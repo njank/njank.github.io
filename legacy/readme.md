@@ -32,6 +32,8 @@ To ensure the application remains strictly lightweight, and portable, **Legacy d
 
 ![Screenshot Mode Map](screenshot-mode-map.jpg)
 
+![Screenshot Mobile](screenshot-mobile.png)
+
 
 
 ## 🚀 Getting Started
