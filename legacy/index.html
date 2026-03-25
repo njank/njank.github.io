@@ -29,6 +29,8 @@
         .grabbing-cursor { cursor: grabbing !important; }
 
         #canvas-container { touch-action: none; }
+        
+        #zoom-container { transform-origin: top left; }
 
         svg path, svg circle { transition: stroke 0.3s, stroke-width 0.3s; }
         .highlighted-line { stroke: #3b82f6 !important; stroke-width: 4px !important; z-index: 100; }
@@ -42,65 +44,166 @@
     <div id="app" class="flex h-[100dvh] w-screen relative">
 
         <!-- Action Bar -->
-        <div id="action-bar" class="absolute bottom-0 left-0 w-full sm:w-auto sm:bottom-4 sm:left-4 z-40 flex items-center px-3 py-2 sm:p-0 bg-white/95 sm:bg-transparent shadow-[0_-4px_10px_rgba(0,0,0,0.05)] sm:shadow-none border-t border-gray-200 sm:border-none backdrop-blur sm:backdrop-blur-none pb-safe gap-2 sm:gap-3 overflow-x-auto hide-scrollbar">
+        <div id="action-bar" class="absolute bottom-0 left-0 w-full sm:w-auto sm:bottom-4 sm:left-4 z-40 flex items-center px-3 py-2 sm:p-0 bg-white/95 sm:bg-transparent shadow-[0_-4px_10px_rgba(0,0,0,0.05)] sm:shadow-none border-t border-gray-200 sm:border-none backdrop-blur sm:backdrop-blur-none pb-safe gap-2 overflow-x-auto hide-scrollbar sm:overflow-visible">
             
-            <!-- Mobile View Burger Button (Always on left) -->
-            <button id="burger-btn" class="sm:hidden flex-shrink-0 bg-white border border-gray-300 text-gray-700 h-8 w-8 rounded shadow-sm hover:bg-gray-50 flex items-center justify-center transition-colors">
+            <!-- Burger Button (Visible on < 1280px) -->
+            <button id="burger-btn" class="xl:hidden flex-shrink-0 bg-white border border-gray-300 text-gray-700 h-8 w-8 rounded shadow-sm hover:bg-gray-50 flex items-center justify-center transition-colors">
                 <i class="ph ph-list text-lg"></i>
             </button>
 
-            <!-- Quick Nav -->
-            <select id="quick-nav-select" class="flex-shrink-0 bg-white border border-gray-300 text-gray-700 px-2 py-0 h-8 sm:h-7 rounded shadow-sm hover:bg-gray-50 flex items-center text-xs font-bold transition-colors outline-none cursor-pointer w-[130px] sm:w-[160px] max-w-[200px]">
-                <option value="">-- Jump to Person --</option>
-            </select>
+            <!-- Quick Navs (Visible Desktop Only >= 640px) -->
+            <div class="hidden sm:flex items-center gap-1 flex-shrink-0">
+                <select class="quick-nav-person bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center text-[11px] font-bold transition-colors outline-none cursor-pointer w-[130px]">
+                </select>
+                <select class="quick-nav-marriage bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center text-[11px] font-bold transition-colors outline-none cursor-pointer w-[130px]">
+                </select>
+            </div>
+            
+            <div class="hidden sm:block w-px bg-gray-300 mx-0.5 h-5 flex-shrink-0"></div>
             
             <!-- Undo/Redo Group -->
             <div class="flex rounded shadow-sm flex-shrink-0">
-                <button id="undo-btn" class="px-3 sm:px-2 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled title="Undo">
+                <button id="undo-btn" class="px-2.5 sm:px-2 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled data-i18n-title="undo">
                     <i class="ph ph-arrow-counter-clockwise text-lg text-gray-500"></i>
                 </button>
-                <button id="redo-btn" class="px-3 sm:px-2 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled title="Redo">
+                <button id="redo-btn" class="px-2.5 sm:px-2 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center justify-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed" disabled data-i18n-title="redo">
                     <i class="ph ph-arrow-clockwise text-lg text-gray-500"></i>
                 </button>
             </div>
 
             <!-- View Mode Switcher Group -->
-            <div class="flex rounded shadow-sm flex-shrink-0">
-                <button id="mode-tree-btn" class="px-3 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded-l flex items-center gap-1.5 transition-colors">
-                    <i class="ph ph-tree-structure text-lg"></i> Tree
+            <div class="flex rounded shadow-sm flex-shrink-0 ml-1">
+                <button class="mode-tree-btn px-2.5 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded-l flex items-center gap-1 transition-colors">
+                    <i class="ph ph-tree-structure text-lg"></i> <span data-i18n="tree">Tree</span>
                 </button>
-                <button id="mode-map-btn" class="px-3 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1.5 transition-colors">
-                    <i class="ph ph-map-pin text-lg text-orange-500"></i> Map
+                <button class="mode-map-btn px-2.5 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1 transition-colors">
+                    <i class="ph ph-map-pin text-lg text-orange-500"></i> <span data-i18n="map">Map</span>
                 </button>
             </div>
 
-            <!-- Desktop I/O Actions Group -->
-            <div class="hidden sm:flex rounded shadow-sm flex-shrink-0">
-                <button class="export-json-btn px-3 py-0 h-7 text-xs font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center gap-1.5 transition-colors">
-                    <i class="ph ph-file-text text-lg text-blue-500"></i> JSON
+            <!-- Zoom Group (Visible Desktop Only >= 768px) -->
+            <div class="hidden md:flex rounded shadow-sm flex-shrink-0 ml-1">
+                <button class="zoom-out-btn px-2 py-0 h-7 text-xs font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center transition-colors">
+                    <i class="ph ph-magnifying-glass-minus text-base"></i>
                 </button>
-                <button class="export-zip-btn px-3 py-0 h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1.5 transition-colors">
-                    <i class="ph ph-file-archive text-lg text-purple-500"></i> ZIP
+                <button class="zoom-reset-btn px-2 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center transition-colors min-w-[42px] justify-center">
+                    100%
                 </button>
-                <label class="px-3 py-0 h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1.5 cursor-pointer transition-colors m-0">
-                    <i class="ph ph-upload-simple text-lg text-green-500"></i> Import
-                    <input type="file" class="import-file hidden" accept=".json,.gz">
+                <button class="zoom-in-btn px-2 py-0 h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center transition-colors">
+                    <i class="ph ph-magnifying-glass-plus text-base"></i>
+                </button>
+            </div>
+
+            <!-- Database Group (Desktop Only >= 1024px) -->
+            <div class="hidden lg:flex items-center rounded shadow-sm flex-shrink-0 ml-1 bg-white border border-gray-300 h-7 text-[11px] font-bold">
+                <span class="px-2 text-gray-500 border-r border-gray-300 h-full flex items-center bg-gray-50" title="Database" data-i18n-title="dbGroup">
+                    <i class="ph ph-database text-[13px]"></i>
+                </span>
+                <select id="db-select" class="bg-transparent text-gray-700 px-2 py-0 h-full outline-none cursor-pointer w-[100px]"></select>
+                <button id="db-create-btn" class="px-2 border-l border-gray-300 hover:bg-gray-50 h-full text-green-600 transition-colors" data-i18n-title="dbCreate"><i class="ph ph-plus"></i></button>
+                <button id="db-delete-btn" class="px-2 border-l border-gray-300 hover:bg-gray-50 h-full text-red-600 transition-colors" data-i18n-title="dbDelete"><i class="ph ph-trash"></i></button>
+            </div>
+
+            <!-- Info Toggle Group (Desktop Only >= 1280px) -->
+            <div class="hidden xl:flex rounded shadow-sm flex-shrink-0 ml-1">
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded-l transition-colors" data-mode="none" data-i18n-title="standard"><i class="ph ph-eye-closed"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r transition-colors" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
+            </div>
+
+            <!-- I/O Actions Group (Desktop Only >= 1280px) -->
+            <div class="hidden xl:flex rounded shadow-sm flex-shrink-0 ml-1">
+                <button class="export-json-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center gap-1 transition-colors" data-i18n-title="exportJson">
+                    <i class="ph ph-file-text text-base text-blue-500"></i> <span data-i18n="exportJson">JSON</span>
+                </button>
+                <button class="export-zip-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 transition-colors" data-i18n-title="exportZip">
+                    <i class="ph ph-file-archive text-base text-purple-500"></i> <span data-i18n="exportZip">ZIP</span>
+                </button>
+                <label class="px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 cursor-pointer transition-colors m-0" data-i18n-title="importReplaceFull">
+                    <i class="ph ph-upload-simple text-base text-red-500"></i> <span data-i18n="importReplace">Imp(R)</span>
+                    <input type="file" class="import-file-replace hidden" accept=".json,.gz">
                 </label>
+                <label class="px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1 cursor-pointer transition-colors m-0" data-i18n-title="importMergeFull">
+                    <i class="ph ph-upload-simple text-base text-green-500"></i> <span data-i18n="importMerge">Imp(M)</span>
+                    <input type="file" class="import-file-merge hidden" accept=".json,.gz">
+                </label>
+            </div>
+
+            <!-- Desktop Language Dropdown (Desktop Only >= 1280px) -->
+            <div class="hidden xl:flex relative rounded shadow-sm flex-shrink-0 ml-1" id="lang-dropdown-desktop">
+                <button class="lang-toggle bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center gap-1.5 text-[11px] font-bold outline-none cursor-pointer transition-colors">
+                    <span class="lang-flag flex-shrink-0"></span> <span class="lang-label">EN</span> <i class="ph ph-caret-up text-gray-400"></i>
+                </button>
+                <div class="lang-menu absolute right-0 bottom-full mb-1 min-w-max bg-white border border-gray-200 rounded shadow-lg hidden flex-col overflow-hidden z-[100]">
+                    <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100 transition-colors" data-lang="en">
+                        <span class="flag-icon-en flex-shrink-0"></span> EN
+                    </button>
+                    <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 transition-colors" data-lang="de">
+                        <span class="flag-icon-de flex-shrink-0"></span> DE
+                    </button>
+                </div>
             </div>
 
         </div>
 
-        <!-- Mobile View Burger Menu Container (Outside Action Bar to prevent overflow clipping) -->
-        <div id="burger-menu" class="fixed bottom-16 left-3 w-40 bg-white border border-gray-200 rounded-lg shadow-xl hidden flex-col overflow-hidden z-[100] sm:hidden">
-            <button class="export-json-btn w-full text-left px-4 py-3 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-text text-blue-500 text-lg"></i> JSON</button>
-            <button class="export-zip-btn w-full text-left px-4 py-3 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-archive text-purple-500 text-lg"></i> ZIP</button>
-            <label class="w-full text-left px-4 py-3 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> Import <input type="file" class="import-file hidden" accept=".json,.gz"></label>
+        <!-- Burger Menu Container (Visible < 1280px) -->
+        <div id="burger-menu" class="fixed bottom-16 left-3 w-52 bg-white border border-gray-200 rounded-lg shadow-xl hidden flex-col overflow-hidden z-[100] xl:hidden">
+            <!-- Navs -->
+            <div class="p-2 border-b border-gray-100 flex flex-col gap-2 bg-gray-50 sm:hidden">
+                <select class="quick-nav-person w-full bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm text-[11px] font-bold outline-none cursor-pointer">
+                </select>
+                <select class="quick-nav-marriage w-full bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm text-[11px] font-bold outline-none cursor-pointer">
+                </select>
+            </div>
+            
+            <!-- Database (Visible < 1024px) -->
+            <div class="bg-gray-50 border-b border-gray-100 p-2 flex flex-col gap-1 lg:hidden">
+                <span class="text-[11px] font-bold text-gray-500 px-1" data-i18n="dbGroup">Database</span>
+                <div class="flex gap-1">
+                    <select id="burger-db-select" class="flex-1 bg-white border border-gray-300 text-gray-700 px-2 py-1 rounded shadow-sm text-[11px] font-bold outline-none cursor-pointer"></select>
+                    <button id="burger-db-create-btn" class="bg-white border border-gray-300 rounded px-2 text-green-600 hover:bg-gray-50" data-i18n-title="dbCreate"><i class="ph ph-plus"></i></button>
+                    <button id="burger-db-delete-btn" class="bg-white border border-gray-300 rounded px-2 text-red-600 hover:bg-gray-50" data-i18n-title="dbDelete"><i class="ph ph-trash"></i></button>
+                </div>
+            </div>
+
+            <!-- View Info (Visible < 1280px) -->
+            <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-3 gap-1">
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 rounded py-1 bg-blue-50 text-blue-600 shadow-inner transition-colors flex justify-center items-center" data-mode="none" data-i18n-title="standard"><i class="ph ph-eye-closed"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
+            </div>
+
+            <!-- Zoom (Visible < 768px) -->
+            <div class="bg-white border-b border-gray-100 p-2 flex justify-between gap-1 md:hidden">
+                <button class="zoom-out-btn flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center hover:bg-gray-100"><i class="ph ph-magnifying-glass-minus"></i></button>
+                <button class="zoom-reset-btn flex-1 bg-white border border-gray-300 rounded flex justify-center text-[11px] hover:bg-gray-100">100%</button>
+                <button class="zoom-in-btn flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center hover:bg-gray-100"><i class="ph ph-magnifying-glass-plus"></i></button>
+            </div>
+
+            <!-- Import/Export (Visible < 1280px) -->
+            <button class="export-json-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-text text-blue-500 text-lg"></i> <span data-i18n="exportJson">JSON</span></button>
+            <button class="export-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-archive text-purple-500 text-lg"></i> <span data-i18n="exportZip">ZIP</span></button>
+            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0 border-b border-gray-100"><i class="ph ph-upload-simple text-red-500 text-lg"></i> <span data-i18n="importReplaceFull">Import (Replace)</span> <input type="file" class="import-file-replace hidden" accept=".json,.gz"></label>
+            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> <span data-i18n="importMergeFull">Import (Merge)</span> <input type="file" class="import-file-merge hidden" accept=".json,.gz"></label>
+
+            <!-- Language (Visible < 1280px) -->
+            <div class="bg-white border-b border-gray-100 p-2 flex flex-col gap-1">
+                <span class="text-[11px] font-bold text-gray-500 px-1" data-i18n="language">Language</span>
+                <div class="flex gap-1">
+                    <button class="lang-option flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center items-center gap-1.5 text-[11px] font-bold hover:bg-gray-50 transition-colors" data-lang="en">
+                        <span class="flag-icon-en flex-shrink-0"></span> EN
+                    </button>
+                    <button class="lang-option flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center items-center gap-1.5 text-[11px] font-bold hover:bg-gray-50 transition-colors" data-lang="de">
+                        <span class="flag-icon-de flex-shrink-0"></span> DE
+                    </button>
+                </div>
+            </div>
         </div>
 
         <!-- Empty State Overlay -->
         <div id="empty-state" class="absolute inset-0 flex items-center justify-center bg-gray-100 z-30 hidden">
             <button id="create-first-person-btn" class="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 font-bold flex items-center gap-2 transition-transform transform active:scale-95 text-base">
-                <i class="ph ph-user-plus text-xl"></i> Create Person
+                <i class="ph ph-user-plus text-xl"></i> <span data-i18n="createPerson">Create Person</span>
             </button>
         </div>
 
@@ -120,85 +223,89 @@
 
         <!-- Edit Panel -->
         <div id="editor-panel" class="absolute inset-0 sm:relative sm:w-[450px] md:w-[500px] w-full flex-shrink-0 bg-white sm:border-l border-gray-300 shadow-2xl hidden flex-col z-50 h-[100dvh] sm:h-auto transform transition-transform duration-300 ease-in-out">
-            <div class="p-4 bg-gray-50 border-b flex justify-between items-center z-10 flex-shrink-0">
-                <h2 class="text-lg font-bold text-gray-700">Edit Person</h2>
-                <button id="close-panel" class="text-gray-400 hover:text-gray-700 p-2 -mr-2 rounded-full hover:bg-gray-200 transition-colors">
-                    <i class="ph ph-x text-xl"></i>
+            <div class="p-3 border-b flex justify-between items-center z-10 flex-shrink-0 bg-gray-50">
+                <h2 class="text-base font-bold text-gray-700 ml-1" data-i18n="editPerson">Edit Person</h2>
+                <button id="close-panel" class="text-gray-400 hover:text-gray-700 p-1.5 rounded hover:bg-gray-200 transition-colors">
+                    <i class="ph ph-x text-lg"></i>
                 </button>
             </div>
-            <div class="p-4 sm:p-5 flex flex-col gap-4 flex-grow overflow-y-auto hide-scrollbar pb-24 sm:pb-5">
+            <div class="p-2 sm:p-2 flex flex-col gap-4 flex-grow overflow-y-auto hide-scrollbar pb-24 sm:pb-5">
                 <input type="hidden" id="edit-id">
                 
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
                     <div class="col-span-1">
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">Title</label>
-                        <input type="text" id="edit-title" class="w-full border rounded p-2 focus:ring focus:ring-blue-200 outline-none">
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="title">Title</label>
+                        <input type="text" id="edit-title" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200">
                     </div>
                     <div class="col-span-1">
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">Gender *</label>
-                        <select id="edit-gender" class="w-full border rounded p-2 focus:ring focus:ring-blue-200 outline-none">
-                            <option value="m">Male</option>
-                            <option value="f">Female</option>
-                        </select>
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="gender">Gender *</label>
+                        <div class="flex h-7 rounded shadow-sm w-full">
+                            <button type="button" id="gender-m-btn" class="gender-btn flex-1 border border-gray-300 rounded-l flex items-center justify-center transition-colors bg-white text-blue-500" data-val="m"><i class="ph ph-gender-male text-base font-bold"></i></button>
+                            <button type="button" id="gender-f-btn" class="gender-btn flex-1 border border-gray-300 border-l-0 rounded-r flex items-center justify-center transition-colors bg-white text-pink-500" data-val="f"><i class="ph ph-gender-female text-base font-bold"></i></button>
+                        </div>
+                        <input type="hidden" id="edit-gender" value="m">
                     </div>
                     <div class="col-span-2 sm:col-span-2">
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">Nickname</label>
-                        <input type="text" id="edit-nickname" class="w-full border rounded p-2 focus:ring focus:ring-blue-200 outline-none">
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="nickname">Nickname</label>
+                        <input type="text" id="edit-nickname" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mt-1">
+                <div class="grid grid-cols-2 gap-3 mt-0">
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">First Name *</label>
-                        <input type="text" id="edit-firstName" class="w-full border rounded p-2 focus:ring focus:ring-blue-200 outline-none">
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="firstName">First Name *</label>
+                        <input type="text" id="edit-firstName" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-gray-500 mb-1">Last Name *</label>
-                        <input type="text" id="edit-lastName" class="w-full border rounded p-2 focus:ring focus:ring-blue-200 outline-none">
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="lastName">Last Name</label>
+                        <input type="text" id="edit-lastName" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200 transition-colors duration-200">
                     </div>
                 </div>
 
                 <!-- Parents -->
-                <div class="border-t pt-4 mt-2">
-                    <label class="block text-xs font-semibold text-gray-500 mb-2">Parents</label>
+                <div class="border-t pt-3 mt-1">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-2" data-i18n="parents">Parents</label>
                     <div class="flex flex-col gap-2">
                         <div class="flex items-center gap-2">
-                            <span class="text-xs text-gray-400 w-12 font-bold">Father</span>
-                            <select id="edit-father" class="w-full border rounded p-2 outline-none text-xs transition-colors duration-200"><option value="">-- No Father --</option></select>
+                            <span class="text-[11px] text-gray-400 w-10 font-bold" data-i18n="father">Father</span>
+                            <select id="edit-father" class="w-full border rounded p-1 outline-none text-xs h-7 transition-colors duration-200"></select>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="text-xs text-gray-400 w-12 font-bold">Mother</span>
-                            <select id="edit-mother" class="w-full border rounded p-2 outline-none text-xs transition-colors duration-200"><option value="">-- No Mother --</option></select>
+                            <span class="text-[11px] text-gray-400 w-10 font-bold" data-i18n="mother">Mother</span>
+                            <select id="edit-mother" class="w-full border rounded p-1 outline-none text-xs h-7 transition-colors duration-200"></select>
                         </div>
                     </div>
                 </div>
 
                 <!-- Children -->
-                <div class="border-t pt-4 mt-2">
-                    <label class="block text-xs font-semibold text-gray-500 mb-2">Children</label>
-                    <div id="edit-children-list" class="flex flex-col gap-2 mb-3"></div>
+                <div class="border-t pt-3 mt-1">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-2" data-i18n="children">Children</label>
+                    <div id="edit-children-list" class="flex flex-col gap-1.5 mb-2"></div>
                     <div class="flex flex-wrap sm:flex-nowrap gap-2">
-                        <select id="assign-child-select" class="flex-grow border rounded p-2 outline-none text-xs"><option value="">-- Select Person --</option></select>
-                        <button id="assign-child-btn" class="bg-gray-100 border border-gray-300 text-gray-700 px-3 py-1.5 rounded text-xs font-bold hover:bg-gray-200 whitespace-nowrap shadow-sm">Assign</button>
-                        <button id="create-child-btn" class="bg-blue-50 border border-blue-200 text-blue-600 px-3 py-1.5 rounded text-xs font-bold hover:bg-blue-100 whitespace-nowrap shadow-sm">+ New</button>
+                        <select id="assign-child-select" class="flex-grow border rounded p-1 outline-none text-xs h-7"></select>
+                        <button id="assign-child-btn" class="bg-gray-100 border border-gray-300 text-gray-700 px-3 py-0 h-7 rounded text-xs font-bold hover:bg-gray-200 whitespace-nowrap shadow-sm" data-i18n="assign">Assign</button>
+                        <button id="create-child-btn" class="bg-blue-50 border border-blue-200 text-blue-600 px-3 py-0 h-7 rounded text-xs font-bold hover:bg-blue-100 whitespace-nowrap shadow-sm" data-i18n="newBtn">+ New</button>
                     </div>
                 </div>
 
                 <!-- Events -->
-                <div class="border-t pt-4 mt-2">
+                <div class="border-t pt-3 mt-1">
                     <div class="flex justify-between items-center mb-2">
-                        <label class="block text-xs font-semibold text-gray-500">Events</label>
-                        <button id="add-event-btn" class="text-blue-500 text-xs font-bold hover:underline py-1 px-2 -mr-2">+ Add Event</button>
+                        <label class="block text-[11px] font-semibold text-gray-500" data-i18n="events">Events</label>
+                        <button id="add-event-btn" class="text-blue-500 text-xs font-bold hover:underline py-0 px-2 -mr-2" data-i18n="addEvent">+ Add Event</button>
                     </div>
-                    <div id="events-list" class="flex flex-col gap-3"></div>
+                    <div id="events-list" class="flex flex-col gap-2"></div>
                 </div>
 
-                <!-- Notes & Delete -->
-                <div class="border-t pt-4 mt-2">
-                    <label class="block text-xs font-semibold text-gray-500 mb-2">Notes</label>
-                    <textarea id="edit-person-notes" class="w-full border rounded p-2 text-xs outline-none focus:ring focus:ring-blue-200 resize-none h-24" placeholder="General notes about this person..."></textarea>
+                <!-- Address & Notes & Delete -->
+                <div class="border-t pt-3 mt-1">
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="address">Address</label>
+                    <textarea id="edit-address" class="w-full border rounded p-1 text-xs outline-none focus:ring focus:ring-blue-200 h-12 mb-2" data-i18n-placeholder="streetCity"></textarea>
                     
-                    <button id="delete-person-btn" class="mt-6 w-full bg-red-50 text-red-600 border border-red-200 rounded py-2.5 font-bold hover:bg-red-100 shadow-sm transition-colors">Delete Person</button>
+                    <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="notes">Notes</label>
+                    <textarea id="edit-person-notes" class="w-full border rounded p-1 text-xs outline-none focus:ring focus:ring-blue-200 h-24" data-i18n-placeholder="generalNotes"></textarea>
+                    
+                    <button id="delete-person-btn" class="mt-5 w-full bg-red-50 text-red-600 border border-red-200 rounded py-2 font-bold hover:bg-red-100 shadow-sm transition-colors text-xs" data-i18n="deletePerson">Delete Person</button>
                 </div>
             </div>
         </div>
@@ -209,6 +316,100 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <script>
+        // --- TRANSLATION / i18n & SVG FLAGS ---
+        const FLAG_EN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" class="w-4 h-3 rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
+        const FLAG_DE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" class="w-4 h-3 rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg>`;
+        const FLAGS = { en: FLAG_EN, de: FLAG_DE };
+
+        // Inject flags to all corresponding spans immediately
+        $('.flag-icon-en').html(FLAG_EN);
+        $('.flag-icon-de').html(FLAG_DE);
+
+        const i18n = {
+            en: {
+                jumpPerson: "Jump Person", jumpMarriage: "Jump Marriage", tree: "Tree", map: "Map",
+                exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(R)", importMerge: "Imp(M)",
+                importReplaceFull: "Import (Replace)", importMergeFull: "Import (Merge)",
+                createPerson: "Create Person", editPerson: "Edit Person", title: "Title", gender: "Gender *",
+                nickname: "Nickname", firstName: "First Name *", lastName: "Last Name",
+                parents: "Parents", father: "Father", mother: "Mother",
+                noFather: "-- No Father --", noMother: "-- No Mother --",
+                children: "Children", selectPerson: "-- Select Person --", assign: "Assign", newBtn: "+ New",
+                events: "Events", addEvent: "+ Add Event", address: "Address", notes: "Notes",
+                deletePerson: "Delete Person", confirmDelete: "Are you sure you want to delete this person?",
+                noChildren: "No children assigned.", noPerson: "-- No Person --",
+                birth: "Birth", death: "Death", marriage: "Marriage", other: "Other",
+                place: "Place", coords: "Lat,Lng", eventNotes: "Event notes...",
+                streetCity: "Street, City, Country...", generalNotes: "General notes about this person...",
+                formatDate: "YYYY or DD.MM.YYYY", dbGroup: "Database", dbCreate: "Create DB", dbDelete: "Delete DB",
+                dbPrompt: "Enter new database name:", dbDeleteConfirm: "Are you sure you want to delete the database '{db}'?",
+                dbCantDeleteLast: "Cannot delete the last database.", dbNameExists: "Database already exists.",
+                parentMissing: "Parent missing", lastNameMissing: "Last name missing", language: "Language",
+                editFather: "Edit Father", addFather: "Add Father", editMother: "Edit Mother", addMother: "Add Mother",
+                addSpouse: "Add Spouse", addChild: "Add Child", standard: "Standard", undo: "Undo", redo: "Redo"
+            },
+            de: {
+                jumpPerson: "Zu Person springen", jumpMarriage: "Zu Ehe springen", tree: "Stammbaum", map: "Karte",
+                exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(E)", importMerge: "Imp(Z)",
+                importReplaceFull: "Importieren (Ersetzen)", importMergeFull: "Importieren (Zusammenführen)",
+                createPerson: "Person erstellen", editPerson: "Person bearbeiten", title: "Titel", gender: "Geschlecht *",
+                nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname",
+                parents: "Eltern", father: "Vater", mother: "Mutter",
+                noFather: "-- Kein Vater --", noMother: "-- Keine Mutter --",
+                children: "Kinder", selectPerson: "-- Person wählen --", assign: "Zuweisen", newBtn: "+ Neu",
+                events: "Ereignisse", addEvent: "+ Ereignis", address: "Adresse", notes: "Notizen",
+                deletePerson: "Person löschen", confirmDelete: "Möchten Sie diese Person wirklich löschen?",
+                noChildren: "Keine Kinder zugewiesen.", noPerson: "-- Keine Person --",
+                birth: "Geburt", death: "Tod", marriage: "Heirat", other: "Andere",
+                place: "Ort", coords: "Lat,Lng", eventNotes: "Ereignisnotizen...",
+                streetCity: "Straße, Stadt, Land...", generalNotes: "Allgemeine Notizen zu dieser Person...",
+                formatDate: "JJJJ oder TT.MM.JJJJ", dbGroup: "Datenbank", dbCreate: "DB erstellen", dbDelete: "DB löschen",
+                dbPrompt: "Namen der neuen Datenbank eingeben:", dbDeleteConfirm: "Möchten Sie die Datenbank '{db}' wirklich löschen?",
+                dbCantDeleteLast: "Die letzte Datenbank kann nicht gelöscht werden.", dbNameExists: "Datenbank existiert bereits.",
+                parentMissing: "Elternteil fehlt", lastNameMissing: "Nachname fehlt", language: "Sprache",
+                editFather: "Vater bearbeiten", addFather: "Vater hinzufügen", editMother: "Mutter bearbeiten", addMother: "Mutter hinzufügen",
+                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen"
+            }
+        };
+
+        let currentLang = localStorage.getItem('genealogyLang') || 'en';
+
+        function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) ? i18n[currentLang][key] : key; }
+
+        function updateLanguageUI() {
+            $('[data-i18n]').each(function() { $(this).text(t($(this).data('i18n'))); });
+            $('[data-i18n-placeholder]').each(function() { $(this).attr('placeholder', t($(this).data('i18n-placeholder'))); });
+            $('[data-i18n-title]').each(function() { $(this).attr('title', t($(this).data('i18n-title'))); });
+
+            $('.lang-option').removeClass('ring-2 ring-blue-500 bg-blue-50');
+            $(`.lang-option[data-lang="${currentLang}"]`).addClass('ring-2 ring-blue-500 bg-blue-50');
+            
+            $('.lang-flag').html(FLAGS[currentLang]);
+            $('.lang-label').text(currentLang.toUpperCase());
+
+            updateQuickNav();
+            if (selectedPersonId) openPanel(selectedPersonId);
+            
+            // Re-render but maintain map if we are in map view
+            renderTree();
+            if (currentViewMode === 'map') {
+                $('#canvas-container').addClass('hidden');
+                openMap();
+            }
+        }
+
+        $('.lang-option').click(function() {
+            currentLang = $(this).data('lang');
+            localStorage.setItem('genealogyLang', currentLang);
+            updateLanguageUI();
+            $('.lang-menu').addClass('hidden');
+        });
+
+        $('.lang-toggle').click(function(e) {
+            e.stopPropagation();
+            $('.lang-menu').toggleClass('hidden');
+        });
+
         const ICONS = {
             male: `<i class="ph ph-gender-male text-blue-500 font-bold"></i>`,
             female: `<i class="ph ph-gender-female text-pink-500 font-bold"></i>`,
@@ -238,21 +439,143 @@
             ]
         };
 
-        let db = JSON.parse(localStorage.getItem('genealogyData'));
-        if (!db || !Array.isArray(db.persons)) {
-            db = JSON.parse(JSON.stringify(initialData));
+        // --- DATABASE MANAGEMENT ---
+        let dbNames = JSON.parse(localStorage.getItem('genealogyDBNames'));
+        if (!dbNames) {
+            dbNames =['default'];
+            localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
+        }
+        
+        let currentDbName = localStorage.getItem('genealogyActiveDB') || 'default';
+        if (!dbNames.includes(currentDbName)) currentDbName = dbNames[0];
+
+        // Migrate older legacy localstorage key to DB standard
+        let oldDb = localStorage.getItem('genealogyData');
+        if (oldDb && !localStorage.getItem('genealogyData_default')) {
+            localStorage.setItem('genealogyData_default', oldDb);
+            let oldHistory = localStorage.getItem('genealogyHistory');
+            let oldHistoryIndex = localStorage.getItem('genealogyHistoryIndex');
+            if(oldHistory) localStorage.setItem('genealogyHistory_default', oldHistory);
+            if(oldHistoryIndex) localStorage.setItem('genealogyHistoryIndex_default', oldHistoryIndex);
         }
 
-        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory')) ||[];
-        let historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex'), 10);
+        function loadDBList() {
+            let opts = '';
+            dbNames.forEach(name => { opts += `<option value="${name}" ${name === currentDbName ? 'selected' : ''}>${name}</option>`; });
+            $('#db-select, #burger-db-select').html(opts);
+        }
+
+        function centerOnLargestFamily() {
+            let possibleRoots =[];
+            db.persons.forEach(p => {
+                if (p.gender === 'm' && !p.fatherId && !p.motherId) possibleRoots.push(p.id);
+                if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasMalePartner(p.id)) possibleRoots.push(p.id);
+            });
+
+            let largestRoot = null;
+            let maxDescendants = -1;
+
+            possibleRoots.forEach(rootId => {
+                let count = countDescendants(rootId);
+                if (count > maxDescendants) { maxDescendants = count; largestRoot = rootId; }
+            });
+
+            if (largestRoot !== null) {
+                scrollToPerson(largestRoot, false);
+            } else if (db.persons.length > 0) {
+                scrollToPerson(db.persons[0].id, false);
+            } else {
+                let sliderEl = document.getElementById('canvas-container');
+                sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
+                sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
+            }
+        }
+
+        function switchDatabase(name) {
+            if (!dbNames.includes(name)) return;
+            
+            // Mask the transition to prevent layout calculation jitter visibility
+            let $canvas = $('#canvas-container');
+            $canvas.css('opacity', '0');
+            
+            currentDbName = name;
+            localStorage.setItem('genealogyActiveDB', currentDbName);
+            
+            let saved = localStorage.getItem('genealogyData_' + currentDbName);
+            db = saved ? JSON.parse(saved) : { persons:[] };
+            
+            historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[JSON.parse(JSON.stringify(db.persons))];
+            historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
+            if (isNaN(historyIndex)) historyIndex = 0;
+            saveHistory();
+
+            selectedPersonId = null;
+            $('#close-panel').click();
+            
+            saveData(true);
+            
+            // Let the DOM fully flush and paint offscreen, then correctly compute lines, scroll, and reveal
+            setTimeout(() => {
+                if (currentViewMode === 'tree') {
+                    setCanvasZoom(1);
+                    drawLines();
+                    centerOnLargestFamily();
+                }
+                $canvas.fadeTo(150, 1);
+            }, 40);
+        }
+
+        function createDatabase() {
+            let name = prompt(t('dbPrompt'));
+            if (!name) return;
+            name = name.trim();
+            if (name === '') return;
+            if (dbNames.includes(name)) { alert(t('dbNameExists')); return; }
+            dbNames.push(name);
+            localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
+            localStorage.setItem('genealogyData_' + name, JSON.stringify({ persons:[] }));
+            
+            loadDBList();
+            switchDatabase(name);
+        }
+
+        function deleteDatabase() {
+            if (dbNames.length <= 1) { alert(t('dbCantDeleteLast')); return; }
+            let msg = t('dbDeleteConfirm').replace('{db}', currentDbName);
+            if (confirm(msg)) {
+                localStorage.removeItem('genealogyData_' + currentDbName);
+                localStorage.removeItem('genealogyHistory_' + currentDbName);
+                localStorage.removeItem('genealogyHistoryIndex_' + currentDbName);
+                
+                dbNames = dbNames.filter(n => n !== currentDbName);
+                localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
+                
+                currentDbName = dbNames[0];
+                loadDBList();
+                switchDatabase(currentDbName);
+            }
+        }
+
+        $('#db-select, #burger-db-select').change(function() {
+            let name = $(this).val();
+            if (name !== currentDbName) switchDatabase(name);
+            $('#db-select').val(name);
+            $('#burger-db-select').val(name);
+        });
+        $('#db-create-btn, #burger-db-create-btn').click(createDatabase);
+        $('#db-delete-btn, #burger-db-delete-btn').click(deleteDatabase);
+
+        let db = JSON.parse(localStorage.getItem('genealogyData_' + currentDbName));
+        if (!db || !Array.isArray(db.persons)) { db = JSON.parse(JSON.stringify(initialData)); }
+
+        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[];
+        let historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
         if (isNaN(historyIndex)) historyIndex = -1;
 
         if (historyStack.length === 0 || historyIndex === -1) {
             historyStack =[JSON.parse(JSON.stringify(db.persons))];
             historyIndex = 0;
             saveHistory();
-        } else {
-            updateUndoRedoButtons();
         }
 
         let renderedIds = new Set();
@@ -260,49 +583,44 @@
         let romanNumerals = {};
         let personGen = {};
         let currentViewMode = 'tree'; 
+        let displayInfoMode = 'none';
+        let canvasZoom = 1;
 
         // --- MAP STATE & LOGIC ---
         let mapInstance = null;
+        let mapTileLayer = null;
         let mapMarkers = null;
         let geoCache = JSON.parse(localStorage.getItem('genealogyGeoCache') || '{}');
         let currentMapGeocodeRun = 0;
 
         function getMajorityColor(colorsObj) {
-            let maxTotal = 0;
-            let maxMales = -1;
-            let res = '#3b82f6';
+            let maxTotal = 0, maxMales = -1, res = '#3b82f6';
             for(let c in colorsObj) {
                 let stats = colorsObj[c];
-                if(stats.total > maxTotal) { 
-                    maxTotal = stats.total; 
-                    maxMales = stats.males;
-                    res = c; 
-                } else if (stats.total === maxTotal) {
-                    if (stats.males > maxMales) {
-                        maxMales = stats.males;
-                        res = c;
-                    }
-                }
+                if(stats.total > maxTotal) { maxTotal = stats.total; maxMales = stats.males; res = c; } 
+                else if (stats.total === maxTotal) { if (stats.males > maxMales) { maxMales = stats.males; res = c; } }
             }
             return res;
         }
 
         async function openMap() {
+            let tileUrl = currentLang === 'de' 
+                ? 'https://tile.openstreetmap.de/{z}/{x}/{y}.png' 
+                : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
+
             if (!mapInstance) {
                 mapInstance = L.map('map-element').setView([48.2082, 16.3738], 4);
-                // Map tiles can be found at: https://leaflet-extras.github.io/leaflet-providers/preview/
-                L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
-                    maxZoom: 19,
-                    attribution: '© OpenStreetMap'
-                }).addTo(mapInstance);
+                mapTileLayer = L.tileLayer(tileUrl, { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapInstance);
+            } else if (mapTileLayer) {
+                if (mapTileLayer._url !== tileUrl) {
+                    mapTileLayer.setUrl(tileUrl);
+                }
             }
 
             let previousCenter = mapInstance.getCenter();
             let previousZoom = mapInstance.getZoom();
 
-            if (mapMarkers) {
-                mapInstance.removeLayer(mapMarkers);
-            }
+            if (mapMarkers) mapInstance.removeLayer(mapMarkers);
             mapMarkers = L.markerClusterGroup();
 
             const locGroups = {};
@@ -314,16 +632,14 @@
                     if (!place && !coordsStr) return;
 
                     let key = coordsStr ? `coords:${coordsStr}` : `place:${place}`;
-                    if (!locGroups[key]) {
-                        locGroups[key] = { place: place, coordsStr: coordsStr, events:[], colors: {} };
-                    }
+                    if (!locGroups[key]) locGroups[key] = { place: place, coordsStr: coordsStr, events:[], colors: {} };
                     
                     let pColor = getColor(p.lastName);
                     if (!locGroups[key].colors[pColor]) locGroups[key].colors[pColor] = { total: 0, males: 0 };
                     locGroups[key].colors[pColor].total++;
                     if (p.gender === 'm') locGroups[key].colors[pColor].males++;
                     
-                    let involved =[p];
+                    let involved = [p];
                     if (e.involvedPersonId) {
                         let invP = getPerson(e.involvedPersonId);
                         if (invP && !involved.find(ip => ip.id === invP.id)) {
@@ -336,16 +652,10 @@
                     }
 
                     let isDup = locGroups[key].events.find(existingEv => 
-                        existingEv.type === e.type && 
-                        existingEv.date === e.date && 
-                        existingEv.involved.some(ip => ip.id === p.id)
+                        existingEv.type === e.type && existingEv.date === e.date && existingEv.involved.some(ip => ip.id === p.id)
                     );
 
-                    if (!isDup) {
-                        locGroups[key].events.push({
-                            type: e.type, date: e.date, note: e.note, involved: involved
-                        });
-                    }
+                    if (!isDup) locGroups[key].events.push({ type: e.type, date: e.date, note: e.note, involved: involved });
                 });
             });
 
@@ -363,14 +673,10 @@
 
                 if (group.coordsStr) {
                     let parts = group.coordsStr.split(',');
-                    if (parts.length === 2) {
-                        lat = parseFloat(parts[0]);
-                        lng = parseFloat(parts[1]);
-                    }
+                    if (parts.length === 2) { lat = parseFloat(parts[0]); lng = parseFloat(parts[1]); }
                 } else if (group.place) {
                     if (geoCache[group.place]) {
-                        lat = geoCache[group.place].lat;
-                        lng = geoCache[group.place].lng;
+                        lat = geoCache[group.place].lat; lng = geoCache[group.place].lng;
                     } else {
                         try {
                             if (hasNewGeocode) await new Promise(r => setTimeout(r, 1000));
@@ -378,14 +684,11 @@
                             let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
                             let response = await $.getJSON(url);
                             if (response && response.length > 0) {
-                                lat = parseFloat(response[0].lat);
-                                lng = parseFloat(response[0].lon);
+                                lat = parseFloat(response[0].lat); lng = parseFloat(response[0].lon);
                                 geoCache[group.place] = { lat, lng };
                                 localStorage.setItem('genealogyGeoCache', JSON.stringify(geoCache));
                             }
-                        } catch(err) {
-                            console.error("Geocoding failed for:", group.place);
-                        }
+                        } catch(err) { console.error("Geocoding failed for:", group.place); }
                     }
                 }
 
@@ -394,12 +697,10 @@
                     let markerIcon = L.divIcon({
                         className: 'custom-pin',
                         html: `<div style="background-color: ${mColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
-                        iconSize:[20, 20],
-                        iconAnchor:[10, 10]
+                        iconSize:[20, 20], iconAnchor:[10, 10]
                     });
 
                     let marker = L.marker([lat, lng], { icon: markerIcon });
-
                     let popupHtml = `<div class="popup-content max-h-64 overflow-y-auto pr-1 text-sm text-gray-800 font-sans w-[280px]">
                         <h3 class="mt-0 mb-3 border-b border-gray-200 pb-1.5 font-bold text-[15px] flex items-center gap-1.5 text-gray-700">
                             <i class="ph ph-map-pin text-orange-500"></i> ${group.place || group.coordsStr}
@@ -412,37 +713,33 @@
 
                         let personsHtml = e.involved.map(invP => {
                             let roman = romanNumerals[invP.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[invP.id]}</span>` : '';
-                            return `<span class="person-link cursor-pointer hover:text-blue-600 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName}${roman}</span>`;
+                            return `<span class="person-link px-1 rounded cursor-pointer hover:text-blue-600 hover:bg-blue-50 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName||''}${roman}</span>`;
                         }).join(' <span class="text-xs font-normal text-gray-400">&amp;</span> ');
 
                         popupHtml += `
-                            <div class="bg-gray-50 border border-gray-200 rounded p-2 mb-2 last:mb-0 shadow-sm">
-                                <div class="flex items-center justify-between mb-1.5">
+                            <div class="bg-gray-50 border border-gray-200 rounded px-1.5 py-2 mb-2 last:mb-0 shadow-sm">
+                                <div class="flex items-center justify-between mb-1.5 px-0.5">
                                     <div class="flex items-center gap-1 text-gray-600 font-semibold text-[11px]" style="color: ${typeColor}">
-                                        ${iconHtml} <span class="uppercase tracking-wide">${e.type}</span>
+                                        ${iconHtml} <span class="uppercase tracking-wide">${t(typeKey)}</span>
                                     </div>
                                     <span class="text-xs text-gray-500 font-medium">${e.date || ''}</span>
                                 </div>
                                 <div class="leading-snug text-[13px]">${personsHtml}</div>
-                                ${e.note ? `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-200 italic leading-tight">${e.note}</div>` : ''}
-                            </div>
-                        `;
+                                ${e.note ? `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-200 italic leading-tight px-0.5">${e.note}</div>` : ''}
+                            </div>`;
                     });
                     popupHtml += `</div>`;
-
                     marker.bindPopup(popupHtml, { minWidth: 280 });
                     mapMarkers.addLayer(marker);
                 }
             }
 
             if (currentMapGeocodeRun !== thisRun) return;
-
             mapInstance.addLayer(mapMarkers);
             
             if (mapMarkers.getLayers().length > 0 && (!previousCenter || (previousZoom === 4 && previousCenter.lat === 48.2082))) {
                 mapInstance.fitBounds(mapMarkers.getBounds(), { padding:[50, 50], maxZoom: 15 });
             }
-            
             setTimeout(() => mapInstance.invalidateSize(), 100);
         }
 
@@ -451,30 +748,76 @@
             $('#burger-menu').addClass('hidden');
 
             if (mode === 'tree') {
-                $('#map-container').addClass('hidden');
-                $('#canvas-container').removeClass('hidden');
-                
-                $('#mode-tree-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
-                $('#mode-map-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
+                $('#map-container').addClass('hidden'); 
+                if (db.persons.length > 0) {
+                    $('#canvas-container').removeClass('hidden');
+                    $('#empty-state').addClass('hidden');
+                    drawLines();
+                } else {
+                    $('#empty-state').removeClass('hidden');
+                }
+                $('.mode-tree-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
+                $('.mode-map-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
             } else {
-                $('#canvas-container').addClass('hidden');
-                $('#map-container').removeClass('hidden');
-                
-                $('#mode-map-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
-                $('#mode-tree-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
-                
-                openMap();
+                $('#canvas-container').addClass('hidden'); 
+                if (db.persons.length > 0) {
+                    $('#map-container').removeClass('hidden');
+                    $('#empty-state').addClass('hidden');
+                    openMap();
+                } else {
+                    $('#empty-state').removeClass('hidden');
+                }
+                $('.mode-map-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
+                $('.mode-tree-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
             }
         }
 
-        $('#mode-tree-btn').click(() => setViewMode('tree'));
-        $('#mode-map-btn').click(() => setViewMode('map'));
-        // --- END MAP LOGIC ---
+        $('.mode-tree-btn').click(() => setViewMode('tree'));
+        $('.mode-map-btn').click(() => setViewMode('map'));
 
-        function getPerson(id) {
-            if (!id) return null;
-            return db.persons.find(p => p.id === parseInt(id, 10));
+        function setCanvasZoom(newZoom, mouseX, mouseY) {
+            let container = $('#canvas-container')[0];
+            if (mouseX === undefined) mouseX = container.clientWidth / 2;
+            if (mouseY === undefined) mouseY = container.clientHeight / 2;
+            let focusX = (container.scrollLeft + mouseX) / canvasZoom;
+            let focusY = (container.scrollTop + mouseY) / canvasZoom;
+            canvasZoom = Math.round(newZoom * 10) / 10;
+            $('#zoom-container').css('transform', `scale(${canvasZoom})`);
+            container.scrollLeft = (focusX * canvasZoom) - mouseX;
+            container.scrollTop = (focusY * canvasZoom) - mouseY;
+            $('.zoom-reset-btn').text(Math.round(canvasZoom * 100) + '%');
         }
+
+        $('.zoom-in-btn').click(() => setCanvasZoom(Math.min(canvasZoom + 0.1, 2)));
+        $('.zoom-out-btn').click(() => setCanvasZoom(Math.max(canvasZoom - 0.1, 0.2)));
+        $('.zoom-reset-btn').click(() => setCanvasZoom(1));
+        
+        document.getElementById('canvas-container').addEventListener('wheel', (e) => {
+            if (currentViewMode === 'map') return;
+            e.preventDefault();
+            let zoomDelta = e.deltaY < 0 ? 0.1 : -0.1;
+            let newZoom = Math.min(Math.max(canvasZoom + zoomDelta, 0.2), 2);
+            let container = e.currentTarget;
+            let rect = container.getBoundingClientRect();
+            setCanvasZoom(newZoom, e.clientX - rect.left, e.clientY - rect.top);
+        }, { passive: false });
+        
+        $('.info-toggle-btn').click(function() {
+            displayInfoMode = $(this).data('mode');
+            $('.info-toggle-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
+            $(`.info-toggle-btn[data-mode="${displayInfoMode}"]`).removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
+            saveData(true); 
+        });
+
+        $('.gender-btn').click(function() {
+            $('.gender-btn').removeClass('bg-blue-50 bg-pink-50 shadow-inner text-blue-600 text-pink-600').addClass('bg-white');
+            let val = $(this).data('val');
+            $('#edit-gender').val(val).trigger('change');
+            if(val === 'm') $(this).removeClass('bg-white').addClass('bg-blue-50 shadow-inner text-blue-600');
+            if(val === 'f') $(this).removeClass('bg-white').addClass('bg-pink-50 shadow-inner text-pink-600');
+        });
+
+        function getPerson(id) { return id ? db.persons.find(p => p.id === parseInt(id, 10)) : null; }
 
         function updateUndoRedoButtons() {
             $('#undo-btn').prop('disabled', historyIndex <= 0);
@@ -482,18 +825,15 @@
         }
 
         function saveHistory() {
-            localStorage.setItem('genealogyHistory', JSON.stringify(historyStack));
-            localStorage.setItem('genealogyHistoryIndex', historyIndex.toString());
+            localStorage.setItem('genealogyHistory_' + currentDbName, JSON.stringify(historyStack));
+            localStorage.setItem('genealogyHistoryIndex_' + currentDbName, historyIndex.toString());
             updateUndoRedoButtons();
         }
 
         function pushToHistory() {
-            if (historyIndex < historyStack.length - 1) {
-                historyStack = historyStack.slice(0, historyIndex + 1);
-            }
+            if (historyIndex < historyStack.length - 1) historyStack = historyStack.slice(0, historyIndex + 1);
             historyStack.push(JSON.parse(JSON.stringify(db.persons)));
-            if (historyStack.length > 11) historyStack.shift();
-            else historyIndex++;
+            if (historyStack.length > 11) historyStack.shift(); else historyIndex++;
             saveHistory();
         }
 
@@ -501,12 +841,8 @@
             if (historyIndex > 0) {
                 historyIndex--;
                 db.persons = JSON.parse(JSON.stringify(historyStack[historyIndex]));
-                saveHistory();
-                saveData(true); 
-                if (selectedPersonId) {
-                    if (getPerson(selectedPersonId)) openPanel(selectedPersonId);
-                    else $('#close-panel').click();
-                }
+                saveHistory(); saveData(true); 
+                if (selectedPersonId) { if (getPerson(selectedPersonId)) openPanel(selectedPersonId); else $('#close-panel').click(); }
             }
         }
 
@@ -514,60 +850,58 @@
             if (historyIndex < historyStack.length - 1) {
                 historyIndex++;
                 db.persons = JSON.parse(JSON.stringify(historyStack[historyIndex]));
-                saveHistory();
-                saveData(true);
-                if (selectedPersonId) {
-                    if (getPerson(selectedPersonId)) openPanel(selectedPersonId);
-                    else $('#close-panel').click();
-                }
+                saveHistory(); saveData(true);
+                if (selectedPersonId) { if (getPerson(selectedPersonId)) openPanel(selectedPersonId); else $('#close-panel').click(); }
             }
         }
 
-        $('#undo-btn').click(undo);
-        $('#redo-btn').click(redo);
-
-        // Burger Menu Handlers
-        $('#burger-btn').click(function(e) {
-            e.stopPropagation();
-            $('#burger-menu').toggleClass('hidden');
-        });
+        $('#undo-btn').click(undo); $('#redo-btn').click(redo);
+        $('#burger-btn').click(function(e) { e.stopPropagation(); $('#burger-menu').toggleClass('hidden'); });
 
         function updateQuickNav() {
-            let options = '<option value="">-- Jump to Person --</option>';
-            let sorted =[...db.persons].sort((a,b) => (a.firstName+a.lastName).localeCompare(b.firstName+b.lastName));
+            let pOptions = `<option value="">${t('jumpPerson')}</option>`;
+            let sorted =[...db.persons].sort((a,b) => (a.firstName+(a.lastName||'')).localeCompare(b.firstName+(b.lastName||'')));
             sorted.forEach(p => {
                 let genderSym = p.gender === 'm' ? '♂' : '♀';
                 let opRoman = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
-                options += `<option value="${p.id}">${genderSym} ${p.firstName} ${p.lastName}${opRoman}</option>`;
+                pOptions += `<option value="${p.id}">${genderSym} ${p.firstName} ${p.lastName||''}${opRoman}</option>`;
             });
-            $('#quick-nav-select').html(options);
+            $('.quick-nav-person').html(pOptions);
+
+            let mOptions = `<option value="">${t('jumpMarriage')}</option>`;
+            let marriages =[];
+            db.persons.forEach(p => {
+                (p.events ||[]).forEach(e => {
+                    if (e.type === 'Marriage' && e.involvedPersonId) {
+                        let spouse = getPerson(e.involvedPersonId);
+                        if (spouse && !marriages.find(m => (m.p1.id===p.id && m.p2.id===spouse.id) || (m.p1.id===spouse.id && m.p2.id===p.id))) {
+                            marriages.push({ p1: p, p2: spouse, date: e.date, place: e.place });
+                        }
+                    }
+                });
+            });
+            marriages.sort((a,b) => (a.date||'').localeCompare(b.date||'')).forEach(m => {
+                let text = `${m.p1.firstName} & ${m.p2.firstName} ${m.date ? '('+m.date+')' : ''}`;
+                mOptions += `<option value="${m.p1.id}">${text}</option>`;
+            });
+            $('.quick-nav-marriage').html(mOptions);
         }
 
-        $('#quick-nav-select').change(function() {
+        $('.quick-nav-person, .quick-nav-marriage').change(function() {
             let id = parseInt($(this).val(), 10);
             if (id) {
                 openPanel(id);
-                if (currentViewMode === 'tree') {
-                    scrollToPerson(id);
-                }
+                if (currentViewMode === 'tree') scrollToPerson(id);
                 $(this).val('');
             }
         });
 
         function countDescendants(rootId) {
-            let count = 0;
-            let visited = new Set([rootId]);
-            let q =[rootId];
-            
+            let count = 0, visited = new Set([rootId]), q =[rootId];
             while(q.length > 0) {
                 let curr = q.shift();
-                let children = db.persons.filter(p => p.fatherId === curr || p.motherId === curr);
-                children.forEach(c => {
-                    if(!visited.has(c.id)) {
-                        visited.add(c.id);
-                        count++;
-                        q.push(c.id);
-                    }
+                db.persons.filter(p => p.fatherId === curr || p.motherId === curr).forEach(c => {
+                    if(!visited.has(c.id)) { visited.add(c.id); count++; q.push(c.id); }
                 });
             }
             return count;
@@ -605,24 +939,13 @@
         function computeGenerations() {
             personGen = {};
             let adj = {};
-
             db.persons.forEach(p => {
                 adj[p.id] = adj[p.id] ||[];
-                if (p.fatherId) {
-                    adj[p.id].push({to: p.fatherId, offset: -1});
-                    adj[p.fatherId] = adj[p.fatherId] ||[];
-                    adj[p.fatherId].push({to: p.id, offset: 1});
-                }
-                if (p.motherId) {
-                    adj[p.id].push({to: p.motherId, offset: -1});
-                    adj[p.motherId] = adj[p.motherId] ||[];
-                    adj[p.motherId].push({to: p.id, offset: 1});
-                }
-                
-                let partners = getPartners(p.id);
-                partners.forEach(partnerId => {
+                if (p.fatherId) { adj[p.id].push({to: p.fatherId, offset: -1}); adj[p.fatherId] = adj[p.fatherId] || []; adj[p.fatherId].push({to: p.id, offset: 1}); }
+                if (p.motherId) { adj[p.id].push({to: p.motherId, offset: -1}); adj[p.motherId] = adj[p.motherId] || []; adj[p.motherId].push({to: p.id, offset: 1}); }
+                getPartners(p.id).forEach(partnerId => {
                     adj[p.id].push({to: partnerId, offset: 0});
-                    adj[partnerId] = adj[partnerId] || [];
+                    adj[partnerId] = adj[partnerId] ||[];
                     adj[partnerId].push({to: p.id, offset: 0});
                 });
             });
@@ -630,44 +953,32 @@
             let visited = new Set();
             db.persons.forEach(startNode => {
                 if (!visited.has(startNode.id)) {
-                    let q =[startNode.id];
-                    personGen[startNode.id] = 0;
-                    visited.add(startNode.id);
-                    
-                    let component = [startNode.id];
-
+                    let q = [startNode.id]; personGen[startNode.id] = 0; visited.add(startNode.id);
+                    let component =[startNode.id];
                     while(q.length > 0) {
                         let curr = q.shift();
                         let currGen = personGen[curr];
-                        
                         adj[curr].forEach(edge => {
                             if (!visited.has(edge.to)) {
                                 personGen[edge.to] = currGen + edge.offset;
-                                visited.add(edge.to);
-                                q.push(edge.to);
-                                component.push(edge.to);
+                                visited.add(edge.to); q.push(edge.to); component.push(edge.to);
                             }
                         });
                     }
-                    
                     let minGen = Math.min(...component.map(id => personGen[id]));
-                    component.forEach(id => {
-                        personGen[id] -= minGen;
-                    });
+                    component.forEach(id => { personGen[id] -= minGen; });
                 }
             });
         }
 
         function updateRomanNumerals() {
             computeGenerations(); 
-
             let groups = {};
             db.persons.forEach(p => {
                 let nameKey = (p.firstName + " " + (p.lastName || '')).toLowerCase().trim();
-                if (!groups[nameKey]) groups[nameKey] =[];
+                if (!groups[nameKey]) groups[nameKey] = [];
                 groups[nameKey].push(p);
             });
-            
             romanNumerals = {};
             for (let key in groups) {
                 if (groups[key].length > 1) {
@@ -675,53 +986,39 @@
                         let genA = personGen[a.id] !== undefined ? personGen[a.id] : 0;
                         let genB = personGen[b.id] !== undefined ? personGen[b.id] : 0;
                         if (genA !== genB) return genA - genB;
-                        
-                        let bA = getBirthYear(a.id);
-                        let bB = getBirthYear(b.id);
+                        let bA = getBirthYear(a.id); let bB = getBirthYear(b.id);
                         if (bA !== bB) return bA - bB;
-                        
                         return a.id - b.id;
                     });
                     groups[key].forEach((p, index) => {
-                        romanNumerals[p.id] = toRoman(index + 1);
+                        romanNumerals[p.id] = (p.lastName && p.lastName.trim() !== '') ? toRoman(index + 1) : (index + 1).toString();
                     });
                 }
             }
         }
 
-        function getNextId() {
-            return db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) + 1 : 1;
-        }
+        function getNextId() { return db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) + 1 : 1; }
 
         function saveData(skipHistory = false) {
-            localStorage.setItem('genealogyData', JSON.stringify(db));
-            updateRomanNumerals();
-            updateQuickNav();
+            localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
+            updateRomanNumerals(); updateQuickNav();
             
             let anchorNode = selectedPersonId ? document.querySelector(`.person-node[data-id="${selectedPersonId}"]`) : null;
             let beforeRect = anchorNode ? anchorNode.getBoundingClientRect() : null;
 
-            renderTree();
-            updateHighlight();
+            renderTree(); updateHighlight();
 
+            // Perform scroll restoration directly synchronously without setTimeouts or requestAnimationFrame frames
             if (anchorNode && beforeRect && currentViewMode === 'tree') {
-                requestAnimationFrame(() => {
-                    let newAnchor = document.querySelector(`.person-node[data-id="${selectedPersonId}"]`);
-                    if (newAnchor) {
-                        let afterRect = newAnchor.getBoundingClientRect();
-                        document.getElementById('canvas-container').scrollLeft += (afterRect.left - beforeRect.left);
-                        document.getElementById('canvas-container').scrollTop += (afterRect.top - beforeRect.top);
-                    }
-                });
+                let newAnchor = document.querySelector(`.person-node[data-id="${selectedPersonId}"]`);
+                if (newAnchor) {
+                    let afterRect = newAnchor.getBoundingClientRect();
+                    document.getElementById('canvas-container').scrollLeft += (afterRect.left - beforeRect.left);
+                    document.getElementById('canvas-container').scrollTop += (afterRect.top - beforeRect.top);
+                }
             }
-
-            if (currentViewMode === 'map') {
-                openMap(); // Refresh map intelligently without losing view port
-            }
-
-            if (!skipHistory) {
-                pushToHistory();
-            }
+            if (currentViewMode === 'map') openMap(); 
+            if (!skipHistory) pushToHistory();
         }
 
         function scrollToPerson(id, animate = true) {
@@ -729,17 +1026,14 @@
             if (node) {
                 let container = $('#canvas-container');
                 let containerRect = container[0].getBoundingClientRect();
+                let zcRect = document.getElementById('zoom-container').getBoundingClientRect();
                 let rect = node.getBoundingClientRect();
-                
-                let scrollTop = container.scrollTop() + rect.top - containerRect.top - containerRect.height / 2 + rect.height / 2;
-                let scrollLeft = container.scrollLeft() + rect.left - containerRect.left - containerRect.width / 2 + rect.width / 2;
-                
-                if (animate) {
-                    container.animate({ scrollTop: scrollTop, scrollLeft: scrollLeft }, 300);
-                } else {
-                    container.scrollTop(scrollTop);
-                    container.scrollLeft(scrollLeft);
-                }
+                let unscaledX = (rect.left + rect.width/2 - zcRect.left) / canvasZoom;
+                let unscaledY = (rect.top + rect.height/2 - zcRect.top) / canvasZoom;
+                let scrollTop = (unscaledY * canvasZoom) - containerRect.height / 2;
+                let scrollLeft = (unscaledX * canvasZoom) - containerRect.width / 2;
+                if (animate) container.animate({ scrollTop: scrollTop, scrollLeft: scrollLeft }, 300);
+                else { container.scrollTop(scrollTop); container.scrollLeft(scrollLeft); }
             }
         }
 
@@ -754,16 +1048,11 @@
             let events =[];
             let p = getPerson(personId);
             if (!p) return events;
-            
-            (p.events ||[]).forEach((e, i) => {
-                events.push({ ...e, sourceId: personId, originalIndex: i });
-            });
+            (p.events ||[]).forEach((e, i) => events.push({ ...e, sourceId: personId, originalIndex: i }));
             db.persons.forEach(other => {
                 if (other.id !== personId) {
                     (other.events ||[]).forEach((e, i) => {
-                        if (e.type === 'Marriage' && e.involvedPersonId === personId) {
-                            events.push({ ...e, sourceId: other.id, originalIndex: i });
-                        }
+                        if (e.type === 'Marriage' && e.involvedPersonId === personId) events.push({ ...e, sourceId: other.id, originalIndex: i });
                     });
                 }
             });
@@ -788,9 +1077,7 @@
         }
 
         function getSharedChildren(p1, p2) {
-            return db.persons.filter(c => 
-                (c.fatherId === p1 && c.motherId === p2) || (c.fatherId === p2 && c.motherId === p1)
-            );
+            return db.persons.filter(c => (c.fatherId === p1 && c.motherId === p2) || (c.fatherId === p2 && c.motherId === p1));
         }
 
         function getEarliestChildBirth(p1, p2) {
@@ -823,13 +1110,17 @@
 
         function updateValidationUI(p) {
             let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
+            let hasNoLastName = !p.lastName || p.lastName.trim() === '';
+
             $('#edit-father').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
             $('#edit-mother').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
+            $('#edit-lastName').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
             
             if (hasOneParent) {
                 if (!p.fatherId) $('#edit-father').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
                 if (!p.motherId) $('#edit-mother').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
             }
+            if (hasNoLastName) $('#edit-lastName').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
         }
 
         function createCard(id) {
@@ -844,11 +1135,28 @@
             let childIcon = `<i class="ph ph-baby text-green-500 text-lg"></i>`;
             
             let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
-            let warningHtml = hasOneParent ? `<i class="ph ph-warning text-amber-500 mr-1" title="Parent missing"></i>` : '';
+            let hasNoLastName = !p.lastName || p.lastName.trim() === '';
+            
+            let warnings =[];
+            if (hasOneParent) warnings.push(t('parentMissing'));
+            if (hasNoLastName) warnings.push(t('lastNameMissing'));
+            let warningHtml = warnings.length > 0 ? `<i class="ph ph-warning text-amber-500 mr-1" title="${warnings.join(' / ')}"></i>` : '';
 
             let roman = romanNumerals[id] ? `<span class="text-gray-400 ml-1">${romanNumerals[id]}</span>` : '';
             let titleSpanAttr = p.title ? `title="${p.title.replace(/"/g, '&quot;')}"` : '';
             let fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName||''} ${romanNumerals[id]||''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
+
+            let extraInfoHtml = '';
+            if (displayInfoMode === 'notes' && p.notes) {
+                extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
+            } else if (displayInfoMode === 'address' && p.address) {
+                extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+            }
+            
+            let fatherTitle = p.fatherId ? t('editFather') : t('addFather');
+            let motherTitle = p.motherId ? t('editMother') : t('addMother');
+            let spouseTitle = t('addSpouse');
+            let childTitle = t('addChild');
 
             return `
                 <div class="person-node w-64 bg-white border border-gray-300 rounded-lg shadow-md relative hover:shadow-lg transition-all cursor-pointer z-10 flex flex-col ${isSelected}" 
@@ -869,62 +1177,50 @@
                         <div class="mt-1.5 text-[11px] flex flex-col gap-0.5 min-h-[1.5rem] events-container">
                             ${buildEventsHtml(p.id)}
                         </div>
+                        ${extraInfoHtml}
                     </div>
                     
                     <div class="flex justify-between border-t border-gray-100 bg-gray-50 rounded-b-lg action-buttons mt-auto h-7">
-                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${p.fatherId ? 'Edit' : 'Add'} Father">
+                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
                             ${fatherIcon}
                         </div>
-                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${p.motherId ? 'Edit' : 'Add'} Mother">
+                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
                             ${motherIcon}
                         </div>
-                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="Add Spouse">
+                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
                             ${spouseIcon}
                         </div>
-                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="Add Child">
+                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
                             ${childIcon}
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
         }
 
         function renderFamily(maleId, expectedGen = 0) {
             if(renderedIds.has(maleId)) return '';
             renderedIds.add(maleId);
-
             let actualGen = personGen[maleId] || 0;
             let margin = Math.max(0, (actualGen - expectedGen) * 320); 
-
             let partners = getPartners(maleId);
             let $fam = $('<div class="flex flex-row gap-16 items-stretch family-group relative py-4"></div>');
-            
             if (margin > 0) $fam.css('margin-left', margin + 'px');
 
             let $parentsBox = $(`<div class="flex flex-col gap-6 justify-center items-center relative parents-box" data-id="${maleId}"></div>`);
             $parentsBox.append(createCard(maleId));
 
             let $childrenCol = $('<div class="flex flex-col gap-8 justify-center items-start children-box"></div>');
-
-            let maleSingleChildren = db.persons.filter(c => c.fatherId === maleId && !c.motherId);
-            maleSingleChildren.forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
+            db.persons.filter(c => c.fatherId === maleId && !c.motherId).forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
 
             partners.forEach(partnerId => {
-                if(!renderedIds.has(partnerId)) {
-                    $parentsBox.append(createCard(partnerId));
-                    renderedIds.add(partnerId);
-                }
-                
+                if(!renderedIds.has(partnerId)) { $parentsBox.append(createCard(partnerId)); renderedIds.add(partnerId); }
                 let children = getSharedChildren(maleId, partnerId);
                 children.sort((a, b) => {
-                    let bA = (a.events||[]).find(e=>e.type==='Birth');
-                    let bB = (b.events||[]).find(e=>e.type==='Birth');
+                    let bA = (a.events||[]).find(e=>e.type==='Birth'); let bB = (b.events||[]).find(e=>e.type==='Birth');
                     return (bA ? parseInt(bA.date) : 9999) - (bB ? parseInt(bB.date) : 9999);
                 });
                 children.forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
-
-                let partnerSingleChildren = db.persons.filter(c => c.motherId === partnerId && !c.fatherId);
-                partnerSingleChildren.forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
+                db.persons.filter(c => c.motherId === partnerId && !c.fatherId).forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
             });
 
             $fam.append($parentsBox);
@@ -935,24 +1231,18 @@
         function renderChild(childId, expectedGen = 0) {
             let child = getPerson(childId);
             if (!child) return '';
-            
-            if (child.gender === 'm') {
-                return renderFamily(childId, expectedGen);
-            } else {
+            if (child.gender === 'm') return renderFamily(childId, expectedGen);
+            else {
                 let actualGen = personGen[childId] || 0;
                 let margin = Math.max(0, (actualGen - expectedGen) * 320); 
-
                 let $singleFam = $('<div class="flex flex-row gap-16 items-stretch family-group relative py-4"></div>');
                 if (margin > 0) $singleFam.css('margin-left', margin + 'px');
-
                 let $parentsBox = $(`<div class="flex flex-col gap-6 justify-center items-center relative parents-box" data-id="${childId}"></div>`);
                 $parentsBox.append(createCard(childId));
                 renderedIds.add(childId);
-
                 let singleKids = db.persons.filter(p => p.motherId === childId && !p.fatherId);
                 let $childrenCol = $('<div class="flex flex-col gap-8 justify-center items-start children-box"></div>');
                 singleKids.forEach(k => { if(shouldRenderAsChild(k.id)) $childrenCol.append(renderChild(k.id, actualGen + 1)); });
-
                 $singleFam.append($parentsBox);
                 if($childrenCol.children().length > 0) $singleFam.append($childrenCol);
                 return $singleFam;
@@ -972,9 +1262,7 @@
             function assignRoot(pId, rId) {
                 if(personToRoot[pId]) return;
                 personToRoot[pId] = rId;
-                db.persons.forEach(c => {
-                    if(c.fatherId === pId || c.motherId === pId) assignRoot(c.id, rId);
-                });
+                db.persons.forEach(c => { if(c.fatherId === pId || c.motherId === pId) assignRoot(c.id, rId); });
             }
             rawRoots.forEach(r => assignRoot(r, r));
 
@@ -983,8 +1271,7 @@
             db.persons.forEach(p => {
                 let r1 = personToRoot[p.id];
                 if(!r1) return;
-                let partners = getPartners(p.id);
-                partners.forEach(partnerId => {
+                getPartners(p.id).forEach(partnerId => {
                     let r2 = personToRoot[partnerId];
                     if(r2 && r1 !== r2) { graph[r1].add(r2); graph[r2].add(r1); }
                 });
@@ -994,14 +1281,11 @@
             let visited = new Set();
             rawRoots.forEach(r => {
                 if(!visited.has(r)) {
-                    let q =[r];
-                    visited.add(r);
+                    let q = [r]; visited.add(r);
                     while(q.length > 0) {
                         let curr = q.shift();
                         ordered.push(curr);
-                        Array.from(graph[curr]).forEach(n => {
-                            if(!visited.has(n)) { visited.add(n); q.push(n); }
-                        });
+                        Array.from(graph[curr]).forEach(n => { if(!visited.has(n)) { visited.add(n); q.push(n); } });
                     }
                 }
             });
@@ -1013,12 +1297,17 @@
             $('#tree-layer').empty();
 
             if (db.persons.length === 0) {
-                $('#empty-state').removeClass('hidden');
+                $('#empty-state').removeClass('hidden'); 
                 $('#canvas-container').addClass('hidden');
+                $('#map-container').addClass('hidden');
                 return;
             } else {
-                $('#empty-state').addClass('hidden');
-                $('#canvas-container').removeClass('hidden');
+                $('#empty-state').addClass('hidden'); 
+                if (currentViewMode === 'tree') {
+                    $('#canvas-container').removeClass('hidden');
+                } else if (currentViewMode === 'map') {
+                    $('#map-container').removeClass('hidden');
+                }
             }
             
             let roots =[];
@@ -1034,23 +1323,28 @@
             });
 
             roots = orderRootsSmartly(roots);
+            roots.forEach(rootId => { if(!renderedIds.has(rootId)) $('#tree-layer').append(renderChild(rootId, 0)); });
 
-            roots.forEach(rootId => {
-                if(!renderedIds.has(rootId)) $('#tree-layer').append(renderChild(rootId, 0));
-            });
-
-            setTimeout(drawLines, 50);
+            if (currentViewMode === 'tree') {
+                drawLines();
+            }
         }
 
         function drawLines() {
+            let container = document.getElementById('tree-layer');
+            if(container) {
+                // Force browser to synchronously compute correct layout constraints
+                // fixes bugs where line coords generate incorrectly before layout tick settles
+                let _forceReflow = container.offsetHeight; 
+            }
+            
             let svg = document.getElementById('svg-layer');
-            let svgLinesHtml = '';
-            let svgOverlayHtml = '';
+            let svgLinesHtml = '', svgOverlayHtml = '';
             let zcRect = document.getElementById('zoom-container').getBoundingClientRect();
 
             function getCenter(el) {
                 let rect = el.getBoundingClientRect();
-                return { x: rect.left + rect.width/2 - zcRect.left, y: rect.top + rect.height/2 - zcRect.top };
+                return { x: (rect.left + rect.width/2 - zcRect.left) / canvasZoom, y: (rect.top + rect.height/2 - zcRect.top) / canvasZoom };
             }
 
             db.persons.forEach(p => {
@@ -1062,9 +1356,7 @@
                     partners.forEach(partnerId => {
                         let femaleEl = document.querySelector(`.person-node[data-id="${partnerId}"]`);
                         if(femaleEl) {
-                            let mC = getCenter(maleEl);
-                            let fC = getCenter(femaleEl);
-                            
+                            let mC = getCenter(maleEl); let fC = getCenter(femaleEl);
                             let everMarried = false;
                             let mEvents = getDisplayEvents(p.id);
                             if (mEvents.some(e => e.type === 'Marriage' && (e.involvedPersonId === partnerId || e.sourceId === partnerId))) everMarried = true;
@@ -1072,7 +1364,6 @@
                             let femaleEvents = getDisplayEvents(partnerId);
                             let femaleIsMarried = femaleEvents.some(e => e.type === 'Marriage');
                             let isAffair = !everMarried && femaleIsMarried;
-                            
                             let strokeAttr = isAffair ? `stroke-dasharray="4,4"` : ``;
                             
                             svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mC.y} L ${fC.x - 3} ${fC.y}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
@@ -1080,13 +1371,10 @@
                             
                             if (everMarried) {
                                 svgOverlayHtml += `<circle cx="${mC.x}" cy="${(mC.y + fC.y)/2}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>
-                                                   <circle cx="${mC.x + 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
+                                svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
                             } else if (!isAffair) {
                                 svgOverlayHtml += `<circle cx="${mC.x}" cy="${(mC.y + fC.y)/2}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${(mC.y + fC.y)/2 - 8}) scale(0.65)">
-                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/>
-                                </g>`;
+                                svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${(mC.y + fC.y)/2 - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
                             }
                         }
                     });
@@ -1095,7 +1383,6 @@
 
             db.persons.forEach(child => {
                 let startBox = null;
-                
                 if (child.fatherId) {
                     let fatherNode = document.querySelector(`.person-node[data-id="${child.fatherId}"]`);
                     if (fatherNode) startBox = fatherNode.closest('.parents-box');
@@ -1103,7 +1390,6 @@
                     let motherNode = document.querySelector(`.person-node[data-id="${child.motherId}"]`);
                     if (motherNode) startBox = motherNode.closest('.parents-box');
                 }
-
                 let endEl = null;
                 if (child.gender === 'm' || !hasMalePartner(child.id)) {
                     let cNode = document.querySelector(`.person-node[data-id="${child.id}"]`);
@@ -1113,18 +1399,12 @@
                 }
 
                 if (startBox && endEl) {
-                    let sRect = startBox.getBoundingClientRect();
-                    let eRect = endEl.getBoundingClientRect();
-                    
-                    let x1 = sRect.right - zcRect.left;
-                    let y1 = (sRect.top + sRect.height/2) - zcRect.top;
-                    let x2 = eRect.left - zcRect.left;
-                    let y2 = eRect.top + eRect.height/2 - zcRect.top;
-
+                    let sRect = startBox.getBoundingClientRect(); let eRect = endEl.getBoundingClientRect();
+                    let x1 = (sRect.right - zcRect.left) / canvasZoom; let y1 = (sRect.top + sRect.height/2 - zcRect.top) / canvasZoom;
+                    let x2 = (eRect.left - zcRect.left) / canvasZoom; let y2 = (eRect.top + eRect.height/2 - zcRect.top) / canvasZoom;
                     let isGenSkip = child.gender === 'f' && hasMalePartner(child.id);
                     let strokeAttr = isGenSkip ? 'stroke-dasharray="6,6" stroke="#9ca3af"' : 'stroke="#6b7280"';
                     let sw = isGenSkip ? 3 : 2;
-
                     svgLinesHtml += `<path class="tree-line" data-child="${child.id}" data-father="${child.fatherId||''}" data-mother="${child.motherId||''}" d="M ${x1} ${y1} C ${(x1+x2)/2} ${y1}, ${(x1+x2)/2} ${y2}, ${x2} ${y2}" fill="none" ${strokeAttr} stroke-width="${sw}" />`;
                 }
             });
@@ -1133,98 +1413,51 @@
             updateHighlight();
         }
 
-        let isDown = false;
-        let hasDragged = false;
-        let startX, startY, scrollLeft, scrollTop, clickStartX, clickStartY;
+        let isDown = false, hasDragged = false, startX, startY, scrollLeft, scrollTop, clickStartX, clickStartY;
         const slider = document.getElementById('canvas-container');
 
-        // Reset drag flag on any pointer down globally
         document.addEventListener('mousedown', () => { hasDragged = false; }, true);
         document.addEventListener('touchstart', () => { hasDragged = false; }, true);
 
         function startPan(e) {
-            // Ignore if clicking UI overlays
-            if ($(e.target).closest('#editor-panel').length || 
-                $(e.target).closest('#action-bar').length ||
-                $(e.target).closest('#empty-state').length ||
-                $(e.target).closest('#map-container').length ||
-                $(e.target).closest('.leaflet-popup').length) {
-                return;
-            }
-
-            // Exclude clicks natively hitting the scrollbars of the parent container
-            if (e.target === slider && e.offsetX !== undefined) {
-                if (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight) return;
-            }
+            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length) return;
+            if (e.target === slider && e.offsetX !== undefined) { if (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight) return; }
 
             let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
             let pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
-            
-            clickStartX = pageX;
-            clickStartY = pageY;
-            
-            isDown = true;
-            slider.classList.add('grabbing-cursor');
-            
-            startX = pageX - slider.offsetLeft;
-            startY = pageY - slider.offsetTop;
-            scrollLeft = slider.scrollLeft;
-            scrollTop = slider.scrollTop;
+            clickStartX = pageX; clickStartY = pageY;
+            isDown = true; slider.classList.add('grabbing-cursor');
+            startX = pageX - slider.offsetLeft; startY = pageY - slider.offsetTop;
+            scrollLeft = slider.scrollLeft; scrollTop = slider.scrollTop;
         }
 
-        function endPan() {
-            isDown = false;
-            slider.classList.remove('grabbing-cursor');
-        }
+        function endPan() { isDown = false; slider.classList.remove('grabbing-cursor'); }
 
         function movePan(e) {
             if (!isDown) return;
-            
             let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
             let pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
-            
-            let dx = Math.abs(pageX - clickStartX);
-            let dy = Math.abs(pageY - clickStartY);
-            
-            // Allow 5px threshold to not confuse slight jitters with drag
-            if (dx > 5 || dy > 5) {
-                hasDragged = true;
-            }
-
+            let dx = Math.abs(pageX - clickStartX), dy = Math.abs(pageY - clickStartY);
+            if (dx > 5 || dy > 5) hasDragged = true;
             if (e.type === 'touchmove' && e.cancelable) e.preventDefault(); 
-            
             slider.scrollLeft = scrollLeft - (pageX - clickStartX);
             slider.scrollTop = scrollTop - (pageY - clickStartY);
         }
 
-        // Bind purely global dragging behavior
         document.addEventListener('mousedown', startPan);
         document.addEventListener('mousemove', movePan, {passive: false});
         document.addEventListener('mouseup', endPan);
-
         document.addEventListener('touchstart', startPan, {passive: true});
         document.addEventListener('touchmove', movePan, {passive: false});
         document.addEventListener('touchend', endPan);
         document.addEventListener('touchcancel', endPan);
 
-        // Click handler to catch drags vs actual clicks
         document.addEventListener('click', (e) => {
-            if (hasDragged) {
-                e.stopPropagation();
-                e.preventDefault();
-                hasDragged = false;
-                return;
-            }
+            if (hasDragged) { e.stopPropagation(); e.preventDefault(); hasDragged = false; return; }
+            if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length) $('#burger-menu').addClass('hidden');
+            if (!$(e.target).closest('#lang-dropdown-desktop').length) $('.lang-menu').addClass('hidden');
 
-            // Close panel and burger menu on genuine background click outside UI components
-            if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length) {
-                $('#burger-menu').addClass('hidden');
-            }
-
-            if (!$(e.target).closest('.person-node').length && 
-                !$(e.target).closest('#editor-panel').length && 
-                !$(e.target).closest('#action-bar').length) {
-                
+            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length) {
                 if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
             }
         }, true);
@@ -1232,18 +1465,13 @@
         document.addEventListener('keydown', (e) => {
             const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
             const isInputActive =['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag);
-
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !isInputActive) {
-                if (e.shiftKey) redo();
-                else undo();
+                if (e.shiftKey) redo(); else undo();
                 e.preventDefault();
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y' && !isInputActive) {
-                redo();
-                e.preventDefault();
+                redo(); e.preventDefault();
             } else if (e.key === 'Delete') {
-                if (selectedPersonId && !isInputActive) {
-                    $('#delete-person-btn').click();
-                }
+                if (selectedPersonId && !isInputActive) $('#delete-person-btn').click();
             }
         });
 
@@ -1263,30 +1491,31 @@
             
             $('#edit-id').val(p.id);
             $('#edit-firstName').val(p.firstName);
-            $('#edit-lastName').val(p.lastName);
+            $('#edit-lastName').val(p.lastName || '');
             $('#edit-nickname').val(p.nickname || '');
             $('#edit-title').val(p.title || '');
             $('#edit-gender').val(p.gender);
+            $('#edit-address').val(p.address || '');
             $('#edit-person-notes').val(p.notes || '');
 
-            let pBirthObj = getBirthDateObj(p.id);
+            $('.gender-btn').removeClass('bg-blue-50 bg-pink-50 shadow-inner text-blue-600 text-pink-600').addClass('bg-white');
+            if (p.gender === 'm') $('#gender-m-btn').removeClass('bg-white').addClass('bg-blue-50 shadow-inner text-blue-600');
+            if (p.gender === 'f') $('#gender-f-btn').removeClass('bg-white').addClass('bg-pink-50 shadow-inner text-pink-600');
 
-            let popFatherOptions = '<option value="">-- No Father --</option>';
-            let popMotherOptions = '<option value="">-- No Mother --</option>';
-            let childAssignOptions = '<option value="">-- Select Person --</option>';
+            let pBirthObj = getBirthDateObj(p.id);
+            let popFatherOptions = `<option value="">${t('noFather')}</option>`;
+            let popMotherOptions = `<option value="">${t('noMother')}</option>`;
+            let childAssignOptions = `<option value="">${t('selectPerson')}</option>`;
             
             db.persons.forEach(op => {
                 if(op.id !== p.id) {
                     let opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
-                    let fullName = `${op.firstName} ${op.lastName}${opRoman}`;
+                    let fullName = `${op.firstName} ${op.lastName || ''}${opRoman}`;
                     let genderSym = op.gender === 'm' ? '♂' : '♀';
                     let fullNameWithGender = `${genderSym} ${fullName}`;
-                    
                     let opBirthObj = getBirthDateObj(op.id);
-                    
                     let isOlder = true;
                     if (pBirthObj && opBirthObj && opBirthObj >= pBirthObj) isOlder = false;
-                    
                     let isYounger = true;
                     if (pBirthObj && opBirthObj && opBirthObj <= pBirthObj) isYounger = false;
                     
@@ -1294,7 +1523,6 @@
                         if (op.gender === 'm') popFatherOptions += `<option value="${op.id}">${fullName}</option>`;
                         if (op.gender === 'f') popMotherOptions += `<option value="${op.id}">${fullName}</option>`;
                     }
-                    
                     if (op.fatherId !== p.id && op.motherId !== p.id && isYounger) {
                         childAssignOptions += `<option value="${op.id}">${fullNameWithGender}</option>`;
                     }
@@ -1321,17 +1549,17 @@
             children.forEach(c => {
                 let cRoman = romanNumerals[c.id] ? ` <span class="text-gray-400">${romanNumerals[c.id]}</span>` : '';
                 html += `
-                <div class="flex justify-between items-center bg-gray-50 border p-2 rounded text-xs">
+                <div class="flex justify-between items-center bg-gray-50 border px-1 rounded text-xs">
                     <div class="flex items-center gap-1.5 text-sm cursor-pointer person-link hover:text-blue-600 transition-colors" data-id="${c.id}">
                         ${c.gender === 'm' ? ICONS.male : ICONS.female}
-                        <span class="font-bold">${c.firstName} ${c.lastName}${cRoman}</span>
+                        <span class="font-bold">${c.firstName} ${c.lastName||''}${cRoman}</span>
                     </div>
                     <button class="remove-child text-red-500 hover:text-red-700 font-bold p-1 rounded hover:bg-red-100 transition-colors" data-child-id="${c.id}" title="Remove Child">
                         <i class="ph ph-x text-sm"></i>
                     </button>
                 </div>`;
             });
-            if(children.length === 0) html = `<div class="text-xs text-gray-400 italic">No children assigned.</div>`;
+            if(children.length === 0) html = `<div class="text-xs text-gray-400 italic">${t('noChildren')}</div>`;
             $('#edit-children-list').html(html);
         }
 
@@ -1340,17 +1568,18 @@
             let html = '';
             
             events.forEach((e) => {
-                let pOpts = '<option value="">-- No Person --</option>';
+                let pOpts = `<option value="">${t('noPerson')}</option>`;
                 db.persons.forEach(op => {
                     let opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
                     let genderSym = op.gender === 'm' ? '♂' : '♀';
-                    let fullNameWithGender = `${genderSym} ${op.firstName} ${op.lastName}${opRoman}`;
-                    pOpts += `<option value="${op.id}" ${e.involvedPersonId===op.id?'selected':''}>${fullNameWithGender}</option>`;
+                    let fullNameWithGender = `${genderSym} ${op.firstName} ${op.lastName||''}${opRoman}`;
+                    let partnerId = (e.sourceId !== personId) ? e.sourceId : e.involvedPersonId;
+                    pOpts += `<option value="${op.id}" ${partnerId === op.id ? 'selected' : ''}>${fullNameWithGender}</option>`;
                 });
                 
                 let isBorrowed = e.sourceId !== personId;
                 let bgClass = isBorrowed ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200';
-                let borrowedBadge = isBorrowed ? `<span class="absolute top-2 left-3 text-[9px] font-bold text-blue-500 uppercase tracking-wider">Linked</span>` : '';
+                let borrowedBadge = isBorrowed ? `<span class="absolute top-0 left-2 text-[9px] font-bold text-blue-500 uppercase tracking-wider">Linked</span>` : '';
                 
                 let pickerVal = '';
                 if (e.date && /^\d{2}\.\d{2}\.\d{4}$/.test(e.date)) {
@@ -1359,28 +1588,30 @@
                 }
 
                 html += `
-                <div class="border p-3 rounded flex flex-col gap-2 relative event-row shadow-sm ${bgClass}" data-source-id="${e.sourceId}" data-original-index="${e.originalIndex}">
+                <div class="border p-2 rounded flex flex-col gap-1.5 relative event-row shadow-sm ${bgClass}" data-source-id="${e.sourceId}" data-original-index="${e.originalIndex}">
                     ${borrowedBadge}
-                    <button class="remove-event text-red-400 absolute top-2 right-2 font-bold text-xs hover:bg-red-100 p-1 rounded"><i class="ph ph-x text-sm"></i></button>
-                    <div class="flex gap-2 pr-6 mt-3">
-                        <select class="ev-type w-1/3 border rounded p-1 text-xs outline-none" ${isBorrowed ? 'disabled' : ''}>
-                            <option value="Birth" ${e.type==='Birth'?'selected':''}>Birth</option>
-                            <option value="Death" ${e.type==='Death'?'selected':''}>Death</option>
-                            <option value="Marriage" ${e.type==='Marriage'?'selected':''}>Marriage</option>
-                            <option value="Other" ${e.type==='Other'?'selected':''}>Other</option>
+                    <button class="remove-event text-red-400 absolute top-1 right-1 font-bold text-xs hover:bg-red-100 p-1 rounded"><i class="ph ph-x text-sm"></i></button>
+                    
+                    <div class="flex gap-2 pr-6 ${isBorrowed ? 'mt-3' : ''}">
+                        <select class="ev-type w-1/4 border rounded p-1 text-xs outline-none h-7" ${isBorrowed ? 'disabled' : ''}>
+                            <option value="Birth" ${e.type==='Birth'?'selected':''}>${t('birth')}</option>
+                            <option value="Death" ${e.type==='Death'?'selected':''}>${t('death')}</option>
+                            <option value="Marriage" ${e.type==='Marriage'?'selected':''}>${t('marriage')}</option>
+                            <option value="Other" ${e.type==='Other'?'selected':''}>${t('other')}</option>
                         </select>
-                        <div class="relative w-2/3 flex items-center">
-                            <input type="text" class="ev-date w-full border rounded p-1 pr-6 text-xs outline-none focus:ring focus:ring-blue-200 invalid:border-red-500 invalid:ring-1 invalid:ring-red-500" placeholder="YYYY or DD.MM.YYYY" value="${e.date||''}" pattern="^(\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})?$" ${isBorrowed ? 'disabled' : ''} title="Format: YYYY or DD.MM.YYYY">
+                        <div class="relative w-1/4">
+                            <input type="text" class="ev-date w-full border rounded p-1 pr-6 text-xs outline-none h-7 focus:ring focus:ring-blue-200 invalid:border-red-500 invalid:ring-1 invalid:ring-red-500" placeholder="${t('formatDate')}" value="${e.date||''}" pattern="^(\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})?$" ${isBorrowed ? 'disabled' : ''} title="Format: YYYY or DD.MM.YYYY">
                             <input type="date" class="ev-date-picker absolute right-0 w-6 h-full opacity-0 cursor-pointer" value="${pickerVal}" ${isBorrowed ? 'disabled' : ''} onclick="this.showPicker && this.showPicker()">
-                            <i class="ph ph-calendar-blank absolute right-1 pointer-events-none text-gray-500 text-sm"></i>
+                            <i class="ph ph-calendar-blank absolute right-1 top-1.5 pointer-events-none text-gray-500 text-sm"></i>
                         </div>
+                        <input type="text" class="ev-place w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('place')}" value="${e.place||''}" ${isBorrowed ? 'disabled' : ''}>
+                        <input type="text" class="ev-coords w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('coords')}" value="${e.coordinates||''}" ${isBorrowed ? 'disabled' : ''}>
                     </div>
+                    
                     <div class="flex gap-2">
-                        <input type="text" class="ev-place w-1/2 border rounded p-1 text-xs outline-none" placeholder="Place" value="${e.place||''}" ${isBorrowed ? 'disabled' : ''}>
-                        <input type="text" class="ev-coords w-1/2 border rounded p-1 text-xs outline-none" placeholder="Coordinates (Lat,Lng)" value="${e.coordinates||''}" ${isBorrowed ? 'disabled' : ''}>
+                        ${(e.type==='Marriage') ? `<select class="ev-person w-1/3 border rounded p-1 text-xs outline-none h-7" ${isBorrowed ? 'disabled' : ''}>${pOpts}</select>` : ''}
+                        <input type="text" class="ev-note flex-grow border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200" placeholder="${t('eventNotes')}" value="${e.note||''}" ${isBorrowed ? 'disabled' : ''}>
                     </div>
-                    ${(e.type==='Marriage') ? `<select class="ev-person w-full border rounded p-1 text-xs outline-none" ${isBorrowed ? 'disabled' : ''}>${pOpts}</select>` : ''}
-                    <textarea class="ev-note w-full border rounded p-1.5 text-xs outline-none resize-none h-14" placeholder="Event notes..." ${isBorrowed ? 'disabled' : ''}>${e.note||''}</textarea>
                 </div>`;
             });
             $('#events-list').html(html);
@@ -1396,7 +1627,7 @@
         });
 
         $('#editor-panel').on('input change', 'input:not(.ev-date):not(.ev-place):not(.ev-coords):not(.ev-note):not(.ev-date-picker), select:not(.ev-type):not(.ev-person), textarea:not(.ev-note)', function(e) {
-            if(this.id==='edit-id' || this.id==='assign-child-select' || this.id==='quick-nav-select') return;
+            if(this.id==='edit-id' || this.id==='assign-child-select' || this.id==='quick-nav-select' || this.id==='quick-nav-marriage') return;
             let id = parseInt($('#edit-id').val(), 10);
             if(!id) return;
             let p = getPerson(id);
@@ -1407,6 +1638,7 @@
             p.nickname = $('#edit-nickname').val();
             p.title = $('#edit-title').val();
             p.gender = $('#edit-gender').val();
+            p.address = $('#edit-address').val();
             p.notes = $('#edit-person-notes').val();
             p.fatherId = $('#edit-father').val() ? parseInt($('#edit-father').val(), 10) : null;
             p.motherId = $('#edit-mother').val() ? parseInt($('#edit-mother').val(), 10) : null;
@@ -1415,7 +1647,7 @@
 
             if(this.tagName === 'SELECT' && e.type === 'change') saveData();
             else if (this.tagName !== 'SELECT') {
-                localStorage.setItem('genealogyData', JSON.stringify(db));
+                localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 updateRomanNumerals();
                 
                 let roman = romanNumerals[p.id] ? `<span class="text-gray-400 ml-1">${romanNumerals[p.id]}</span>` : '';
@@ -1427,15 +1659,26 @@
                 if (p.title) $node.find('span.text-\\[10px\\]').attr('title', p.title.replace(/"/g, '&quot;'));
                 else $node.find('span.text-\\[10px\\]').removeAttr('title');
                 
-                $node.find('.font-bold.text-gray-800')
-                    .attr('title', fullNameAttr)
-                    .html(`${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName||''}</span>${roman}`);
+                $node.find('.font-bold.text-gray-800').attr('title', fullNameAttr).html(`${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName||''}</span>${roman}`);
                 
                 let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
-                let warningHtml = hasOneParent ? `<i class="ph ph-warning text-amber-500 mr-1" title="Parent missing"></i>` : '';
+                let hasNoLastName = !p.lastName || p.lastName.trim() === '';
+                let warnings =[];
+                if (hasOneParent) warnings.push(t('parentMissing'));
+                if (hasNoLastName) warnings.push(t('lastNameMissing'));
+                let warningHtml = warnings.length > 0 ? `<i class="ph ph-warning text-amber-500 mr-1" title="${warnings.join(' / ')}"></i>` : '';
                 
                 $node.find('.flex-shrink-0.flex.items-center.ml-1').html(`${warningHtml}${p.gender === 'm' ? ICONS.male : ICONS.female}`);
 
+                let extraInfoHtml = '';
+                if (displayInfoMode === 'notes' && p.notes) {
+                    extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
+                } else if (displayInfoMode === 'address' && p.address) {
+                    extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+                }
+                
+                $node.find('.events-container').nextAll('div').remove(); 
+                if (extraInfoHtml) $node.find('.p-2.pb-1\\.5').append(extraInfoHtml);
                 if (e.type === 'change') saveData(); 
             }
         });
@@ -1444,15 +1687,12 @@
             let row = $(this).closest('.event-row');
             let sId = parseInt(row.attr('data-source-id'), 10);
             let idx = parseInt(row.attr('data-original-index'), 10);
-            
             let sourcePerson = getPerson(sId);
             if (!sourcePerson || !sourcePerson.events[idx]) return;
-            let ev = sourcePerson.events[idx];
             
+            let ev = sourcePerson.events[idx];
             let dateVal = row.find('.ev-date').val().trim();
-            if (dateVal !== "" && !/^(\d{4}|\d{2}\.\d{2}\.\d{4})$/.test(dateVal)) {
-                return; 
-            }
+            if (dateVal !== "" && !/^(\d{4}|\d{2}\.\d{2}\.\d{4})$/.test(dateVal)) return; 
             
             ev.type = row.find('.ev-type').val();
             ev.date = dateVal;
@@ -1463,18 +1703,12 @@
             ev.note = row.find('.ev-note').val();
 
             if (e.type === 'change' && ($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
-                saveData();
-                renderEventsEditor(selectedPersonId);
+                saveData(); renderEventsEditor(selectedPersonId);
             } else {
-                localStorage.setItem('genealogyData', JSON.stringify(db));
+                localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 $(`.person-node[data-id="${selectedPersonId}"]`).find('.events-container').html(buildEventsHtml(selectedPersonId));
-                if(ev.involvedPersonId) {
-                    $(`.person-node[data-id="${ev.involvedPersonId}"]`).find('.events-container').html(buildEventsHtml(ev.involvedPersonId));
-                }
-                
-                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
-                    saveData();
-                }
+                if(ev.involvedPersonId) $(`.person-node[data-id="${ev.involvedPersonId}"]`).find('.events-container').html(buildEventsHtml(ev.involvedPersonId));
+                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) saveData();
             }
         });
 
@@ -1506,25 +1740,19 @@
             saveData();
             openPanel(newId);
             
-            setTimeout(() => {
-                let sliderEl = document.getElementById('canvas-container');
-                sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
-                sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
-            }, 100);
+            let sliderEl = document.getElementById('canvas-container');
+            sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
+            sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
         });
 
         $('#create-child-btn').click(() => {
             let parentId = parseInt($('#edit-id').val(), 10);
             let parent = getPerson(parentId);
             let newId = getNextId();
-            
             let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            if (parent.gender === 'm') newChild.fatherId = parentId;
-            else newChild.motherId = parentId;
-            
+            if (parent.gender === 'm') newChild.fatherId = parentId; else newChild.motherId = parentId;
             db.persons.push(newChild);
-            saveData();
-            openPanel(parentId);
+            saveData(); openPanel(parentId);
         });
 
         $('#assign-child-btn').click(() => {
@@ -1533,12 +1761,8 @@
             let parentId = parseInt($('#edit-id').val(), 10);
             let parent = getPerson(parentId);
             let child = getPerson(childId);
-            
-            if (parent.gender === 'm') child.fatherId = parentId;
-            else child.motherId = parentId;
-            
-            saveData();
-            openPanel(parentId);
+            if (parent.gender === 'm') child.fatherId = parentId; else child.motherId = parentId;
+            saveData(); openPanel(parentId);
         });
 
         $(document).on('click', '.remove-child', function() {
@@ -1546,21 +1770,15 @@
             let parentId = parseInt($('#edit-id').val(), 10);
             let parent = getPerson(parentId);
             let child = getPerson(childId);
-            
-            if (parent.gender === 'm') child.fatherId = null;
-            else child.motherId = null;
-            
-            saveData();
-            openPanel(parentId);
+            if (parent.gender === 'm') child.fatherId = null; else child.motherId = null;
+            saveData(); openPanel(parentId);
         });
         
         $(document).on('click', '.person-link', function(e) {
             e.stopPropagation();
             let id = parseInt($(this).data('id'), 10);
             openPanel(id);
-            if (currentViewMode === 'tree') {
-                scrollToPerson(id);
-            }
+            if (currentViewMode === 'tree') scrollToPerson(id);
         });
 
         $('#close-panel').click(() => {
@@ -1579,14 +1797,12 @@
             e.stopPropagation();
             let childId = parseInt($(this).closest('.person-node').data('id'), 10);
             let child = getPerson(childId);
-            if(child.fatherId) {
-                openPanel(child.fatherId);
-            } else {
+            if(child.fatherId) openPanel(child.fatherId);
+            else {
                 let newId = getNextId();
                 db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "m", events:[] });
                 child.fatherId = newId;
-                saveData();
-                openPanel(newId);
+                saveData(); openPanel(newId);
             }
         });
 
@@ -1594,14 +1810,12 @@
             e.stopPropagation();
             let childId = parseInt($(this).closest('.person-node').data('id'), 10);
             let child = getPerson(childId);
-            if(child.motherId) {
-                openPanel(child.motherId);
-            } else {
+            if(child.motherId) openPanel(child.motherId);
+            else {
                 let newId = getNextId();
                 db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "f", events:[] });
                 child.motherId = newId;
-                saveData();
-                openPanel(newId);
+                saveData(); openPanel(newId);
             }
         });
         
@@ -1611,26 +1825,10 @@
             let person = getPerson(personId);
             let newId = getNextId();
             let newGender = person.gender === 'm' ? 'f' : 'm';
-            
-            db.persons.push({ 
-                id: newId, 
-                firstName: "New", 
-                lastName: "", 
-                gender: newGender, 
-                events:[] 
-            });
-            
+            db.persons.push({ id: newId, firstName: "New", lastName: "", gender: newGender, events:[] });
             if (!person.events) person.events =[];
-            person.events.push({
-                type: 'Marriage',
-                date: '',
-                place: '',
-                involvedPersonId: newId,
-                note: ''
-            });
-            
-            saveData();
-            openPanel(newId);
+            person.events.push({ type: 'Marriage', date: '', place: '', involvedPersonId: newId, note: '' });
+            saveData(); openPanel(newId);
         });
 
         $(document).on('click', '.action-child', function(e) {
@@ -1638,19 +1836,15 @@
             let parentId = parseInt($(this).closest('.person-node').data('id'), 10);
             let parent = getPerson(parentId);
             let newId = getNextId();
-            
             let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            if (parent.gender === 'm') newChild.fatherId = parentId;
-            else newChild.motherId = parentId;
-            
+            if (parent.gender === 'm') newChild.fatherId = parentId; else newChild.motherId = parentId;
             db.persons.push(newChild);
-            saveData();
-            openPanel(newId);
+            saveData(); openPanel(newId);
         });
 
         $('#delete-person-btn').click(() => {
             let id = parseInt($('#edit-id').val(), 10);
-            if(confirm("Are you sure you want to delete this person?")) {
+            if(confirm(t('confirmDelete'))) {
                 db.persons = db.persons.filter(p => p.id !== id);
                 db.persons.forEach(p => {
                     if(p.fatherId === id) p.fatherId = null;
@@ -1669,7 +1863,7 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = "genealogy.json";
+            a.download = `genealogy_${currentDbName}.json`;
             a.click();
             URL.revokeObjectURL(url);
         });
@@ -1684,83 +1878,90 @@
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = "genealogy.json.gz";
+                a.download = `genealogy_${currentDbName}.json.gz`;
                 a.click();
                 URL.revokeObjectURL(url);
-            } catch (err) {
-                console.error("Compression failed:", err);
-                alert("Your browser does not support the Compression Streams API yet.");
-            }
+            } catch (err) { alert("Your browser does not support the Compression Streams API yet."); }
         });
 
-        $('.import-file').change(async function(e) {
+        $('.import-file-replace').change(async function(e) {
             $('#burger-menu').addClass('hidden');
             const file = e.target.files[0];
             if (!file) return;
-            
             try {
                 const buffer = await file.slice(0, 2).arrayBuffer();
                 const view = new Uint8Array(buffer);
                 const isGzip = view.length === 2 && view[0] === 0x1F && view[1] === 0x8B;
-                
                 let stream = file.stream();
-                if (isGzip) {
-                    stream = stream.pipeThrough(new DecompressionStream('gzip'));
-                }
-                
-                const response = new Response(stream);
-                const jsonStr = await response.text();
+                if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
+                const jsonStr = await new Response(stream).text();
                 const importedDb = JSON.parse(jsonStr);
-                
                 if (importedDb && Array.isArray(importedDb.persons)) {
+                    $('#canvas-container').css('opacity', '0');
                     db = importedDb;
                     if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
-                    saveData();
-                } else {
-                    alert("Invalid data format. Expected an array of persons.");
-                }
-            } catch (err) {
-                console.error("Import failed:", err);
-                alert("Failed to import data. Please ensure it is a valid JSON or GZIP file.");
-            }
+                    saveData(true);
+                    setTimeout(() => {
+                        if (currentViewMode === 'tree') {
+                            setCanvasZoom(1);
+                            drawLines();
+                            centerOnLargestFamily();
+                        }
+                        $('#canvas-container').fadeTo(150, 1);
+                    }, 40);
+                } else alert("Invalid data format. Expected an array of persons.");
+            } catch (err) { alert("Failed to import data. Please ensure it is a valid JSON or GZIP file."); }
             $(this).val('');
         });
 
-        window.addEventListener('resize', drawLines);
+        $('.import-file-merge').change(async function(e) {
+            $('#burger-menu').addClass('hidden');
+            const file = e.target.files[0];
+            if (!file) return;
+            try {
+                const buffer = await file.slice(0, 2).arrayBuffer();
+                const view = new Uint8Array(buffer);
+                const isGzip = view.length === 2 && view[0] === 0x1F && view[1] === 0x8B;
+                let stream = file.stream();
+                if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
+                const jsonStr = await new Response(stream).text();
+                const importedDb = JSON.parse(jsonStr);
+                if (importedDb && Array.isArray(importedDb.persons)) {
+                    $('#canvas-container').css('opacity', '0');
+                    importedDb.persons.forEach(ip => {
+                        let idx = db.persons.findIndex(p => p.id === ip.id);
+                        if (idx >= 0) db.persons[idx] = ip; else db.persons.push(ip); 
+                    });
+                    if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
+                    saveData(true);
+                    setTimeout(() => {
+                        if (currentViewMode === 'tree') {
+                            setCanvasZoom(1);
+                            drawLines();
+                            centerOnLargestFamily();
+                        }
+                        $('#canvas-container').fadeTo(150, 1);
+                    }, 40);
+                } else alert("Invalid data format. Expected an array of persons.");
+            } catch (err) { alert("Failed to merge data. Please ensure it is a valid JSON or GZIP file."); }
+            $(this).val('');
+        });
 
-        updateRomanNumerals();
-        updateQuickNav();
-        renderTree();
+        window.addEventListener('resize', () => { if (currentViewMode === 'tree') drawLines(); });
 
-        // Center dynamically to the largest family head on load
+        // INITIALIZE ALL
+        loadDBList();
+        
+        $('#canvas-container').css('opacity', '0');
+        updateLanguageUI();
+        
         setTimeout(() => {
-            let possibleRoots =[];
-            db.persons.forEach(p => {
-                if (p.gender === 'm' && !p.fatherId && !p.motherId) possibleRoots.push(p.id);
-                if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasMalePartner(p.id)) possibleRoots.push(p.id);
-            });
-
-            let largestRoot = null;
-            let maxDescendants = -1;
-
-            possibleRoots.forEach(rootId => {
-                let count = countDescendants(rootId);
-                if (count > maxDescendants) {
-                    maxDescendants = count;
-                    largestRoot = rootId;
-                }
-            });
-
-            if (largestRoot !== null) {
-                scrollToPerson(largestRoot, false);
-            } else if (db.persons.length > 0) {
-                scrollToPerson(db.persons[0].id, false);
-            } else {
-                let sliderEl = document.getElementById('canvas-container');
-                sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
-                sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
+            if (currentViewMode === 'tree') {
+                drawLines();
+                centerOnLargestFamily();
             }
-        }, 100);
+            $('#canvas-container').fadeTo(150, 1);
+        }, 40);
 
     </script>
 </body>
