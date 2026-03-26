@@ -106,9 +106,9 @@
 
             <!-- Info Toggle Group (Desktop Only >= 1280px) -->
             <div class="hidden xl:flex rounded shadow-sm flex-shrink-0 ml-1">
-                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded-l transition-colors" data-mode="none" data-i18n-title="standard"><i class="ph ph-eye-closed"></i></button>
-                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
-                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r transition-colors" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l transition-colors" data-mode="events" data-i18n-title="events"><i class="ph ph-calendar-star"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r transition-colors" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
             </div>
 
             <!-- I/O Actions Group (Desktop Only >= 1280px) -->
@@ -168,9 +168,9 @@
 
             <!-- View Info (Visible < 1280px) -->
             <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-3 gap-1">
-                <button class="info-toggle-btn text-base font-bold border border-gray-300 rounded py-1 bg-blue-50 text-blue-600 shadow-inner transition-colors flex justify-center items-center" data-mode="none" data-i18n-title="standard"><i class="ph ph-eye-closed"></i></button>
-                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="events" data-i18n-title="events"><i class="ph ph-calendar-star"></i></button>
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
             </div>
 
             <!-- Zoom (Visible < 768px) -->
@@ -215,15 +215,15 @@
         <!-- Main Canvas (Scrollable Flex-Item) -->
         <div id="canvas-container" class="flex-grow overflow-auto relative grab-cursor pb-16 sm:pb-0">
             <div id="zoom-container" class="relative" style="width: 10000px; height: 10000px; transform-origin: top left;">
-                <svg id="svg-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 0;"></svg>
-                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-24" style="top: 4000px; left: 1000px; z-index: 10;">
-                </div>
+                <svg id="svg-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 5;"></svg>
+                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-8" style="top: 4000px; left: 1000px;"></div>
+                <svg id="svg-layer-rings" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 15;"></svg>
             </div>
         </div>
 
         <!-- Edit Panel -->
         <div id="editor-panel" class="absolute inset-0 sm:relative sm:w-[450px] md:w-[500px] w-full flex-shrink-0 bg-white sm:border-l border-gray-300 shadow-2xl hidden flex-col z-50 h-[100dvh] sm:h-auto transform transition-transform duration-300 ease-in-out">
-            <div class="p-3 border-b flex justify-between items-center z-10 flex-shrink-0 bg-gray-50">
+            <div class="p-1 border-b flex justify-between items-center z-10 flex-shrink-0 bg-gray-50">
                 <h2 class="text-base font-bold text-gray-700 ml-1" data-i18n="editPerson">Edit Person</h2>
                 <button id="close-panel" class="text-gray-400 hover:text-gray-700 p-1.5 rounded hover:bg-gray-200 transition-colors">
                     <i class="ph ph-x text-lg"></i>
@@ -245,9 +245,27 @@
                         </div>
                         <input type="hidden" id="edit-gender" value="m">
                     </div>
-                    <div class="col-span-2 sm:col-span-2">
+                    <div class="col-span-1 sm:col-span-1">
                         <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="nickname">Nickname</label>
                         <input type="text" id="edit-nickname" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200">
+                    </div>
+                    <div class="col-span-1 sm:col-span-1">
+                        <label class="block text-[11px] font-semibold text-gray-500 mb-1" data-i18n="category">Category</label>
+                        <select id="edit-category" class="w-full border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200 cursor-pointer">
+                            <option value="none" data-i18n="catNone">None</option>
+                            <option value="red" data-i18n="catRed" style="background-color: #ef444433;">Red</option>
+                            <option value="orange" data-i18n="catOrange" style="background-color: #f9731633;">Orange</option>
+                            <option value="yellow" data-i18n="catYellow" style="background-color: #eab30833;">Yellow</option>
+                            <option value="chartreuse" data-i18n="catChartreuse" style="background-color: #84cc1633;">Chartreuse</option>
+                            <option value="green" data-i18n="catGreen" style="background-color: #22c55e33;">Green</option>
+                            <option value="springgreen" data-i18n="catSpringGreen" style="background-color: #10b98133;">Spring Gr.</option>
+                            <option value="cyan" data-i18n="catCyan" style="background-color: #06b6d433;">Cyan</option>
+                            <option value="azure" data-i18n="catAzure" style="background-color: #0ea5e933;">Azure</option>
+                            <option value="blue" data-i18n="catBlue" style="background-color: #3b82f633;">Blue</option>
+                            <option value="violet" data-i18n="catViolet" style="background-color: #8b5cf633;">Violet</option>
+                            <option value="magenta" data-i18n="catMagenta" style="background-color: #d946ef33;">Magenta</option>
+                            <option value="rose" data-i18n="catRose" style="background-color: #f43f5e33;">Rose</option>
+                        </select>
                     </div>
                 </div>
 
@@ -317,13 +335,25 @@
 
     <script>
         // --- TRANSLATION / i18n & SVG FLAGS ---
-        const FLAG_EN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" class="w-4 h-3 rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
-        const FLAG_DE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" class="w-4 h-3 rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg>`;
+        const FLAG_EN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
+        const FLAG_DE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg>`;
         const FLAGS = { en: FLAG_EN, de: FLAG_DE };
 
-        // Inject flags to all corresponding spans immediately
-        $('.flag-icon-en').html(FLAG_EN);
-        $('.flag-icon-de').html(FLAG_DE);
+        const CATEGORY_COLORS = {
+            "none": "",
+            "red": "#ef4444",
+            "orange": "#f97316",
+            "yellow": "#eab308",
+            "chartreuse": "#84cc16",
+            "green": "#22c55e",
+            "springgreen": "#10b981",
+            "cyan": "#06b6d4",
+            "azure": "#0ea5e9",
+            "blue": "#3b82f6",
+            "violet": "#8b5cf6",
+            "magenta": "#d946ef",
+            "rose": "#f43f5e"
+        };
 
         const i18n = {
             en: {
@@ -331,7 +361,10 @@
                 exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(R)", importMerge: "Imp(M)",
                 importReplaceFull: "Import (Replace)", importMergeFull: "Import (Merge)",
                 createPerson: "Create Person", editPerson: "Edit Person", title: "Title", gender: "Gender *",
-                nickname: "Nickname", firstName: "First Name *", lastName: "Last Name",
+                nickname: "Nickname", firstName: "First Name *", lastName: "Last Name", category: "Category",
+                catNone: "None", catRed: "Red", catOrange: "Orange", catYellow: "Yellow", catChartreuse: "Chartreuse", 
+                catGreen: "Green", catSpringGreen: "Spring Gr.", catCyan: "Cyan", catAzure: "Azure", 
+                catBlue: "Blue", catViolet: "Violet", catMagenta: "Magenta", catRose: "Rose",
                 parents: "Parents", father: "Father", mother: "Mother",
                 noFather: "-- No Father --", noMother: "-- No Mother --",
                 children: "Children", selectPerson: "-- Select Person --", assign: "Assign", newBtn: "+ New",
@@ -353,7 +386,10 @@
                 exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(E)", importMerge: "Imp(Z)",
                 importReplaceFull: "Importieren (Ersetzen)", importMergeFull: "Importieren (Zusammenführen)",
                 createPerson: "Person erstellen", editPerson: "Person bearbeiten", title: "Titel", gender: "Geschlecht *",
-                nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname",
+                nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname", category: "Kategorie",
+                catNone: "Keine", catRed: "Rot", catOrange: "Orange", catYellow: "Gelb", catChartreuse: "Hellgrün", 
+                catGreen: "Grün", catSpringGreen: "Frühlingsgr.", catCyan: "Türkis", catAzure: "Azurblau", 
+                catBlue: "Blau", catViolet: "Violett", catMagenta: "Magenta", catRose: "Rosa",
                 parents: "Eltern", father: "Vater", mother: "Mutter",
                 noFather: "-- Kein Vater --", noMother: "-- Keine Mutter --",
                 children: "Kinder", selectPerson: "-- Person wählen --", assign: "Zuweisen", newBtn: "+ Neu",
@@ -421,21 +457,21 @@
 
         const initialData = {
             persons:[
-                { id: 1, firstName: "Georg", lastName: "Müller", gender: "m", notes: "", events:[{type: "Birth", date: "1850", place: "Berlin"}, {type: "Death", date: "1920", place: "Berlin"}] },
-                { id: 2, firstName: "Ursula", lastName: "Schmidt", gender: "f", notes: "", events:[{type: "Birth", date: "1855", place: "Munich"}, {type: "Marriage", date: "1880", place: "Berlin", involvedPersonId: 1}, {type: "Death", date: "1925", place: "Berlin"}] },
-                { id: 3, firstName: "Johann", lastName: "Müller", gender: "m", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1882", place: "Berlin"}] },
-                { id: 4, firstName: "Josef", lastName: "Müller", gender: "m", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1885", place: "Berlin"}, {type: "Marriage", date: "1910", place: "Hamburg", involvedPersonId: 14}] },
-                { id: 5, firstName: "Karl", lastName: "Weber", gender: "m", notes: "", events:[{type: "Birth", date: "1860", place: "Vienna"}, {type: "Death", date: "1910", place: "Vienna"}] },
-                { id: 6, firstName: "Gerda", lastName: "Fuchs", gender: "f", notes: "", events:[{type: "Birth", date: "1865", place: "Salzburg"}, {type: "Marriage", date: "1885", place: "Vienna", involvedPersonId: 5}, {type: "Death", date: "1930", place: "Vienna"}] },
-                { id: 7, firstName: "Heinrich", lastName: "Weber", gender: "m", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1886", place: "Vienna"}] },
-                { id: 8, firstName: "Karl", lastName: "Weber", gender: "m", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1890", place: "Vienna"}] },
-                { id: 9, firstName: "Elise", lastName: "Meier", gender: "f", notes: "", events:[{type: "Birth", date: "1895", place: "Linz"}, {type: "Marriage", date: "1915", place: "Vienna", involvedPersonId: 8}] },
-                { id: 10, firstName: "Ernst", lastName: "Weber", gender: "m", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1916", place: "Vienna"}] },
-                { id: 11, firstName: "Johann", lastName: "Weber", gender: "m", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1918", place: "Vienna"}] },
-                { id: 12, firstName: "Friedrich", lastName: "Hoffman", gender: "m", notes: "", events:[{type: "Birth", date: "1862", place: "Hamburg"}, {type: "Death", date: "1915", place: "Hamburg"}] },
-                { id: 13, firstName: "Waltraud", lastName: "Wagner", gender: "f", notes: "", events:[{type: "Birth", date: "1868", place: "Bremen"}, {type: "Marriage", date: "1890", place: "Hamburg", involvedPersonId: 12}, {type: "Death", date: "1940", place: "Hamburg"}] },
-                { id: 14, firstName: "Maria", lastName: "Hoffman", gender: "f", notes: "", fatherId: 12, motherId: 13, events:[{type: "Birth", date: "1892", place: "Hamburg"}] },
-                { id: 15, firstName: "Archie", lastName: "Müller", gender: "m", notes: "", fatherId: 4, motherId: 14, events:[{type: "Birth", date: "1912", place: "Hamburg"}] }
+                { id: 1, firstName: "Georg", lastName: "Müller", gender: "m", category: "blue", notes: "", events:[{type: "Birth", date: "1850", place: "Berlin"}, {type: "Death", date: "1920", place: "Berlin"}] },
+                { id: 2, firstName: "Ursula", lastName: "Schmidt", gender: "f", category: "rose", notes: "", events:[{type: "Birth", date: "1855", place: "Munich"}, {type: "Marriage", date: "1880", place: "Berlin", involvedPersonId: 1}, {type: "Death", date: "1925", place: "Berlin"}] },
+                { id: 3, firstName: "Johann", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1882", place: "Berlin"}] },
+                { id: 4, firstName: "Josef", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1885", place: "Berlin"}, {type: "Marriage", date: "1910", place: "Hamburg", involvedPersonId: 14}] },
+                { id: 5, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", events:[{type: "Birth", date: "1860", place: "Vienna"}, {type: "Death", date: "1910", place: "Vienna"}] },
+                { id: 6, firstName: "Gerda", lastName: "Fuchs", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1865", place: "Salzburg"}, {type: "Marriage", date: "1885", place: "Vienna", involvedPersonId: 5}, {type: "Death", date: "1930", place: "Vienna"}] },
+                { id: 7, firstName: "Heinrich", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1886", place: "Vienna"}] },
+                { id: 8, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1890", place: "Vienna"}] },
+                { id: 9, firstName: "Elise", lastName: "Meier", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1895", place: "Linz"}, {type: "Marriage", date: "1915", place: "Vienna", involvedPersonId: 8}] },
+                { id: 10, firstName: "Ernst", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1916", place: "Vienna"}] },
+                { id: 11, firstName: "Johann", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1918", place: "Vienna"}] },
+                { id: 12, firstName: "Friedrich", lastName: "Hoffman", gender: "m", category: "none", notes: "", events:[{type: "Birth", date: "1862", place: "Hamburg"}, {type: "Death", date: "1915", place: "Hamburg"}] },
+                { id: 13, firstName: "Waltraud", lastName: "Wagner", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1868", place: "Bremen"}, {type: "Marriage", date: "1890", place: "Hamburg", involvedPersonId: 12}, {type: "Death", date: "1940", place: "Hamburg"}] },
+                { id: 14, firstName: "Maria", lastName: "Hoffman", gender: "f", category: "none", notes: "", fatherId: 12, motherId: 13, events:[{type: "Birth", date: "1892", place: "Hamburg"}] },
+                { id: 15, firstName: "Archie", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 4, motherId: 14, events:[{type: "Birth", date: "1912", place: "Hamburg"}] }
             ]
         };
 
@@ -469,7 +505,7 @@
             let possibleRoots =[];
             db.persons.forEach(p => {
                 if (p.gender === 'm' && !p.fatherId && !p.motherId) possibleRoots.push(p.id);
-                if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasMalePartner(p.id)) possibleRoots.push(p.id);
+                if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasActiveMalePartner(p.id)) possibleRoots.push(p.id);
             });
 
             let largestRoot = null;
@@ -510,6 +546,7 @@
             saveHistory();
 
             selectedPersonId = null;
+            collapsedFamilies.clear(); // reset collapsed states
             $('#close-panel').click();
             
             saveData(true);
@@ -583,8 +620,18 @@
         let romanNumerals = {};
         let personGen = {};
         let currentViewMode = 'tree'; 
-        let displayInfoMode = 'none';
+        let displayInfoModes = { events: false, address: false, notes: false };
+        let collapsedFamilies = new Set();
+        let suppressedIds = new Set();
         let canvasZoom = 1;
+
+        let debounceSaveTimeout = null;
+        function debouncedSaveData() {
+            clearTimeout(debounceSaveTimeout);
+            debounceSaveTimeout = setTimeout(() => {
+                saveData();
+            }, 200);
+        }
 
         // --- MAP STATE & LOGIC ---
         let mapInstance = null;
@@ -803,9 +850,24 @@
         }, { passive: false });
         
         $('.info-toggle-btn').click(function() {
-            displayInfoMode = $(this).data('mode');
-            $('.info-toggle-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
-            $(`.info-toggle-btn[data-mode="${displayInfoMode}"]`).removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
+            let mode = $(this).data('mode');
+            displayInfoModes[mode] = !displayInfoModes[mode];
+            
+            $(`.info-toggle-btn[data-mode="${mode}"]`).each(function() {
+                if (displayInfoModes[mode]) {
+                    $(this).removeClass('bg-white text-gray-700 hover:bg-gray-50 hover:bg-gray-100').addClass('bg-blue-50 text-blue-600 shadow-inner');
+                } else {
+                    $(this).removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700 hover:bg-gray-50 hover:bg-gray-100');
+                }
+            });
+            saveData(true); 
+        });
+
+        $(document).on('click', '.collapse-toggle-btn', function(e) {
+            e.stopPropagation();
+            let id = parseInt($(this).data('id'), 10);
+            if (collapsedFamilies.has(id)) collapsedFamilies.delete(id);
+            else collapsedFamilies.add(id);
             saveData(true); 
         });
 
@@ -907,6 +969,15 @@
             return count;
         }
 
+        function parseDateForSort(d) {
+            if (!d) return 99999999;
+            let m2 = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+            if (m2) return parseInt(`${m2[3]}${m2[2]}${m2[1]}`);
+            let m1 = d.match(/\d{4}/);
+            if (m1) return parseInt(`${m1[0]}0000`);
+            return 99999999;
+        }
+
         function getBirthYear(id) {
             let p = getPerson(id);
             if (!p) return 9999;
@@ -1000,6 +1071,7 @@
         function getNextId() { return db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) + 1 : 1; }
 
         function saveData(skipHistory = false) {
+            clearTimeout(debounceSaveTimeout);
             localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
             updateRomanNumerals(); updateQuickNav();
             
@@ -1042,6 +1114,22 @@
             let hash = 0, str = lastName.toLowerCase().replace(/[^a-z]/g, '');
             for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
             return `hsl(${Math.abs(hash) % 360}, 65%, 65%)`;
+        }
+
+        function sortChildren(childrenArray) {
+            return childrenArray.sort((a, b) => {
+                let fA = a.fatherId || 0, fB = b.fatherId || 0;
+                if (fA !== fB) return fA - fB;
+                
+                let mA = a.motherId || 0, mB = b.motherId || 0;
+                if (mA !== mB) return mA - mB;
+                
+                let bA = getBirthYear(a.id);
+                let bB = getBirthYear(b.id);
+                if (bA !== bB) return bA - bB;
+                
+                return a.id - b.id;
+            });
         }
 
         function getDisplayEvents(personId) {
@@ -1089,9 +1177,13 @@
             return earliest;
         }
 
-        function hasMalePartner(femaleId) {
+        // Detects if the female has any male partner that is currently NOT suppressed (i.e. currently active in the graph tree).
+        function hasActiveMalePartner(femaleId) {
             let partners = getPartners(femaleId);
-            for(let pid of partners) if(getPerson(pid) && getPerson(pid).gender === 'm') return true;
+            for(let pid of partners) {
+                let p = getPerson(pid);
+                if(p && p.gender === 'm' && !suppressedIds.has(pid)) return true;
+            }
             return false;
         }
 
@@ -1101,9 +1193,26 @@
             let death = displayEvents.find(e => e.type === 'Death');
             let marriage = displayEvents.find(e => e.type === 'Marriage');
             
-            let bHtml = birth ? `<div class="flex items-center gap-1 justify-start overflow-hidden text-gray-600" title="${birth.note||''}"><i class="ph ph-star text-[12px] flex-shrink-0 text-gray-500"></i> <span class="truncate">${birth.date||''}</span></div>` : `<div></div>`;
-            let mHtml = marriage ? `<div class="flex items-center gap-1 justify-center overflow-hidden text-gray-600" title="${marriage.note||''}">${ICONS.marriage} <span class="truncate">${marriage.date||''}</span></div>` : `<div></div>`;
-            let dHtml = death ? `<div class="flex items-center gap-1 justify-end overflow-hidden text-gray-600" title="${death.note||''}"><i class="ph ph-cross text-[12px] flex-shrink-0 text-gray-500"></i> <span class="truncate">${death.date||''}</span></div>` : `<div></div>`;
+            let showPlace = displayInfoModes.events;
+
+            function evCol(ev, iconHtml, isCenter, isEnd) {
+                if (!ev) return `<div></div>`;
+                let jClass = isCenter ? 'justify-center' : (isEnd ? 'justify-end' : 'justify-start');
+                let alignClass = isCenter ? 'text-center' : (isEnd ? 'text-right' : 'text-left');
+                
+                let placeHtml = (showPlace && ev.place) ? `<div class="text-[9px] text-gray-400 truncate leading-none mt-0.5 px-0.5 ${alignClass}" title="${ev.place}">${ev.place}</div>` : '';
+
+                return `<div class="flex flex-col overflow-hidden text-gray-600" title="${ev.note||''}">
+                    <div class="flex items-center gap-1 ${jClass}">
+                        ${iconHtml} <span class="truncate">${ev.date||''}</span>
+                    </div>
+                    ${placeHtml}
+                </div>`;
+            }
+
+            let bHtml = evCol(birth, `<i class="ph ph-star text-[12px] flex-shrink-0 text-gray-500"></i>`, false, false);
+            let mHtml = evCol(marriage, ICONS.marriage, true, false);
+            let dHtml = evCol(death, `<i class="ph ph-cross text-[12px] flex-shrink-0 text-gray-500"></i>`, false, true);
             
             return `<div class="grid grid-cols-3 gap-1 w-full text-gray-600">${bHtml}${mHtml}${dHtml}</div>`;
         }
@@ -1126,7 +1235,9 @@
         function createCard(id) {
             let p = getPerson(id);
             if(!p) return '';
-            let color = getColor(p.lastName);
+            
+            let borderColor = getColor(p.lastName);
+            let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
             let isSelected = selectedPersonId === id ? 'ring-2 ring-blue-500 shadow-xl' : '';
             
             let fatherIcon = p.fatherId ? `<i class="ph ph-user-gear text-blue-500 text-lg"></i>` : `<i class="ph ph-user-plus text-blue-400 text-lg"></i>`;
@@ -1147,10 +1258,26 @@
             let fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName||''} ${romanNumerals[id]||''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
 
             let extraInfoHtml = '';
-            if (displayInfoMode === 'notes' && p.notes) {
-                extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
-            } else if (displayInfoMode === 'address' && p.address) {
-                extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+
+            if (displayInfoModes.events) {
+                let displayEvents = getDisplayEvents(p.id);
+                let minorEvents = displayEvents.filter(e => !['Birth', 'Death', 'Marriage'].includes(e.type));
+                if (minorEvents.length > 0) {
+                    let minorHtml = minorEvents.map(e => {
+                        let text =[e.date, e.place, e.note].filter(x => x).join(' - ');
+                        let iconHtml = ICONS[e.type.toLowerCase()] || ICONS.other;
+                        return `<div class="flex items-start gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
+                    }).join('');
+                    extraInfoHtml += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
+                }
+            }
+
+            if (displayInfoModes.address && p.address) {
+                extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+            }
+            
+            if (displayInfoModes.notes && p.notes) {
+                extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
             }
             
             let fatherTitle = p.fatherId ? t('editFather') : t('addFather');
@@ -1160,8 +1287,8 @@
 
             return `
                 <div class="person-node w-64 bg-white border border-gray-300 rounded-lg shadow-md relative hover:shadow-lg transition-all cursor-pointer z-10 flex flex-col ${isSelected}" 
-                     data-id="${id}" style="border-left: 6px solid ${color};">
-                    <div class="p-2 pb-1.5 flex-grow overflow-hidden">
+                     data-id="${id}" style="border-left: 6px solid ${borderColor}; background-color: ${bgColor};">
+                    <div class="p-1 pb-1.5 flex-grow overflow-hidden">
                         <div class="flex justify-between items-start gap-2 mb-1">
                             <div class="flex flex-col overflow-hidden w-full">
                                 <span class="text-[10px] text-gray-400 font-bold uppercase truncate leading-none mb-1" ${titleSpanAttr}>${p.title || ''}</span>
@@ -1180,21 +1307,49 @@
                         ${extraInfoHtml}
                     </div>
                     
-                    <div class="flex justify-between border-t border-gray-100 bg-gray-50 rounded-b-lg action-buttons mt-auto h-7">
-                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
+                    <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
+                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
                             ${fatherIcon}
                         </div>
-                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
+                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
                             ${motherIcon}
                         </div>
-                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
+                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
                             ${spouseIcon}
                         </div>
-                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-gray-200 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
+                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
                             ${childIcon}
                         </div>
                     </div>
                 </div>`;
+        }
+
+        function calculateSuppressed() {
+            suppressedIds.clear();
+            let q = Array.from(collapsedFamilies);
+            while (q.length > 0) {
+                let curr = q.shift();
+                let kidsToSuppress =[];
+                let p = getPerson(curr);
+                if (!p) continue;
+
+                if (p.gender === 'm') {
+                    kidsToSuppress.push(...db.persons.filter(c => c.fatherId === curr && !c.motherId).map(c=>c.id));
+                    getPartners(curr).forEach(partnerId => {
+                        kidsToSuppress.push(...getSharedChildren(curr, partnerId).map(c=>c.id));
+                        kidsToSuppress.push(...db.persons.filter(c => c.motherId === partnerId && !c.fatherId).map(c=>c.id));
+                    });
+                } else {
+                    kidsToSuppress.push(...db.persons.filter(c => c.motherId === curr && !c.fatherId).map(c=>c.id));
+                }
+
+                kidsToSuppress.forEach(kId => {
+                    if (!suppressedIds.has(kId)) {
+                        suppressedIds.add(kId);
+                        q.push(kId);
+                    }
+                });
+            }
         }
 
         function renderFamily(maleId, expectedGen = 0) {
@@ -1203,48 +1358,78 @@
             let actualGen = personGen[maleId] || 0;
             let margin = Math.max(0, (actualGen - expectedGen) * 320); 
             let partners = getPartners(maleId);
-            let $fam = $('<div class="flex flex-row gap-16 items-stretch family-group relative py-4"></div>');
+            let $fam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
             if (margin > 0) $fam.css('margin-left', margin + 'px');
 
-            let $parentsBox = $(`<div class="flex flex-col gap-6 justify-center items-center relative parents-box" data-id="${maleId}"></div>`);
+            let $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${maleId}"></div>`);
             $parentsBox.append(createCard(maleId));
 
-            let $childrenCol = $('<div class="flex flex-col gap-8 justify-center items-start children-box"></div>');
-            db.persons.filter(c => c.fatherId === maleId && !c.motherId).forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
-
             partners.forEach(partnerId => {
-                if(!renderedIds.has(partnerId)) { $parentsBox.append(createCard(partnerId)); renderedIds.add(partnerId); }
-                let children = getSharedChildren(maleId, partnerId);
-                children.sort((a, b) => {
-                    let bA = (a.events||[]).find(e=>e.type==='Birth'); let bB = (b.events||[]).find(e=>e.type==='Birth');
-                    return (bA ? parseInt(bA.date) : 9999) - (bB ? parseInt(bB.date) : 9999);
-                });
-                children.forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
-                db.persons.filter(c => c.motherId === partnerId && !c.fatherId).forEach(c => { if(shouldRenderAsChild(c.id)) $childrenCol.append(renderChild(c.id, actualGen + 1)); });
+                if(!renderedIds.has(partnerId)) { 
+                    $parentsBox.append(createCard(partnerId)); 
+                    renderedIds.add(partnerId); 
+                }
             });
 
+            let childrenToRender =[];
+            let maleKids = sortChildren(db.persons.filter(c => c.fatherId === maleId && !c.motherId));
+            childrenToRender.push(...maleKids.filter(c => shouldRenderAsChild(c.id)));
+            
+            partners.forEach(partnerId => {
+                let shared = sortChildren(getSharedChildren(maleId, partnerId));
+                childrenToRender.push(...shared.filter(c => shouldRenderAsChild(c.id)));
+                
+                let partnerKids = sortChildren(db.persons.filter(c => c.motherId === partnerId && !c.fatherId));
+                childrenToRender.push(...partnerKids.filter(c => shouldRenderAsChild(c.id)));
+            });
+
+            if (childrenToRender.length > 0) {
+                let isCollapsed = collapsedFamilies.has(maleId);
+                $parentsBox.append(`<button class="collapse-toggle-btn absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full w-5 h-5 flex items-center justify-center text-gray-600 z-30 hover:bg-gray-100 shadow cursor-pointer transition-colors" data-id="${maleId}">${isCollapsed ? '<i class="ph ph-plus text-xs"></i>' : '<i class="ph ph-minus text-xs"></i>'}</button>`);
+                
+                if (!isCollapsed) {
+                    let $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
+                    childrenToRender.forEach(c => { $childrenCol.append(renderChild(c.id, actualGen + 1)); });
+                    $fam.append($parentsBox);
+                    $fam.append($childrenCol);
+                    return $fam;
+                }
+            }
+
             $fam.append($parentsBox);
-            if($childrenCol.children().length > 0) $fam.append($childrenCol);
             return $fam;
         }
 
         function renderChild(childId, expectedGen = 0) {
+            if (renderedIds.has(childId)) return '';
             let child = getPerson(childId);
             if (!child) return '';
             if (child.gender === 'm') return renderFamily(childId, expectedGen);
             else {
+                renderedIds.add(childId);
                 let actualGen = personGen[childId] || 0;
                 let margin = Math.max(0, (actualGen - expectedGen) * 320); 
-                let $singleFam = $('<div class="flex flex-row gap-16 items-stretch family-group relative py-4"></div>');
+                let $singleFam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
                 if (margin > 0) $singleFam.css('margin-left', margin + 'px');
-                let $parentsBox = $(`<div class="flex flex-col gap-6 justify-center items-center relative parents-box" data-id="${childId}"></div>`);
+                let $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${childId}"></div>`);
                 $parentsBox.append(createCard(childId));
-                renderedIds.add(childId);
-                let singleKids = db.persons.filter(p => p.motherId === childId && !p.fatherId);
-                let $childrenCol = $('<div class="flex flex-col gap-8 justify-center items-start children-box"></div>');
-                singleKids.forEach(k => { if(shouldRenderAsChild(k.id)) $childrenCol.append(renderChild(k.id, actualGen + 1)); });
+                
+                let singleKids = sortChildren(db.persons.filter(p => p.motherId === childId && !p.fatherId));
+                let childrenToRender = singleKids.filter(k => shouldRenderAsChild(k.id));
+
+                if (childrenToRender.length > 0) {
+                    let isCollapsed = collapsedFamilies.has(childId);
+                    $parentsBox.append(`<button class="collapse-toggle-btn absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full w-5 h-5 flex items-center justify-center text-gray-600 z-30 hover:bg-gray-100 shadow cursor-pointer transition-colors" data-id="${childId}">${isCollapsed ? '<i class="ph ph-plus text-xs"></i>' : '<i class="ph ph-minus text-xs"></i>'}</button>`);
+                    
+                    if (!isCollapsed) {
+                        let $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
+                        childrenToRender.forEach(k => { $childrenCol.append(renderChild(k.id, actualGen + 1)); });
+                        $singleFam.append($parentsBox);
+                        if($childrenCol.children().length > 0) $singleFam.append($childrenCol);
+                        return $singleFam;
+                    }
+                }
                 $singleFam.append($parentsBox);
-                if($childrenCol.children().length > 0) $singleFam.append($childrenCol);
                 return $singleFam;
             }
         }
@@ -1253,7 +1438,7 @@
             let p = getPerson(id);
             if (!p) return false;
             if (p.gender === 'm') return true;
-            if (hasMalePartner(id)) return false; 
+            if (hasActiveMalePartner(id)) return false; 
             return true;
         }
 
@@ -1310,20 +1495,28 @@
                 }
             }
             
+            calculateSuppressed();
+
             let roots =[];
             db.persons.forEach(p => {
-                if (p.gender === 'm' && !p.fatherId && !p.motherId) roots.push(p.id);
-                if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasMalePartner(p.id)) roots.push(p.id);
-            });
-            db.persons.forEach(p => {
-                if (!renderedIds.has(p.id) && !roots.includes(p.id)) {
+                let hasParent = (p.fatherId && getPerson(p.fatherId)) || (p.motherId && getPerson(p.motherId));
+                if (!hasParent && !suppressedIds.has(p.id)) {
                     if (p.gender === 'm') roots.push(p.id);
-                    else if (p.gender === 'f' && !hasMalePartner(p.id)) roots.push(p.id);
+                    else if (p.gender === 'f' && !hasActiveMalePartner(p.id)) roots.push(p.id);
                 }
             });
 
             roots = orderRootsSmartly(roots);
             roots.forEach(rootId => { if(!renderedIds.has(rootId)) $('#tree-layer').append(renderChild(rootId, 0)); });
+
+            // Catch-all loop to guarantee all isolated branches or unparented females with suppressed husbands are correctly rendered
+            db.persons.forEach(p => {
+                if (!renderedIds.has(p.id) && !suppressedIds.has(p.id)) {
+                    if (p.gender === 'm' || !hasActiveMalePartner(p.id)) {
+                        $('#tree-layer').append(renderChild(p.id, 0));
+                    }
+                }
+            });
 
             if (currentViewMode === 'tree') {
                 drawLines();
@@ -1339,6 +1532,7 @@
             }
             
             let svg = document.getElementById('svg-layer');
+            let svgRings = document.getElementById('svg-layer-rings');
             let svgLinesHtml = '', svgOverlayHtml = '';
             let zcRect = document.getElementById('zoom-container').getBoundingClientRect();
 
@@ -1357,6 +1551,12 @@
                         let femaleEl = document.querySelector(`.person-node[data-id="${partnerId}"]`);
                         if(femaleEl) {
                             let mC = getCenter(maleEl); let fC = getCenter(femaleEl);
+                            let mRect = maleEl.getBoundingClientRect();
+                            let fRect = femaleEl.getBoundingClientRect();
+                            
+                            let mBottom = (mRect.bottom - zcRect.top) / canvasZoom;
+                            let fTop = (fRect.top - zcRect.top) / canvasZoom;
+
                             let everMarried = false;
                             let mEvents = getDisplayEvents(p.id);
                             if (mEvents.some(e => e.type === 'Marriage' && (e.involvedPersonId === partnerId || e.sourceId === partnerId))) everMarried = true;
@@ -1366,15 +1566,18 @@
                             let isAffair = !everMarried && femaleIsMarried;
                             let strokeAttr = isAffair ? `stroke-dasharray="4,4"` : ``;
                             
-                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mC.y} L ${fC.x - 3} ${fC.y}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
-                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x + 3} ${mC.y} L ${fC.x + 3} ${fC.y}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
+                            // Draw continuous vertical link lines overriding the minimal gap
+                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mBottom} L ${fC.x - 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
+                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x + 3} ${mBottom} L ${fC.x + 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
+                            
+                            let ringY = (mBottom + fTop) / 2;
                             
                             if (everMarried) {
-                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${(mC.y + fC.y)/2}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${(mC.y + fC.y)/2}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
+                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                                svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
                             } else if (!isAffair) {
-                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${(mC.y + fC.y)/2}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${(mC.y + fC.y)/2 - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
+                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                                svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${ringY - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
                             }
                         }
                     });
@@ -1383,15 +1586,25 @@
 
             db.persons.forEach(child => {
                 let startBox = null;
+                let startBoxId = null;
                 if (child.fatherId) {
                     let fatherNode = document.querySelector(`.person-node[data-id="${child.fatherId}"]`);
-                    if (fatherNode) startBox = fatherNode.closest('.parents-box');
+                    if (fatherNode) {
+                        startBox = fatherNode.closest('.parents-box');
+                        if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
+                    }
                 } else if (child.motherId) {
                     let motherNode = document.querySelector(`.person-node[data-id="${child.motherId}"]`);
-                    if (motherNode) startBox = motherNode.closest('.parents-box');
+                    if (motherNode) {
+                        startBox = motherNode.closest('.parents-box');
+                        if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
+                    }
                 }
+
+                if (startBoxId && collapsedFamilies.has(startBoxId)) return;
+
                 let endEl = null;
-                if (child.gender === 'm' || !hasMalePartner(child.id)) {
+                if (child.gender === 'm' || !hasActiveMalePartner(child.id)) {
                     let cNode = document.querySelector(`.person-node[data-id="${child.id}"]`);
                     if (cNode) endEl = cNode.closest('.parents-box');
                 } else {
@@ -1402,14 +1615,20 @@
                     let sRect = startBox.getBoundingClientRect(); let eRect = endEl.getBoundingClientRect();
                     let x1 = (sRect.right - zcRect.left) / canvasZoom; let y1 = (sRect.top + sRect.height/2 - zcRect.top) / canvasZoom;
                     let x2 = (eRect.left - zcRect.left) / canvasZoom; let y2 = (eRect.top + eRect.height/2 - zcRect.top) / canvasZoom;
-                    let isGenSkip = child.gender === 'f' && hasMalePartner(child.id);
+                    let isGenSkip = child.gender === 'f' && hasActiveMalePartner(child.id);
                     let strokeAttr = isGenSkip ? 'stroke-dasharray="6,6" stroke="#9ca3af"' : 'stroke="#6b7280"';
                     let sw = isGenSkip ? 3 : 2;
-                    svgLinesHtml += `<path class="tree-line" data-child="${child.id}" data-father="${child.fatherId||''}" data-mother="${child.motherId||''}" d="M ${x1} ${y1} C ${(x1+x2)/2} ${y1}, ${(x1+x2)/2} ${y2}, ${x2} ${y2}" fill="none" ${strokeAttr} stroke-width="${sw}" />`;
+                    
+                    let dist = Math.max(30, (x2 - x1) / 2);
+                    let ctrlX1 = x1 + dist;
+                    let ctrlX2 = x2 - dist;
+
+                    svgLinesHtml += `<path class="tree-line" data-child="${child.id}" data-father="${child.fatherId||''}" data-mother="${child.motherId||''}" d="M ${x1} ${y1} C ${ctrlX1} ${y1}, ${ctrlX2} ${y2}, ${x2} ${y2}" fill="none" ${strokeAttr} stroke-width="${sw}" />`;
                 }
             });
 
-            svg.innerHTML = svgLinesHtml + svgOverlayHtml;
+            svg.innerHTML = svgLinesHtml;
+            svgRings.innerHTML = svgOverlayHtml;
             updateHighlight();
         }
 
@@ -1420,7 +1639,7 @@
         document.addEventListener('touchstart', () => { hasDragged = false; }, true);
 
         function startPan(e) {
-            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length) return;
+            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length || $(e.target).closest('.collapse-toggle-btn').length) return;
             if (e.target === slider && e.offsetX !== undefined) { if (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight) return; }
 
             let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
@@ -1457,7 +1676,7 @@
             if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length) $('#burger-menu').addClass('hidden');
             if (!$(e.target).closest('#lang-dropdown-desktop').length) $('.lang-menu').addClass('hidden');
 
-            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length) {
+            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length && !$(e.target).closest('.collapse-toggle-btn').length) {
                 if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
             }
         }, true);
@@ -1493,6 +1712,9 @@
             $('#edit-firstName').val(p.firstName);
             $('#edit-lastName').val(p.lastName || '');
             $('#edit-nickname').val(p.nickname || '');
+            let activeCategory = p.category || 'none';
+            $('#edit-category').val(activeCategory);
+            $('#edit-category').css('background-color', activeCategory !== 'none' ? CATEGORY_COLORS[activeCategory] + '33' : '#ffffff');
             $('#edit-title').val(p.title || '');
             $('#edit-gender').val(p.gender);
             $('#edit-address').val(p.address || '');
@@ -1544,7 +1766,7 @@
         }
 
         function renderChildrenEditor(parentId) {
-            let children = db.persons.filter(c => c.fatherId === parentId || c.motherId === parentId);
+            let children = sortChildren(db.persons.filter(c => c.fatherId === parentId || c.motherId === parentId));
             let html = '';
             children.forEach(c => {
                 let cRoman = romanNumerals[c.id] ? ` <span class="text-gray-400">${romanNumerals[c.id]}</span>` : '';
@@ -1565,8 +1787,21 @@
 
         function renderEventsEditor(personId) {
             let events = getDisplayEvents(personId);
-            let html = '';
             
+            const typeWeight = { 'Birth': 1, 'Marriage': 2, 'Death': 3 };
+            events.sort((a, b) => {
+                let wA = typeWeight[a.type] || 4;
+                let wB = typeWeight[b.type] || 4;
+                if (wA !== wB) return wA - wB;
+                
+                let dateA = parseDateForSort(a.date);
+                let dateB = parseDateForSort(b.date);
+                if (dateA !== dateB) return dateA - dateB;
+                
+                return a.originalIndex - b.originalIndex;
+            });
+            
+            let html = '';
             events.forEach((e) => {
                 let pOpts = `<option value="">${t('noPerson')}</option>`;
                 db.persons.forEach(op => {
@@ -1636,6 +1871,7 @@
             p.firstName = $('#edit-firstName').val();
             p.lastName = $('#edit-lastName').val();
             p.nickname = $('#edit-nickname').val();
+            p.category = $('#edit-category').val();
             p.title = $('#edit-title').val();
             p.gender = $('#edit-gender').val();
             p.address = $('#edit-address').val();
@@ -1645,7 +1881,13 @@
 
             updateValidationUI(p);
 
-            if(this.tagName === 'SELECT' && e.type === 'change') saveData();
+            if (this.id === 'edit-category') {
+                $(this).css('background-color', p.category !== 'none' ? CATEGORY_COLORS[p.category] + '33' : '#ffffff');
+            }
+
+            if(this.tagName === 'SELECT' && e.type === 'change') {
+                debouncedSaveData();
+            }
             else if (this.tagName !== 'SELECT') {
                 localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 updateRomanNumerals();
@@ -1671,15 +1913,37 @@
                 $node.find('.flex-shrink-0.flex.items-center.ml-1').html(`${warningHtml}${p.gender === 'm' ? ICONS.male : ICONS.female}`);
 
                 let extraInfoHtml = '';
-                if (displayInfoMode === 'notes' && p.notes) {
-                    extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
-                } else if (displayInfoMode === 'address' && p.address) {
-                    extraInfoHtml = `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+
+                if (displayInfoModes.events) {
+                    let displayEvents = getDisplayEvents(p.id);
+                    let minorEvents = displayEvents.filter(ev => !['Birth', 'Death', 'Marriage'].includes(ev.type));
+                    if (minorEvents.length > 0) {
+                        let minorHtml = minorEvents.map(ev => {
+                            let text = [ev.date, ev.place, ev.note].filter(x => x).join(' - ');
+                            let iconHtml = ICONS[ev.type.toLowerCase()] || ICONS.other;
+                            return `<div class="flex items-start gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
+                        }).join('');
+                        extraInfoHtml += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
+                    }
+                }
+
+                if (displayInfoModes.address && p.address) {
+                    extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+                }
+
+                if (displayInfoModes.notes && p.notes) {
+                    extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
                 }
                 
                 $node.find('.events-container').nextAll('div').remove(); 
                 if (extraInfoHtml) $node.find('.p-2.pb-1\\.5').append(extraInfoHtml);
-                if (e.type === 'change') saveData(); 
+                
+                let borderColor = getColor(p.lastName);
+                let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
+                $node.css('border-left', `6px solid ${borderColor}`);
+                $node.css('background-color', bgColor);
+
+                if (e.type === 'change') debouncedSaveData(); 
             }
         });
 
@@ -1703,12 +1967,19 @@
             ev.note = row.find('.ev-note').val();
 
             if (e.type === 'change' && ($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
-                saveData(); renderEventsEditor(selectedPersonId);
+                clearTimeout(debounceSaveTimeout);
+                debounceSaveTimeout = setTimeout(() => {
+                    saveData();
+                    renderEventsEditor(selectedPersonId);
+                }, 200);
             } else {
                 localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 $(`.person-node[data-id="${selectedPersonId}"]`).find('.events-container').html(buildEventsHtml(selectedPersonId));
                 if(ev.involvedPersonId) $(`.person-node[data-id="${ev.involvedPersonId}"]`).find('.events-container').html(buildEventsHtml(ev.involvedPersonId));
-                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) saveData();
+                
+                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
+                    debouncedSaveData();
+                }
             }
         });
 
@@ -1856,9 +2127,31 @@
             }
         });
 
+        function getExportData() {
+            let exportDb = JSON.parse(JSON.stringify(db));
+            let idMap = {};
+            let newId = 1;
+            
+            // Generate sequence starting from 1 with no holes
+            exportDb.persons.forEach(p => { idMap[p.id] = newId++; });
+            
+            // Remap records
+            exportDb.persons.forEach(p => {
+                p.id = idMap[p.id];
+                if (p.fatherId) p.fatherId = idMap[p.fatherId] || null;
+                if (p.motherId) p.motherId = idMap[p.motherId] || null;
+                if (p.events) {
+                    p.events.forEach(e => {
+                        if (e.involvedPersonId) e.involvedPersonId = idMap[e.involvedPersonId] || null;
+                    });
+                }
+            });
+            return exportDb;
+        }
+
         $('.export-json-btn').click(() => {
             $('#burger-menu').addClass('hidden');
-            const dataStr = JSON.stringify(db, null, 2);
+            const dataStr = JSON.stringify(getExportData(), null, 2);
             const blob = new Blob([dataStr], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -1871,7 +2164,7 @@
         $('.export-zip-btn').click(async () => {
             $('#burger-menu').addClass('hidden');
             try {
-                const dataStr = JSON.stringify(db);
+                const dataStr = JSON.stringify(getExportData());
                 const stream = new Blob([dataStr], {type: 'application/json'}).stream();
                 const compressedReadableStream = stream.pipeThrough(new CompressionStream('gzip'));
                 const blob = await new Response(compressedReadableStream).blob();
@@ -1900,6 +2193,7 @@
                     $('#canvas-container').css('opacity', '0');
                     db = importedDb;
                     if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
+                    collapsedFamilies.clear();
                     saveData(true);
                     setTimeout(() => {
                         if (currentViewMode === 'tree') {
@@ -1926,12 +2220,32 @@
                 if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
                 const jsonStr = await new Response(stream).text();
                 const importedDb = JSON.parse(jsonStr);
+
                 if (importedDb && Array.isArray(importedDb.persons)) {
                     $('#canvas-container').css('opacity', '0');
+                    
+                    let maxId = db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) : 0;
+                    let idMap = {};
+                    
+                    // Assign entirely new sequential IDs based on current db maximum state
                     importedDb.persons.forEach(ip => {
-                        let idx = db.persons.findIndex(p => p.id === ip.id);
-                        if (idx >= 0) db.persons[idx] = ip; else db.persons.push(ip); 
+                        let newId = ++maxId;
+                        idMap[ip.id] = newId;
+                        ip.id = newId;
                     });
+                    
+                    // Update relational references using the local ID mapping
+                    importedDb.persons.forEach(ip => {
+                        if (ip.fatherId) ip.fatherId = idMap[ip.fatherId] || null;
+                        if (ip.motherId) ip.motherId = idMap[ip.motherId] || null;
+                        if (ip.events) {
+                            ip.events.forEach(ev => {
+                                if (ev.involvedPersonId) ev.involvedPersonId = idMap[ev.involvedPersonId] || null;
+                            });
+                        }
+                        db.persons.push(ip);
+                    });
+                    
                     if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
                     saveData(true);
                     setTimeout(() => {
@@ -1953,6 +2267,7 @@
         loadDBList();
         
         $('#canvas-container').css('opacity', '0');
+        updateRomanNumerals();
         updateLanguageUI();
         
         setTimeout(() => {
