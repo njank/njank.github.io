@@ -108,7 +108,8 @@
             <div class="hidden xl:flex rounded shadow-sm flex-shrink-0 ml-1">
                 <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l transition-colors" data-mode="events" data-i18n-title="events"><i class="ph ph-calendar-star"></i></button>
                 <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
-                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r transition-colors" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 transition-colors" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-blue-50 text-blue-600 shadow-inner rounded-r transition-colors" data-mode="actions" data-i18n-title="actions"><i class="ph ph-user-gear"></i></button>
             </div>
 
             <!-- I/O Actions Group (Desktop Only >= 1280px) -->
@@ -118,6 +119,9 @@
                 </button>
                 <button class="export-zip-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 transition-colors" data-i18n-title="exportZip">
                     <i class="ph ph-file-archive text-base text-purple-500"></i> <span data-i18n="exportZip">ZIP</span>
+                </button>
+                <button class="share-zip-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 transition-colors" data-i18n-title="shareZip">
+                    <i class="ph ph-share-network text-base text-teal-500"></i> <span data-i18n="shareZip">Share</span>
                 </button>
                 <label class="px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 cursor-pointer transition-colors m-0" data-i18n-title="importReplaceFull">
                     <i class="ph ph-upload-simple text-base text-red-500"></i> <span data-i18n="importReplace">Imp(R)</span>
@@ -167,10 +171,11 @@
             </div>
 
             <!-- View Info (Visible < 1280px) -->
-            <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-3 gap-1">
+            <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-4 gap-1">
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="events" data-i18n-title="events"><i class="ph ph-calendar-star"></i></button>
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded py-1 transition-colors flex justify-center items-center" data-mode="actions" data-i18n-title="actions"><i class="ph ph-user-gear"></i></button>
             </div>
 
             <!-- Zoom (Visible < 768px) -->
@@ -183,6 +188,7 @@
             <!-- Import/Export (Visible < 1280px) -->
             <button class="export-json-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-text text-blue-500 text-lg"></i> <span data-i18n="exportJson">JSON</span></button>
             <button class="export-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-archive text-purple-500 text-lg"></i> <span data-i18n="exportZip">ZIP</span></button>
+            <button class="share-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-share-network text-teal-500 text-lg"></i> <span data-i18n="shareZip">Share</span></button>
             <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0 border-b border-gray-100"><i class="ph ph-upload-simple text-red-500 text-lg"></i> <span data-i18n="importReplaceFull">Import (Replace)</span> <input type="file" class="import-file-replace hidden" accept=".json,.gz"></label>
             <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> <span data-i18n="importMergeFull">Import (Merge)</span> <input type="file" class="import-file-merge hidden" accept=".json,.gz"></label>
 
@@ -216,7 +222,7 @@
         <div id="canvas-container" class="flex-grow overflow-auto relative grab-cursor pb-16 sm:pb-0">
             <div id="zoom-container" class="relative" style="width: 10000px; height: 10000px; transform-origin: top left;">
                 <svg id="svg-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 5;"></svg>
-                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-8" style="top: 4000px; left: 1000px;"></div>
+                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-1" style="top: 4000px; left: 1000px; z-index: 10;"></div>
                 <svg id="svg-layer-rings" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 15;"></svg>
             </div>
         </div>
@@ -379,7 +385,8 @@
                 dbCantDeleteLast: "Cannot delete the last database.", dbNameExists: "Database already exists.",
                 parentMissing: "Parent missing", lastNameMissing: "Last name missing", language: "Language",
                 editFather: "Edit Father", addFather: "Add Father", editMother: "Edit Mother", addMother: "Add Mother",
-                addSpouse: "Add Spouse", addChild: "Add Child", standard: "Standard", undo: "Undo", redo: "Redo"
+                addSpouse: "Add Spouse", addChild: "Add Child", standard: "Standard", undo: "Undo", redo: "Redo",
+                actions: "Actions", shareZip: "Share"
             },
             de: {
                 jumpPerson: "Zu Person springen", jumpMarriage: "Zu Ehe springen", tree: "Stammbaum", map: "Karte",
@@ -404,7 +411,8 @@
                 dbCantDeleteLast: "Die letzte Datenbank kann nicht gelöscht werden.", dbNameExists: "Datenbank existiert bereits.",
                 parentMissing: "Elternteil fehlt", lastNameMissing: "Nachname fehlt", language: "Sprache",
                 editFather: "Vater bearbeiten", addFather: "Vater hinzufügen", editMother: "Mutter bearbeiten", addMother: "Mutter hinzufügen",
-                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen"
+                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen",
+                actions: "Aktionen", shareZip: "Teilen"
             }
         };
 
@@ -429,7 +437,6 @@
             // Re-render but maintain map if we are in map view
             renderTree();
             if (currentViewMode === 'map') {
-                $('#canvas-container').addClass('hidden');
                 openMap();
             }
         }
@@ -449,10 +456,10 @@
         const ICONS = {
             male: `<i class="ph ph-gender-male text-blue-500 font-bold"></i>`,
             female: `<i class="ph ph-gender-female text-pink-500 font-bold"></i>`,
-            birth: `<i class="ph ph-star flex-shrink-0"></i>`,
-            death: `<i class="ph ph-cross flex-shrink-0"></i>`,
-            marriage: `<svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`,
-            other: `<i class="ph ph-calendar-blank flex-shrink-0"></i>`
+            birth: `<i class="ph ph-star ></i>`,
+            death: `<i class="ph ph-cross"></i>`,
+            marriage: `<svg class="w-3 h-3" fill="none" stroke="#6b7280" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`,
+            other: `<i class="ph ph-calendar-star text-gray-400 text-sm"></i>`
         };
 
         const initialData = {
@@ -530,7 +537,9 @@
         function switchDatabase(name) {
             if (!dbNames.includes(name)) return;
             
-            // Mask the transition to prevent layout calculation jitter visibility
+            $('#db-select').val(name);
+            $('#burger-db-select').val(name);
+            
             let $canvas = $('#canvas-container');
             $canvas.css('opacity', '0');
             
@@ -551,14 +560,16 @@
             
             saveData(true);
             
-            // Let the DOM fully flush and paint offscreen, then correctly compute lines, scroll, and reveal
             setTimeout(() => {
                 if (currentViewMode === 'tree') {
                     setCanvasZoom(1);
                     drawLines();
                     centerOnLargestFamily();
+                    $canvas.animate({opacity: 1}, 150);
+                } else {
+                    $('#map-container').animate({opacity: 1}, 150);
+                    $canvas.css('opacity', '1').addClass('hidden');
                 }
-                $canvas.fadeTo(150, 1);
             }, 40);
         }
 
@@ -596,8 +607,6 @@
         $('#db-select, #burger-db-select').change(function() {
             let name = $(this).val();
             if (name !== currentDbName) switchDatabase(name);
-            $('#db-select').val(name);
-            $('#burger-db-select').val(name);
         });
         $('#db-create-btn, #burger-db-create-btn').click(createDatabase);
         $('#db-delete-btn, #burger-db-delete-btn').click(deleteDatabase);
@@ -620,7 +629,7 @@
         let romanNumerals = {};
         let personGen = {};
         let currentViewMode = 'tree'; 
-        let displayInfoModes = { events: false, address: false, notes: false };
+        let displayInfoModes = { events: false, address: false, notes: false, actions: true };
         let collapsedFamilies = new Set();
         let suppressedIds = new Set();
         let canvasZoom = 1;
@@ -727,9 +736,11 @@
                     } else {
                         try {
                             if (hasNewGeocode) await new Promise(r => setTimeout(r, 1000));
+                            if (currentMapGeocodeRun !== thisRun) return;
                             hasNewGeocode = true;
                             let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
                             let response = await $.getJSON(url);
+                            if (currentMapGeocodeRun !== thisRun) return;
                             if (response && response.length > 0) {
                                 lat = parseFloat(response[0].lat); lng = parseFloat(response[0].lon);
                                 geoCache[group.place] = { lat, lng };
@@ -787,33 +798,39 @@
             if (mapMarkers.getLayers().length > 0 && (!previousCenter || (previousZoom === 4 && previousCenter.lat === 48.2082))) {
                 mapInstance.fitBounds(mapMarkers.getBounds(), { padding:[50, 50], maxZoom: 15 });
             }
-            setTimeout(() => mapInstance.invalidateSize(), 100);
+            
+            mapInstance.invalidateSize();
+            setTimeout(() => mapInstance.invalidateSize(), 150);
         }
 
         function setViewMode(mode) {
             currentViewMode = mode;
             $('#burger-menu').addClass('hidden');
 
-            if (mode === 'tree') {
-                $('#map-container').addClass('hidden'); 
-                if (db.persons.length > 0) {
+            // Strip any leftover inline display style that might override .hidden
+            $('#canvas-container, #map-container').css('display', '');
+
+            if (db.persons.length === 0) {
+                $('#canvas-container').addClass('hidden');
+                $('#map-container').addClass('hidden');
+                $('#empty-state').removeClass('hidden');
+            } else {
+                $('#empty-state').addClass('hidden');
+                if (mode === 'tree') {
+                    $('#map-container').addClass('hidden');
                     $('#canvas-container').removeClass('hidden');
-                    $('#empty-state').addClass('hidden');
                     drawLines();
                 } else {
-                    $('#empty-state').removeClass('hidden');
+                    $('#canvas-container').addClass('hidden');
+                    $('#map-container').removeClass('hidden');
+                    openMap();
                 }
+            }
+
+            if (mode === 'tree') {
                 $('.mode-tree-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
                 $('.mode-map-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
             } else {
-                $('#canvas-container').addClass('hidden'); 
-                if (db.persons.length > 0) {
-                    $('#map-container').removeClass('hidden');
-                    $('#empty-state').addClass('hidden');
-                    openMap();
-                } else {
-                    $('#empty-state').removeClass('hidden');
-                }
                 $('.mode-map-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
                 $('.mode-tree-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
             }
@@ -1266,7 +1283,7 @@
                     let minorHtml = minorEvents.map(e => {
                         let text =[e.date, e.place, e.note].filter(x => x).join(' - ');
                         let iconHtml = ICONS[e.type.toLowerCase()] || ICONS.other;
-                        return `<div class="flex items-start gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
+                        return `<div class="flex items-start flex items-center gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
                     }).join('');
                     extraInfoHtml += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
                 }
@@ -1284,6 +1301,25 @@
             let motherTitle = p.motherId ? t('editMother') : t('addMother');
             let spouseTitle = t('addSpouse');
             let childTitle = t('addChild');
+
+            let actionButtonsHtml = '';
+            if (displayInfoModes.actions) {
+                actionButtonsHtml = `
+                    <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
+                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
+                            ${fatherIcon}
+                        </div>
+                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
+                            ${motherIcon}
+                        </div>
+                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
+                            ${spouseIcon}
+                        </div>
+                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
+                            ${childIcon}
+                        </div>
+                    </div>`;
+            }
 
             return `
                 <div class="person-node w-64 bg-white border border-gray-300 rounded-lg shadow-md relative hover:shadow-lg transition-all cursor-pointer z-10 flex flex-col ${isSelected}" 
@@ -1306,21 +1342,7 @@
                         </div>
                         ${extraInfoHtml}
                     </div>
-                    
-                    <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
-                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
-                            ${fatherIcon}
-                        </div>
-                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
-                            ${motherIcon}
-                        </div>
-                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
-                            ${spouseIcon}
-                        </div>
-                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
-                            ${childIcon}
-                        </div>
-                    </div>
+                    ${actionButtonsHtml}
                 </div>`;
         }
 
@@ -1490,8 +1512,10 @@
                 $('#empty-state').addClass('hidden'); 
                 if (currentViewMode === 'tree') {
                     $('#canvas-container').removeClass('hidden');
+                    $('#map-container').addClass('hidden');
                 } else if (currentViewMode === 'map') {
                     $('#map-container').removeClass('hidden');
+                    $('#canvas-container').addClass('hidden');
                 }
             }
             
@@ -1547,6 +1571,8 @@
                     let maleEl = document.querySelector(`.person-node[data-id="${p.id}"]`);
                     if(!maleEl) return;
                     
+                    let hasDrawnRing = false;
+
                     partners.forEach(partnerId => {
                         let femaleEl = document.querySelector(`.person-node[data-id="${partnerId}"]`);
                         if(femaleEl) {
@@ -1563,8 +1589,8 @@
                             
                             let femaleEvents = getDisplayEvents(partnerId);
                             let femaleIsMarried = femaleEvents.some(e => e.type === 'Marriage');
-                            let isAffair = !everMarried && femaleIsMarried;
-                            let strokeAttr = isAffair ? `stroke-dasharray="4,4"` : ``;
+                            let isSecondarySpouse = !everMarried && femaleIsMarried;
+                            let strokeAttr = isSecondarySpouse ? `stroke-dasharray="4,4"` : ``;
                             
                             // Draw continuous vertical link lines overriding the minimal gap
                             svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mBottom} L ${fC.x - 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
@@ -1572,12 +1598,16 @@
                             
                             let ringY = (mBottom + fTop) / 2;
                             
-                            if (everMarried) {
-                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
-                            } else if (!isAffair) {
-                                svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${ringY - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
+                            if (!hasDrawnRing) {
+                                if (everMarried) {
+                                    svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                                    svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
+                                    hasDrawnRing = true;
+                                } else if (!isSecondarySpouse) {
+                                    svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                                    svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${ringY - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
+                                    hasDrawnRing = true;
+                                }
                             }
                         }
                     });
@@ -1935,8 +1965,14 @@
                     extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
                 }
                 
-                $node.find('.events-container').nextAll('div').remove(); 
-                if (extraInfoHtml) $node.find('.p-2.pb-1\\.5').append(extraInfoHtml);
+                $node.find('.events-container').nextAll('div').not('.action-buttons').remove(); 
+                if (extraInfoHtml) {
+                    if ($node.find('.action-buttons').length) {
+                        $(extraInfoHtml).insertBefore($node.find('.action-buttons'));
+                    } else {
+                        $node.find('.p-1.pb-1\\.5').append(extraInfoHtml);
+                    }
+                }
                 
                 let borderColor = getColor(p.lastName);
                 let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
@@ -2177,6 +2213,30 @@
             } catch (err) { alert("Your browser does not support the Compression Streams API yet."); }
         });
 
+        $('.share-zip-btn').click(async () => {
+            $('#burger-menu').addClass('hidden');
+            try {
+                const dataStr = JSON.stringify(getExportData());
+                const stream = new Blob([dataStr], {type: 'application/json'}).stream();
+                const compressedReadableStream = stream.pipeThrough(new CompressionStream('gzip'));
+                const blob = await new Response(compressedReadableStream).blob();
+                
+                const file = new File([blob], `genealogy_${currentDbName}.json.gz`, { type: 'application/gzip' });
+
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                    await navigator.share({
+                        files: [file],
+                        title: `Genealogy App Backup`,
+                        text: `Export for ${currentDbName}`
+                    });
+                } else {
+                    alert("File sharing is not supported on this device/browser.");
+                }
+            } catch (err) { 
+                alert(err); 
+            }
+        });
+
         $('.import-file-replace').change(async function(e) {
             $('#burger-menu').addClass('hidden');
             const file = e.target.files[0];
@@ -2200,8 +2260,11 @@
                             setCanvasZoom(1);
                             drawLines();
                             centerOnLargestFamily();
+                            $('#canvas-container').animate({opacity: 1}, 150);
+                        } else {
+                            $('#map-container').animate({opacity: 1}, 150);
+                            $('#canvas-container').css('opacity', '1').addClass('hidden');
                         }
-                        $('#canvas-container').fadeTo(150, 1);
                     }, 40);
                 } else alert("Invalid data format. Expected an array of persons.");
             } catch (err) { alert("Failed to import data. Please ensure it is a valid JSON or GZIP file."); }
@@ -2253,8 +2316,11 @@
                             setCanvasZoom(1);
                             drawLines();
                             centerOnLargestFamily();
+                            $('#canvas-container').animate({opacity: 1}, 150);
+                        } else {
+                            $('#map-container').animate({opacity: 1}, 150);
+                            $('#canvas-container').css('opacity', '1').addClass('hidden');
                         }
-                        $('#canvas-container').fadeTo(150, 1);
                     }, 40);
                 } else alert("Invalid data format. Expected an array of persons.");
             } catch (err) { alert("Failed to merge data. Please ensure it is a valid JSON or GZIP file."); }
@@ -2275,7 +2341,7 @@
                 drawLines();
                 centerOnLargestFamily();
             }
-            $('#canvas-container').fadeTo(150, 1);
+            $('#canvas-container').animate({opacity: 1}, 150);
         }, 40);
 
     </script>
