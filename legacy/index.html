@@ -39,27 +39,36 @@
         .leaflet-popup-content-wrapper { border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
     </style>
 </head>
-<body class="bg-gray-100 overflow-hidden text-sm select-none h-[100dvh] w-screen">
+<body class="bg-gray-100 overflow-hidden text-sm select-none h-[100dvh] w-screen relative">
     
+    <!-- Initial Full-Screen App Loader -->
+    <div id="app-loading" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-gray-100 transition-opacity duration-300">
+        <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+        <div class="mt-4 text-gray-500 font-bold text-sm tracking-widest" data-i18n="loading">LOADING...</div>
+    </div>
+
     <div id="app" class="flex h-[100dvh] w-screen relative">
 
         <!-- Action Bar -->
-        <div id="action-bar" class="absolute bottom-0 left-0 w-full sm:w-auto sm:bottom-4 sm:left-4 z-40 flex items-center px-3 py-2 sm:p-0 bg-white/95 sm:bg-transparent shadow-[0_-4px_10px_rgba(0,0,0,0.05)] sm:shadow-none border-t border-gray-200 sm:border-none backdrop-blur sm:backdrop-blur-none pb-safe gap-2 overflow-x-auto hide-scrollbar sm:overflow-visible">
+        <div id="action-bar" class="opacity-0 pointer-events-none absolute bottom-0 left-0 w-full sm:w-auto sm:bottom-4 sm:left-4 z-40 flex items-center px-3 py-2 sm:p-0 bg-white/95 sm:bg-transparent shadow-[0_-4px_10px_rgba(0,0,0,0.05)] sm:shadow-none border-t border-gray-200 sm:border-none backdrop-blur sm:backdrop-blur-none pb-safe gap-2 overflow-x-auto hide-scrollbar sm:overflow-visible transition-opacity duration-300">
             
-            <!-- Burger Button (Visible on < 1280px) -->
-            <button id="burger-btn" class="xl:hidden flex-shrink-0 bg-white border border-gray-300 text-gray-700 h-8 w-8 rounded shadow-sm hover:bg-gray-50 flex items-center justify-center transition-colors">
+            <!-- Burger Button (Always visible) -->
+            <button id="burger-btn" class="flex-shrink-0 bg-white border border-gray-300 text-gray-700 h-8 sm:h-7 w-8 sm:w-7 rounded shadow-sm hover:bg-gray-50 flex items-center justify-center transition-colors relative">
                 <i class="ph ph-list text-lg"></i>
             </button>
 
-            <!-- Quick Navs (Visible Desktop Only >= 640px) -->
-            <div class="hidden sm:flex items-center gap-1 flex-shrink-0">
-                <select class="quick-nav-person bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center text-[11px] font-bold transition-colors outline-none cursor-pointer w-[130px]">
-                </select>
-                <select class="quick-nav-marriage bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center text-[11px] font-bold transition-colors outline-none cursor-pointer w-[130px]">
-                </select>
+            <!-- Global Search Box -->
+            <div id="search-container" class="relative flex-shrink-0 flex items-center">
+                <div class="relative">
+                    <i class="ph ph-magnifying-glass absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="global-search" class="w-32 sm:w-48 bg-white border border-gray-300 text-gray-700 pl-7 pr-2 py-0 h-8 sm:h-7 rounded shadow-sm text-[11px] font-bold outline-none focus:ring focus:ring-blue-200 transition-all placeholder-gray-400" placeholder="Search..." data-i18n-placeholder="search">
+                </div>
+                <!-- Search Results Dropdown -->
+                <div id="search-results" class="absolute bottom-full left-0 mb-1 w-[280px] max-h-64 overflow-y-auto bg-white border border-gray-200 rounded shadow-lg hidden z-[100] flex-col hide-scrollbar">
+                </div>
             </div>
             
-            <div class="hidden sm:block w-px bg-gray-300 mx-0.5 h-5 flex-shrink-0"></div>
+            <div class="w-px bg-gray-300 mx-0.5 h-5 flex-shrink-0"></div>
             
             <!-- Undo/Redo Group -->
             <div class="flex rounded shadow-sm flex-shrink-0">
@@ -74,10 +83,10 @@
             <!-- View Mode Switcher Group -->
             <div class="flex rounded shadow-sm flex-shrink-0 ml-1">
                 <button class="mode-tree-btn px-2.5 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded-l flex items-center gap-1 transition-colors">
-                    <i class="ph ph-tree-structure text-lg"></i> <span data-i18n="tree">Tree</span>
+                    <i class="ph ph-tree-structure text-lg"></i> <span class="hidden sm:inline" data-i18n="tree">Tree</span>
                 </button>
                 <button class="mode-map-btn px-2.5 py-0 h-8 sm:h-7 text-xs font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1 transition-colors">
-                    <i class="ph ph-map-pin text-lg text-orange-500"></i> <span data-i18n="map">Map</span>
+                    <i class="ph ph-map-pin text-lg text-orange-500"></i> <span class="hidden sm:inline" data-i18n="map">Map</span>
                 </button>
             </div>
 
@@ -112,27 +121,6 @@
                 <button class="info-toggle-btn px-2 py-0 h-7 text-base font-bold border border-gray-300 border-l-0 bg-blue-50 text-blue-600 shadow-inner rounded-r transition-colors" data-mode="actions" data-i18n-title="actions"><i class="ph ph-user-gear"></i></button>
             </div>
 
-            <!-- I/O Actions Group (Desktop Only >= 1280px) -->
-            <div class="hidden xl:flex rounded shadow-sm flex-shrink-0 ml-1">
-                <button class="export-json-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 rounded-l flex items-center gap-1 transition-colors" data-i18n-title="exportJson">
-                    <i class="ph ph-file-text text-base text-blue-500"></i> <span data-i18n="exportJson">JSON</span>
-                </button>
-                <button class="export-zip-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 transition-colors" data-i18n-title="exportZip">
-                    <i class="ph ph-file-archive text-base text-purple-500"></i> <span data-i18n="exportZip">ZIP</span>
-                </button>
-                <button class="share-zip-btn px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 transition-colors" data-i18n-title="shareZip">
-                    <i class="ph ph-share-network text-base text-teal-500"></i> <span data-i18n="shareZip">Share</span>
-                </button>
-                <label class="px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 flex items-center gap-1 cursor-pointer transition-colors m-0" data-i18n-title="importReplaceFull">
-                    <i class="ph ph-upload-simple text-base text-red-500"></i> <span data-i18n="importReplace">Imp(R)</span>
-                    <input type="file" class="import-file-replace hidden" accept=".json,.gz">
-                </label>
-                <label class="px-2.5 py-0 h-7 text-[11px] font-bold border border-gray-300 border-l-0 bg-white text-gray-700 hover:bg-gray-50 rounded-r flex items-center gap-1 cursor-pointer transition-colors m-0" data-i18n-title="importMergeFull">
-                    <i class="ph ph-upload-simple text-base text-green-500"></i> <span data-i18n="importMerge">Imp(M)</span>
-                    <input type="file" class="import-file-merge hidden" accept=".json,.gz">
-                </label>
-            </div>
-
             <!-- Desktop Language Dropdown (Desktop Only >= 1280px) -->
             <div class="hidden xl:flex relative rounded shadow-sm flex-shrink-0 ml-1" id="lang-dropdown-desktop">
                 <button class="lang-toggle bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm hover:bg-gray-50 flex items-center gap-1.5 text-[11px] font-bold outline-none cursor-pointer transition-colors">
@@ -140,27 +128,27 @@
                 </button>
                 <div class="lang-menu absolute right-0 bottom-full mb-1 min-w-max bg-white border border-gray-200 rounded shadow-lg hidden flex-col overflow-hidden z-[100]">
                     <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100 transition-colors" data-lang="en">
-                        <span class="flag-icon-en flex-shrink-0"></span> EN
+                        <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg></span> EN
                     </button>
                     <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 transition-colors" data-lang="de">
-                        <span class="flag-icon-de flex-shrink-0"></span> DE
+                        <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg></span> DE
                     </button>
                 </div>
             </div>
 
         </div>
 
-        <!-- Burger Menu Container (Visible < 1280px) -->
-        <div id="burger-menu" class="fixed bottom-16 left-3 w-52 bg-white border border-gray-200 rounded-lg shadow-xl hidden flex-col overflow-hidden z-[100] xl:hidden">
-            <!-- Navs -->
-            <div class="p-2 border-b border-gray-100 flex flex-col gap-2 bg-gray-50 sm:hidden">
+        <!-- Burger Menu Container -->
+        <div id="burger-menu" class="fixed bottom-16 sm:bottom-12 left-3 w-56 bg-white border border-gray-200 rounded-lg shadow-xl hidden flex-col overflow-hidden z-[100]">
+            <!-- Navs (Always inside menu) -->
+            <div class="p-2 border-b border-gray-100 flex flex-col gap-2 bg-gray-50">
                 <select class="quick-nav-person w-full bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm text-[11px] font-bold outline-none cursor-pointer">
                 </select>
                 <select class="quick-nav-marriage w-full bg-white border border-gray-300 text-gray-700 px-2 py-0 h-7 rounded shadow-sm text-[11px] font-bold outline-none cursor-pointer">
                 </select>
             </div>
             
-            <!-- Database (Visible < 1024px) -->
+            <!-- Database (Visible < 1024px inside menu) -->
             <div class="bg-gray-50 border-b border-gray-100 p-2 flex flex-col gap-1 lg:hidden">
                 <span class="text-[11px] font-bold text-gray-500 px-1" data-i18n="dbGroup">Database</span>
                 <div class="flex gap-1">
@@ -171,11 +159,11 @@
             </div>
 
             <!-- View Info (Visible < 1280px) -->
-            <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-4 gap-1">
+            <div class="bg-gray-50 border-b border-gray-100 p-2 grid grid-cols-4 gap-1 xl:hidden">
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="events" data-i18n-title="events"><i class="ph ph-calendar-star"></i></button>
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="address" data-i18n-title="address"><i class="ph ph-address-book"></i></button>
                 <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-white text-gray-700 rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="notes" data-i18n-title="notes"><i class="ph ph-notepad"></i></button>
-                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded py-1 transition-colors flex justify-center items-center" data-mode="actions" data-i18n-title="actions"><i class="ph ph-user-gear"></i></button>
+                <button class="info-toggle-btn text-base font-bold border border-gray-300 bg-blue-50 text-blue-600 shadow-inner rounded py-1 hover:bg-gray-100 transition-colors flex justify-center items-center" data-mode="actions" data-i18n-title="actions"><i class="ph ph-user-gear"></i></button>
             </div>
 
             <!-- Zoom (Visible < 768px) -->
@@ -185,22 +173,21 @@
                 <button class="zoom-in-btn flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center hover:bg-gray-100"><i class="ph ph-magnifying-glass-plus"></i></button>
             </div>
 
-            <!-- Import/Export (Visible < 1280px) -->
+            <!-- Import/Export (Always in Menu) -->
             <button class="export-json-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-text text-blue-500 text-lg"></i> <span data-i18n="exportJson">JSON</span></button>
             <button class="export-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-archive text-purple-500 text-lg"></i> <span data-i18n="exportZip">ZIP</span></button>
-            <button class="share-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-share-network text-teal-500 text-lg"></i> <span data-i18n="shareZip">Share</span></button>
             <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0 border-b border-gray-100"><i class="ph ph-upload-simple text-red-500 text-lg"></i> <span data-i18n="importReplaceFull">Import (Replace)</span> <input type="file" class="import-file-replace hidden" accept=".json,.gz"></label>
             <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> <span data-i18n="importMergeFull">Import (Merge)</span> <input type="file" class="import-file-merge hidden" accept=".json,.gz"></label>
 
             <!-- Language (Visible < 1280px) -->
-            <div class="bg-white border-b border-gray-100 p-2 flex flex-col gap-1">
+            <div class="bg-white border-b border-gray-100 p-2 flex flex-col gap-1 xl:hidden">
                 <span class="text-[11px] font-bold text-gray-500 px-1" data-i18n="language">Language</span>
                 <div class="flex gap-1">
                     <button class="lang-option flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center items-center gap-1.5 text-[11px] font-bold hover:bg-gray-50 transition-colors" data-lang="en">
-                        <span class="flag-icon-en flex-shrink-0"></span> EN
+                        <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg></span> EN
                     </button>
                     <button class="lang-option flex-1 bg-white border border-gray-300 rounded py-1 flex justify-center items-center gap-1.5 text-[11px] font-bold hover:bg-gray-50 transition-colors" data-lang="de">
-                        <span class="flag-icon-de flex-shrink-0"></span> DE
+                        <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg></span> DE
                     </button>
                 </div>
             </div>
@@ -215,15 +202,19 @@
 
         <!-- Map Container (Flex-Item) -->
         <div id="map-container" class="flex-grow relative z-20 hidden bg-gray-100 pb-16 sm:pb-0">
+            <!-- Map loading overlay -->
+            <div id="map-loading" class="absolute inset-0 z-30 bg-gray-100/80 flex items-center justify-center hidden">
+                <div class="animate-spin rounded-full h-10 w-10 border-4 border-orange-500 border-t-transparent"></div>
+            </div>
             <div id="map-element" class="w-full h-full z-0"></div>
         </div>
 
         <!-- Main Canvas (Scrollable Flex-Item) -->
-        <div id="canvas-container" class="flex-grow overflow-auto relative grab-cursor pb-16 sm:pb-0">
-            <div id="zoom-container" class="relative" style="width: 10000px; height: 10000px; transform-origin: top left;">
-                <svg id="svg-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 5;"></svg>
-                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-1" style="top: 4000px; left: 1000px; z-index: 10;"></div>
-                <svg id="svg-layer-rings" class="absolute top-0 left-0 w-full h-full pointer-events-none" style="z-index: 15;"></svg>
+        <div id="canvas-container" class="flex-grow overflow-auto relative grab-cursor pb-16 sm:pb-0 hidden opacity-0 transition-opacity duration-300">
+            <div id="zoom-container" class="relative" style="width: 50000px; height: 50000px; transform-origin: top left;">
+                <svg id="svg-layer" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible" style="z-index: 5;"></svg>
+                <div id="tree-layer" class="absolute pointer-events-auto flex flex-col gap-8" style="top: 25000px; left: 25000px; z-index: 10;"></div>
+                <svg id="svg-layer-rings" class="absolute top-0 left-0 w-full h-full pointer-events-none overflow-visible" style="z-index: 15;"></svg>
             </div>
         </div>
 
@@ -371,10 +362,10 @@
                 catNone: "None", catRed: "Red", catOrange: "Orange", catYellow: "Yellow", catChartreuse: "Chartreuse", 
                 catGreen: "Green", catSpringGreen: "Spring Gr.", catCyan: "Cyan", catAzure: "Azure", 
                 catBlue: "Blue", catViolet: "Violet", catMagenta: "Magenta", catRose: "Rose",
-                parents: "Parents", father: "Father", mother: "Mother",
+                parents: "Parents", father: "Father", mother: "Mother", partner: "Partner",
                 noFather: "-- No Father --", noMother: "-- No Mother --",
                 children: "Children", selectPerson: "-- Select Person --", assign: "Assign", newBtn: "+ New",
-                events: "Events", addEvent: "+ Add Event", address: "Address", notes: "Notes",
+                events: "Events", addEvent: "+ Add Event", address: "Address", notes: "Notes", actions: "Actions",
                 deletePerson: "Delete Person", confirmDelete: "Are you sure you want to delete this person?",
                 noChildren: "No children assigned.", noPerson: "-- No Person --",
                 birth: "Birth", death: "Death", marriage: "Marriage", other: "Other",
@@ -385,22 +376,22 @@
                 dbCantDeleteLast: "Cannot delete the last database.", dbNameExists: "Database already exists.",
                 parentMissing: "Parent missing", lastNameMissing: "Last name missing", language: "Language",
                 editFather: "Edit Father", addFather: "Add Father", editMother: "Edit Mother", addMother: "Add Mother",
-                addSpouse: "Add Spouse", addChild: "Add Child", standard: "Standard", undo: "Undo", redo: "Redo",
-                actions: "Actions", shareZip: "Share"
+                addSpouse: "Add Spouse", addChild: "Add Child", standard: "Standard", undo: "Undo", redo: "Redo", loading: "LOADING...",
+                search: "Search...", typePerson: "Person", typeAddress: "Address", typeEventPlace: "Event Place", typeEventNote: "Event Note", typeNote: "Note"
             },
             de: {
                 jumpPerson: "Zu Person springen", jumpMarriage: "Zu Ehe springen", tree: "Stammbaum", map: "Karte",
-                exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(E)", importMerge: "Imp(Z)",
+                exportJson: "Exportieren (JSON)", exportZip: "Exportieren (ZIP)", importReplace: "Imp(E)", importMerge: "Imp(Z)",
                 importReplaceFull: "Importieren (Ersetzen)", importMergeFull: "Importieren (Zusammenführen)",
                 createPerson: "Person erstellen", editPerson: "Person bearbeiten", title: "Titel", gender: "Geschlecht *",
                 nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname", category: "Kategorie",
                 catNone: "Keine", catRed: "Rot", catOrange: "Orange", catYellow: "Gelb", catChartreuse: "Hellgrün", 
                 catGreen: "Grün", catSpringGreen: "Frühlingsgr.", catCyan: "Türkis", catAzure: "Azurblau", 
                 catBlue: "Blau", catViolet: "Violett", catMagenta: "Magenta", catRose: "Rosa",
-                parents: "Eltern", father: "Vater", mother: "Mutter",
+                parents: "Eltern", father: "Vater", mother: "Mutter", partner: "Partner",
                 noFather: "-- Kein Vater --", noMother: "-- Keine Mutter --",
                 children: "Kinder", selectPerson: "-- Person wählen --", assign: "Zuweisen", newBtn: "+ Neu",
-                events: "Ereignisse", addEvent: "+ Ereignis", address: "Adresse", notes: "Notizen",
+                events: "Ereignisse", addEvent: "+ Ereignis", address: "Adresse", notes: "Notizen", actions: "Aktionen",
                 deletePerson: "Person löschen", confirmDelete: "Möchten Sie diese Person wirklich löschen?",
                 noChildren: "Keine Kinder zugewiesen.", noPerson: "-- Keine Person --",
                 birth: "Geburt", death: "Tod", marriage: "Heirat", other: "Andere",
@@ -411,8 +402,8 @@
                 dbCantDeleteLast: "Die letzte Datenbank kann nicht gelöscht werden.", dbNameExists: "Datenbank existiert bereits.",
                 parentMissing: "Elternteil fehlt", lastNameMissing: "Nachname fehlt", language: "Sprache",
                 editFather: "Vater bearbeiten", addFather: "Vater hinzufügen", editMother: "Mutter bearbeiten", addMother: "Mutter hinzufügen",
-                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen",
-                actions: "Aktionen", shareZip: "Teilen"
+                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen", loading: "LÄDT...",
+                search: "Suchen...", typePerson: "Person", typeAddress: "Adresse", typeEventPlace: "Ereignisort", typeEventNote: "Ereignisnotiz", typeNote: "Notiz"
             }
         };
 
@@ -456,10 +447,11 @@
         const ICONS = {
             male: `<i class="ph ph-gender-male text-blue-500 font-bold"></i>`,
             female: `<i class="ph ph-gender-female text-pink-500 font-bold"></i>`,
-            birth: `<i class="ph ph-star ></i>`,
-            death: `<i class="ph ph-cross"></i>`,
-            marriage: `<svg class="w-3 h-3" fill="none" stroke="#6b7280" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`,
-            other: `<i class="ph ph-calendar-star text-gray-400 text-sm"></i>`
+            birth: `<i class="ph ph-star flex-shrink-0"></i>`,
+            death: `<i class="ph ph-cross flex-shrink-0"></i>`,
+            marriage: `<svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`,
+            other: `<i class="ph ph-calendar-blank flex-shrink-0"></i>`,
+            address: `<i class="ph ph-house flex-shrink-0 text-gray-500"></i>`
         };
 
         const initialData = {
@@ -529,16 +521,13 @@
                 scrollToPerson(db.persons[0].id, false);
             } else {
                 let sliderEl = document.getElementById('canvas-container');
-                sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
-                sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
+                sliderEl.scrollLeft = 25000 - window.innerWidth/2 + 128;
+                sliderEl.scrollTop = 25000 - window.innerHeight/2 + 100;
             }
         }
 
         function switchDatabase(name) {
             if (!dbNames.includes(name)) return;
-            
-            $('#db-select').val(name);
-            $('#burger-db-select').val(name);
             
             let $canvas = $('#canvas-container');
             $canvas.css('opacity', '0');
@@ -642,6 +631,79 @@
             }, 200);
         }
 
+        // --- FUZZY SEARCH LOGIC ---
+        $('#global-search').on('input', function() {
+            let val = $(this).val().toLowerCase().trim();
+            if(!val) { $('#search-results').addClass('hidden'); return; }
+            
+            let results =[];
+            db.persons.forEach(p => {
+                let pName = `${p.firstName} ${p.lastName||''}`.trim();
+                let romanPlain = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
+                let romanHtml = romanNumerals[p.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[p.id]}</span>` : '';
+                let pNameDisplayPlain = `${pName}${romanPlain}`;
+                let pNameDisplayHtml = `${pName}${romanHtml}`;
+                let pNameLower = pNameDisplayPlain.toLowerCase();
+                let nicknameLower = (p.nickname||'').toLowerCase();
+
+                if (pNameLower.includes(val) || nicknameLower.includes(val)) {
+                    results.push({ type: t('typePerson'), text: pNameDisplayHtml, id: p.id, score: 10 });
+                }
+                if (p.address && p.address.toLowerCase().includes(val)) {
+                    results.push({ type: t('typeAddress'), text: p.address, personName: pNameDisplayHtml, id: p.id, score: 8 });
+                }
+                if (p.notes && p.notes.toLowerCase().includes(val)) {
+                    results.push({ type: t('typeNote'), text: p.notes.substring(0, 40) + '...', personName: pNameDisplayHtml, id: p.id, score: 5 });
+                }
+                if (p.events) {
+                    p.events.forEach(e => {
+                        if (e.place && e.place.toLowerCase().includes(val)) {
+                            results.push({ type: t('typeEventPlace'), text: e.place, personName: pNameDisplayHtml, id: p.id, score: 6 });
+                        }
+                        if (e.note && e.note.toLowerCase().includes(val)) {
+                            results.push({ type: t('typeEventNote'), text: e.note.substring(0,40)+'...', personName: pNameDisplayHtml, id: p.id, score: 4 });
+                        }
+                    });
+                }
+            });
+            
+            results.sort((a,b) => b.score - a.score);
+            let uniqueResults =[];
+            let seen = new Set();
+            results.forEach(r => {
+                let key = r.id + r.type + r.text;
+                if(!seen.has(key)) { seen.add(key); uniqueResults.push(r); }
+            });
+            uniqueResults = uniqueResults.slice(0, 10);
+
+            if(uniqueResults.length > 0) {
+                let html = uniqueResults.map(r => `
+                    <div class="p-2 border-b border-gray-100 hover:bg-blue-50 cursor-pointer search-result-item transition-colors" data-id="${r.id}">
+                        <div class="text-[10px] font-bold text-blue-500 uppercase tracking-wide">${r.type} ${r.personName ? `<span class="text-gray-400 font-medium lowercase">in</span> ${r.personName}` : ''}</div>
+                        <div class="text-xs text-gray-700 truncate">${r.text}</div>
+                    </div>
+                `).join('');
+                $('#search-results').html(html).removeClass('hidden');
+            } else {
+                $('#search-results').html(`<div class="p-2 text-xs text-gray-500 italic">No results</div>`).removeClass('hidden');
+            }
+        });
+
+        // Hide search results on generic document click
+        document.addEventListener('click', (e) => {
+            if (!$(e.target).closest('#search-container').length) {
+                $('#search-results').addClass('hidden');
+            }
+        }, true);
+
+        $(document).on('click', '.search-result-item', function() {
+            let id = $(this).data('id');
+            openPanel(id);
+            if(currentViewMode === 'tree') scrollToPerson(id);
+            $('#search-results').addClass('hidden');
+            $('#global-search').val('');
+        });
+
         // --- MAP STATE & LOGIC ---
         let mapInstance = null;
         let mapTileLayer = null;
@@ -681,10 +743,17 @@
 
             const locGroups = {};
             db.persons.forEach(p => {
-                if(!p.events) return;
-                p.events.forEach(e => {
+                let mapItems =[];
+                if(p.events) {
+                    p.events.forEach(e => mapItems.push({ type: e.type, date: e.date, note: e.note, place: e.place, coordsStr: e.coordinates, involvedPersonId: e.involvedPersonId }));
+                }
+                if (p.address && p.address.trim() !== '') {
+                    mapItems.push({ type: 'Address', date: '', note: '', place: p.address, coordsStr: '', involvedPersonId: null });
+                }
+
+                mapItems.forEach(e => {
                     let place = (e.place || "").trim();
-                    let coordsStr = (e.coordinates || "").trim();
+                    let coordsStr = (e.coordsStr || "").trim();
                     if (!place && !coordsStr) return;
 
                     let key = coordsStr ? `coords:${coordsStr}` : `place:${place}`;
@@ -719,6 +788,8 @@
             let thisRun = currentMapGeocodeRun;
             let keys = Object.keys(locGroups);
             let hasNewGeocode = false;
+
+            if (keys.length > 0) $('#map-loading').removeClass('hidden');
 
             for (let i = 0; i < keys.length; i++) {
                 if (currentMapGeocodeRun !== thisRun) return;
@@ -766,7 +837,7 @@
                     
                     group.events.sort((a,b) => parseInt(a.date||'9999') - parseInt(b.date||'9999')).forEach(e => {
                         let typeKey = (e.type || 'other').toLowerCase();
-                        let typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : '#6c757d'));
+                        let typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : (e.type === 'address' ? '#6b7280' : '#6c757d')));
                         let iconHtml = ICONS[typeKey] || ICONS.other;
 
                         let personsHtml = e.involved.map(invP => {
@@ -801,6 +872,7 @@
             
             mapInstance.invalidateSize();
             setTimeout(() => mapInstance.invalidateSize(), 150);
+            $('#map-loading').addClass('hidden');
         }
 
         function setViewMode(mode) {
@@ -1305,20 +1377,20 @@
             let actionButtonsHtml = '';
             if (displayInfoModes.actions) {
                 actionButtonsHtml = `
-                    <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
-                        <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
-                            ${fatherIcon}
-                        </div>
-                        <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
-                            ${motherIcon}
-                        </div>
-                        <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
-                            ${spouseIcon}
-                        </div>
-                        <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
-                            ${childIcon}
-                        </div>
-                    </div>`;
+                <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
+                    <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
+                        ${fatherIcon}
+                    </div>
+                    <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
+                        ${motherIcon}
+                    </div>
+                    <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
+                        ${spouseIcon}
+                    </div>
+                    <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
+                        ${childIcon}
+                    </div>
+                </div>`;
             }
 
             return `
@@ -1543,7 +1615,7 @@
             });
 
             if (currentViewMode === 'tree') {
-                drawLines();
+                setTimeout(drawLines, 10);
             }
         }
 
@@ -1615,20 +1687,18 @@
             });
 
             db.persons.forEach(child => {
+                let startParentId = null;
                 let startBox = null;
                 let startBoxId = null;
                 if (child.fatherId) {
-                    let fatherNode = document.querySelector(`.person-node[data-id="${child.fatherId}"]`);
-                    if (fatherNode) {
-                        startBox = fatherNode.closest('.parents-box');
-                        if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
-                    }
+                    startParentId = child.fatherId;
                 } else if (child.motherId) {
-                    let motherNode = document.querySelector(`.person-node[data-id="${child.motherId}"]`);
-                    if (motherNode) {
-                        startBox = motherNode.closest('.parents-box');
-                        if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
-                    }
+                    startParentId = child.motherId;
+                }
+                let parentNode = document.querySelector(`.person-node[data-id="${startParentId}"]`);
+                if (parentNode) {
+                    startBox = parentNode.closest('.parents-box');
+                    if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
                 }
 
                 if (startBoxId && collapsedFamilies.has(startBoxId)) return;
@@ -1669,7 +1739,7 @@
         document.addEventListener('touchstart', () => { hasDragged = false; }, true);
 
         function startPan(e) {
-            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length || $(e.target).closest('.collapse-toggle-btn').length) return;
+            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length || $(e.target).closest('.collapse-toggle-btn').length || $(e.target).closest('#search-results').length || $(e.target).closest('#search-container').length) return;
             if (e.target === slider && e.offsetX !== undefined) { if (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight) return; }
 
             let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
@@ -1703,10 +1773,10 @@
 
         document.addEventListener('click', (e) => {
             if (hasDragged) { e.stopPropagation(); e.preventDefault(); hasDragged = false; return; }
-            if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length) $('#burger-menu').addClass('hidden');
+            if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('.import-file-replace').length && !$(e.target).closest('.import-file-merge').length) $('#burger-menu').addClass('hidden');
             if (!$(e.target).closest('#lang-dropdown-desktop').length) $('.lang-menu').addClass('hidden');
 
-            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length && !$(e.target).closest('.collapse-toggle-btn').length) {
+            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length && !$(e.target).closest('.collapse-toggle-btn').length && !$(e.target).closest('#search-results').length) {
                 if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
             }
         }, true);
@@ -1759,6 +1829,9 @@
             let popMotherOptions = `<option value="">${t('noMother')}</option>`;
             let childAssignOptions = `<option value="">${t('selectPerson')}</option>`;
             
+            let currentMotherSpouses = p.motherId ? getPartners(p.motherId) :[];
+            let currentFatherSpouses = p.fatherId ? getPartners(p.fatherId) :[];
+
             db.persons.forEach(op => {
                 if(op.id !== p.id) {
                     let opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
@@ -1772,8 +1845,14 @@
                     if (pBirthObj && opBirthObj && opBirthObj <= pBirthObj) isYounger = false;
                     
                     if (isOlder) {
-                        if (op.gender === 'm') popFatherOptions += `<option value="${op.id}">${fullName}</option>`;
-                        if (op.gender === 'f') popMotherOptions += `<option value="${op.id}">${fullName}</option>`;
+                        if (op.gender === 'm') {
+                            let mark = currentMotherSpouses.includes(op.id) ? ` ⭐` : '';
+                            popFatherOptions += `<option value="${op.id}">${fullName}${mark}</option>`;
+                        }
+                        if (op.gender === 'f') {
+                            let mark = currentFatherSpouses.includes(op.id) ? ` ⭐` : '';
+                            popMotherOptions += `<option value="${op.id}">${fullName}${mark}</option>`;
+                        }
                     }
                     if (op.fatherId !== p.id && op.motherId !== p.id && isYounger) {
                         childAssignOptions += `<option value="${op.id}">${fullNameWithGender}</option>`;
@@ -1898,6 +1977,8 @@
             let p = getPerson(id);
             if(!p) return;
             
+            let oldGender = p.gender;
+
             p.firstName = $('#edit-firstName').val();
             p.lastName = $('#edit-lastName').val();
             p.nickname = $('#edit-nickname').val();
@@ -1913,6 +1994,29 @@
 
             if (this.id === 'edit-category') {
                 $(this).css('background-color', p.category !== 'none' ? CATEGORY_COLORS[p.category] + '33' : '#ffffff');
+            }
+
+            // Cascade Gender Flipping Safeties
+            if (oldGender !== p.gender) {
+                getPartners(p.id).forEach(partnerId => {
+                    let partner = getPerson(partnerId);
+                    if (partner) partner.gender = (p.gender === 'm') ? 'f' : 'm';
+                });
+                
+                db.persons.filter(c => c.fatherId === p.id || c.motherId === p.id).forEach(c => {
+                    let oldFather = c.fatherId;
+                    let oldMother = c.motherId;
+                    if (oldFather === p.id) {
+                        c.fatherId = oldMother;
+                        c.motherId = p.id;
+                    } else if (oldMother === p.id) {
+                        c.motherId = oldFather;
+                        c.fatherId = p.id;
+                    }
+                });
+                saveData(false);
+                openPanel(p.id); 
+                return; 
             }
 
             if(this.tagName === 'SELECT' && e.type === 'change') {
@@ -1949,7 +2053,7 @@
                     let minorEvents = displayEvents.filter(ev => !['Birth', 'Death', 'Marriage'].includes(ev.type));
                     if (minorEvents.length > 0) {
                         let minorHtml = minorEvents.map(ev => {
-                            let text = [ev.date, ev.place, ev.note].filter(x => x).join(' - ');
+                            let text =[ev.date, ev.place, ev.note].filter(x => x).join(' - ');
                             let iconHtml = ICONS[ev.type.toLowerCase()] || ICONS.other;
                             return `<div class="flex items-start gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
                         }).join('');
@@ -1965,14 +2069,8 @@
                     extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
                 }
                 
-                $node.find('.events-container').nextAll('div').not('.action-buttons').remove(); 
-                if (extraInfoHtml) {
-                    if ($node.find('.action-buttons').length) {
-                        $(extraInfoHtml).insertBefore($node.find('.action-buttons'));
-                    } else {
-                        $node.find('.p-1.pb-1\\.5').append(extraInfoHtml);
-                    }
-                }
+                $node.find('.events-container').nextAll('div:not(.action-buttons)').remove(); 
+                if (extraInfoHtml) $node.find('.p-1.pb-1\\.5').append(extraInfoHtml);
                 
                 let borderColor = getColor(p.lastName);
                 let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
@@ -2048,8 +2146,8 @@
             openPanel(newId);
             
             let sliderEl = document.getElementById('canvas-container');
-            sliderEl.scrollLeft = 1000 - window.innerWidth/2 + 128;
-            sliderEl.scrollTop = 4000 - window.innerHeight/2 + 100;
+            sliderEl.scrollLeft = 25000 - window.innerWidth/2 + 128;
+            sliderEl.scrollTop = 25000 - window.innerHeight/2 + 100;
         });
 
         $('#create-child-btn').click(() => {
@@ -2057,7 +2155,16 @@
             let parent = getPerson(parentId);
             let newId = getNextId();
             let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            if (parent.gender === 'm') newChild.fatherId = parentId; else newChild.motherId = parentId;
+            
+            let partners = getPartners(parentId);
+            if (parent.gender === 'm') {
+                newChild.fatherId = parentId; 
+                if (partners.length > 0) newChild.motherId = partners[0];
+            } else {
+                newChild.motherId = parentId;
+                if (partners.length > 0) newChild.fatherId = partners[0];
+            }
+
             db.persons.push(newChild);
             saveData(); openPanel(parentId);
         });
@@ -2144,7 +2251,16 @@
             let parent = getPerson(parentId);
             let newId = getNextId();
             let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            if (parent.gender === 'm') newChild.fatherId = parentId; else newChild.motherId = parentId;
+            
+            let partners = getPartners(parentId);
+            if (parent.gender === 'm') {
+                newChild.fatherId = parentId; 
+                if (partners.length > 0) newChild.motherId = partners[0];
+            } else {
+                newChild.motherId = parentId;
+                if (partners.length > 0) newChild.fatherId = partners[0];
+            }
+
             db.persons.push(newChild);
             saveData(); openPanel(newId);
         });
@@ -2211,30 +2327,6 @@
                 a.click();
                 URL.revokeObjectURL(url);
             } catch (err) { alert("Your browser does not support the Compression Streams API yet."); }
-        });
-
-        $('.share-zip-btn').click(async () => {
-            $('#burger-menu').addClass('hidden');
-            try {
-                const dataStr = JSON.stringify(getExportData());
-                const stream = new Blob([dataStr], {type: 'application/json'}).stream();
-                const compressedReadableStream = stream.pipeThrough(new CompressionStream('gzip'));
-                const blob = await new Response(compressedReadableStream).blob();
-                
-                const file = new File([blob], `genealogy_${currentDbName}.json.gz`, { type: 'application/gzip' });
-
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        files: [file],
-                        title: `Genealogy App Backup`,
-                        text: `Export for ${currentDbName}`
-                    });
-                } else {
-                    alert("File sharing is not supported on this device/browser.");
-                }
-            } catch (err) { 
-                alert(err); 
-            }
         });
 
         $('.import-file-replace').change(async function(e) {
@@ -2332,17 +2424,23 @@
         // INITIALIZE ALL
         loadDBList();
         
-        $('#canvas-container').css('opacity', '0');
         updateRomanNumerals();
         updateLanguageUI();
         
+        // Let everything build, then fade out the loader overlay and reveal the UI beautifully.
         setTimeout(() => {
             if (currentViewMode === 'tree') {
                 drawLines();
                 centerOnLargestFamily();
             }
-            $('#canvas-container').animate({opacity: 1}, 150);
-        }, 40);
+            
+            $('#app-loading').addClass('opacity-0 pointer-events-none');
+            $('#action-bar').removeClass('opacity-0 pointer-events-none');
+            if (currentViewMode === 'tree') $('#canvas-container').removeClass('hidden opacity-0');
+            else $('#map-container').removeClass('hidden');
+
+            setTimeout(() => { $('#app-loading').remove(); }, 300);
+        }, 100);
 
     </script>
 </body>
