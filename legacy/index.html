@@ -44,7 +44,9 @@
     <!-- Initial Full-Screen App Loader -->
     <div id="app-loading" class="absolute inset-0 z-[100] flex flex-col items-center justify-center bg-gray-100 transition-opacity duration-300">
         <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
-        <div class="mt-4 text-gray-500 font-bold text-sm tracking-widest" data-i18n="loading">LOADING...</div>
+        <div class="mt-4 text-gray-500 font-bold text-sm tracking-widest">
+            <span data-i18n="loading">LOADING...</span> <span id="app-loading-pct"></span>
+        </div>
     </div>
 
     <div id="app" class="flex h-[100dvh] w-screen relative">
@@ -176,8 +178,8 @@
             <!-- Import/Export (Always in Menu) -->
             <button class="export-json-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-text text-blue-500 text-lg"></i> <span data-i18n="exportJson">JSON</span></button>
             <button class="export-zip-btn w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold border-b border-gray-100 flex items-center gap-2"><i class="ph ph-file-archive text-purple-500 text-lg"></i> <span data-i18n="exportZip">ZIP</span></button>
-            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0 border-b border-gray-100"><i class="ph ph-upload-simple text-red-500 text-lg"></i> <span data-i18n="importReplaceFull">Import (Replace)</span> <input type="file" class="import-file-replace hidden" accept=".json,.gz"></label>
-            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> <span data-i18n="importMergeFull">Import (Merge)</span> <input type="file" class="import-file-merge hidden" accept=".json,.gz"></label>
+            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0 border-b border-gray-100"><i class="ph ph-upload-simple text-red-500 text-lg"></i> <span data-i18n="importReplace">Import (Replace)</span> <input type="file" class="import-file-replace hidden" accept=".json,.gz"></label>
+            <label class="w-full text-left px-3 py-2.5 hover:bg-gray-50 text-xs font-bold cursor-pointer flex items-center gap-2 m-0"><i class="ph ph-upload-simple text-green-500 text-lg"></i> <span data-i18n="importMerge">Import (Merge)</span> <input type="file" class="import-file-merge hidden" accept=".json,.gz"></label>
 
             <!-- Language (Visible < 1280px) -->
             <div class="bg-white border-b border-gray-100 p-2 flex flex-col gap-1 xl:hidden">
@@ -203,8 +205,11 @@
         <!-- Map Container (Flex-Item) -->
         <div id="map-container" class="flex-grow relative z-20 hidden bg-gray-100 pb-16 sm:pb-0">
             <!-- Map loading overlay -->
-            <div id="map-loading" class="absolute inset-0 z-30 bg-gray-100/80 flex items-center justify-center hidden">
+            <div id="map-loading" class="absolute inset-0 z-30 bg-gray-100/80 flex flex-col items-center justify-center hidden">
                 <div class="animate-spin rounded-full h-10 w-10 border-4 border-orange-500 border-t-transparent"></div>
+                <div class="mt-4 text-gray-600 font-bold text-sm tracking-widest">
+                    <span data-i18n="loading">LOADING...</span> <span id="map-loading-pct"></span>
+                </div>
             </div>
             <div id="map-element" class="w-full h-full z-0"></div>
         </div>
@@ -331,32 +336,24 @@
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
 
     <script>
-        // --- TRANSLATION / i18n & SVG FLAGS ---
+        // ==========================================
+        // 1. CONSTANTS & CONFIGURATION
+        // ==========================================
         const FLAG_EN = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg>`;
         const FLAG_DE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg>`;
         const FLAGS = { en: FLAG_EN, de: FLAG_DE };
 
         const CATEGORY_COLORS = {
-            "none": "",
-            "red": "#ef4444",
-            "orange": "#f97316",
-            "yellow": "#eab308",
-            "chartreuse": "#84cc16",
-            "green": "#22c55e",
-            "springgreen": "#10b981",
-            "cyan": "#06b6d4",
-            "azure": "#0ea5e9",
-            "blue": "#3b82f6",
-            "violet": "#8b5cf6",
-            "magenta": "#d946ef",
-            "rose": "#f43f5e"
+            "none": "", "red": "#ef4444", "orange": "#f97316", "yellow": "#eab308",
+            "chartreuse": "#84cc16", "green": "#22c55e", "springgreen": "#10b981",
+            "cyan": "#06b6d4", "azure": "#0ea5e9", "blue": "#3b82f6",
+            "violet": "#8b5cf6", "magenta": "#d946ef", "rose": "#f43f5e"
         };
 
         const i18n = {
             en: {
                 jumpPerson: "Jump Person", jumpMarriage: "Jump Marriage", tree: "Tree", map: "Map",
-                exportJson: "JSON", exportZip: "ZIP", importReplace: "Imp(R)", importMerge: "Imp(M)",
-                importReplaceFull: "Import (Replace)", importMergeFull: "Import (Merge)",
+                exportJson: "JSON", exportZip: "ZIP", importReplace: "Import (Replace)", importMerge: "Import (Merge)",
                 createPerson: "Create Person", editPerson: "Edit Person", title: "Title", gender: "Gender *",
                 nickname: "Nickname", firstName: "First Name *", lastName: "Last Name", category: "Category",
                 catNone: "None", catRed: "Red", catOrange: "Orange", catYellow: "Yellow", catChartreuse: "Chartreuse", 
@@ -381,8 +378,8 @@
             },
             de: {
                 jumpPerson: "Zu Person springen", jumpMarriage: "Zu Ehe springen", tree: "Stammbaum", map: "Karte",
-                exportJson: "Exportieren (JSON)", exportZip: "Exportieren (ZIP)", importReplace: "Imp(E)", importMerge: "Imp(Z)",
-                importReplaceFull: "Importieren (Ersetzen)", importMergeFull: "Importieren (Zusammenführen)",
+                exportJson: "Exportieren (JSON)", exportZip: "Exportieren (ZIP)",
+                importReplace: "Importieren (Ersetzen)", importMerge: "Importieren (Zusammenführen)",
                 createPerson: "Person erstellen", editPerson: "Person bearbeiten", title: "Titel", gender: "Geschlecht *",
                 nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname", category: "Kategorie",
                 catNone: "Keine", catRed: "Rot", catOrange: "Orange", catYellow: "Gelb", catChartreuse: "Hellgrün", 
@@ -402,47 +399,10 @@
                 dbCantDeleteLast: "Die letzte Datenbank kann nicht gelöscht werden.", dbNameExists: "Datenbank existiert bereits.",
                 parentMissing: "Elternteil fehlt", lastNameMissing: "Nachname fehlt", language: "Sprache",
                 editFather: "Vater bearbeiten", addFather: "Vater hinzufügen", editMother: "Mutter bearbeiten", addMother: "Mutter hinzufügen",
-                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen", loading: "LÄDT...",
+                addSpouse: "Ehepartner hinzufügen", addChild: "Kind hinzufügen", standard: "Standard", undo: "Rückgängig", redo: "Wiederholen", loading: "LADEN...",
                 search: "Suchen...", typePerson: "Person", typeAddress: "Adresse", typeEventPlace: "Ereignisort", typeEventNote: "Ereignisnotiz", typeNote: "Notiz"
             }
         };
-
-        let currentLang = localStorage.getItem('genealogyLang') || 'en';
-
-        function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) ? i18n[currentLang][key] : key; }
-
-        function updateLanguageUI() {
-            $('[data-i18n]').each(function() { $(this).text(t($(this).data('i18n'))); });
-            $('[data-i18n-placeholder]').each(function() { $(this).attr('placeholder', t($(this).data('i18n-placeholder'))); });
-            $('[data-i18n-title]').each(function() { $(this).attr('title', t($(this).data('i18n-title'))); });
-
-            $('.lang-option').removeClass('ring-2 ring-blue-500 bg-blue-50');
-            $(`.lang-option[data-lang="${currentLang}"]`).addClass('ring-2 ring-blue-500 bg-blue-50');
-            
-            $('.lang-flag').html(FLAGS[currentLang]);
-            $('.lang-label').text(currentLang.toUpperCase());
-
-            updateQuickNav();
-            if (selectedPersonId) openPanel(selectedPersonId);
-            
-            // Re-render but maintain map if we are in map view
-            renderTree();
-            if (currentViewMode === 'map') {
-                openMap();
-            }
-        }
-
-        $('.lang-option').click(function() {
-            currentLang = $(this).data('lang');
-            localStorage.setItem('genealogyLang', currentLang);
-            updateLanguageUI();
-            $('.lang-menu').addClass('hidden');
-        });
-
-        $('.lang-toggle').click(function(e) {
-            e.stopPropagation();
-            $('.lang-menu').toggleClass('hidden');
-        });
 
         const ICONS = {
             male: `<i class="ph ph-gender-male text-blue-500 font-bold"></i>`,
@@ -474,7 +434,17 @@
             ]
         };
 
-        // --- DATABASE MANAGEMENT ---
+        // ==========================================
+        // 2. GLOBAL STATE INITIALIZATION
+        // ==========================================
+        let currentLang = localStorage.getItem('genealogyLang') || 'en';
+        
+        let mapInstance = null;
+        let mapTileLayer = null;
+        let mapMarkers = null;
+        let geoCache = JSON.parse(localStorage.getItem('genealogyGeoCache') || '{}');
+        let currentMapGeocodeRun = 0;
+
         let dbNames = JSON.parse(localStorage.getItem('genealogyDBNames'));
         if (!dbNames) {
             dbNames =['default'];
@@ -493,6 +463,68 @@
             if(oldHistory) localStorage.setItem('genealogyHistory_default', oldHistory);
             if(oldHistoryIndex) localStorage.setItem('genealogyHistoryIndex_default', oldHistoryIndex);
         }
+
+        let db = JSON.parse(localStorage.getItem('genealogyData_' + currentDbName));
+        if (!db || !Array.isArray(db.persons)) { db = JSON.parse(JSON.stringify(initialData)); }
+
+        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[];
+        let historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
+        if (isNaN(historyIndex)) historyIndex = -1;
+
+        if (historyStack.length === 0 || historyIndex === -1) {
+            historyStack =[JSON.parse(JSON.stringify(db.persons))];
+            historyIndex = 0;
+            saveHistory();
+        }
+
+        let renderedIds = new Set();
+        let selectedPersonId = null;
+        let romanNumerals = {};
+        let personGen = {};
+        let currentViewMode = 'tree'; 
+        let displayInfoModes = { events: false, address: false, notes: false, actions: true };
+        let collapsedFamilies = new Set();
+        let suppressedIds = new Set();
+        let canvasZoom = 1;
+        let debounceSaveTimeout = null;
+
+        // ==========================================
+        // 3. CORE FUNCTIONS & LOGIC
+        // ==========================================
+
+        function t(key) { return (i18n[currentLang] && i18n[currentLang][key]) ? i18n[currentLang][key] : key; }
+
+        function updateLanguageUI() {
+            $('[data-i18n]').each(function() { $(this).text(t($(this).data('i18n'))); });
+            $('[data-i18n-placeholder]').each(function() { $(this).attr('placeholder', t($(this).data('i18n-placeholder'))); });
+            $('[data-i18n-title]').each(function() { $(this).attr('title', t($(this).data('i18n-title'))); });
+
+            $('.lang-option').removeClass('ring-2 ring-blue-500 bg-blue-50');
+            $(`.lang-option[data-lang="${currentLang}"]`).addClass('ring-2 ring-blue-500 bg-blue-50');
+            
+            $('.lang-flag').html(FLAGS[currentLang]);
+            $('.lang-label').text(currentLang.toUpperCase());
+
+            updateQuickNav();
+            if (selectedPersonId) openPanel(selectedPersonId);
+            
+            renderTree();
+            if (currentViewMode === 'map') {
+                openMap();
+            }
+        }
+
+        $('.lang-option').click(function() {
+            currentLang = $(this).data('lang');
+            localStorage.setItem('genealogyLang', currentLang);
+            updateLanguageUI();
+            $('.lang-menu').addClass('hidden');
+        });
+
+        $('.lang-toggle').click(function(e) {
+            e.stopPropagation();
+            $('.lang-menu').toggleClass('hidden');
+        });
 
         function loadDBList() {
             let opts = '';
@@ -544,7 +576,7 @@
             saveHistory();
 
             selectedPersonId = null;
-            collapsedFamilies.clear(); // reset collapsed states
+            collapsedFamilies.clear();
             $('#close-panel').click();
             
             saveData(true);
@@ -600,30 +632,6 @@
         $('#db-create-btn, #burger-db-create-btn').click(createDatabase);
         $('#db-delete-btn, #burger-db-delete-btn').click(deleteDatabase);
 
-        let db = JSON.parse(localStorage.getItem('genealogyData_' + currentDbName));
-        if (!db || !Array.isArray(db.persons)) { db = JSON.parse(JSON.stringify(initialData)); }
-
-        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[];
-        let historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
-        if (isNaN(historyIndex)) historyIndex = -1;
-
-        if (historyStack.length === 0 || historyIndex === -1) {
-            historyStack =[JSON.parse(JSON.stringify(db.persons))];
-            historyIndex = 0;
-            saveHistory();
-        }
-
-        let renderedIds = new Set();
-        let selectedPersonId = null;
-        let romanNumerals = {};
-        let personGen = {};
-        let currentViewMode = 'tree'; 
-        let displayInfoModes = { events: false, address: false, notes: false, actions: true };
-        let collapsedFamilies = new Set();
-        let suppressedIds = new Set();
-        let canvasZoom = 1;
-
-        let debounceSaveTimeout = null;
         function debouncedSaveData() {
             clearTimeout(debounceSaveTimeout);
             debounceSaveTimeout = setTimeout(() => {
@@ -689,7 +697,6 @@
             }
         });
 
-        // Hide search results on generic document click
         document.addEventListener('click', (e) => {
             if (!$(e.target).closest('#search-container').length) {
                 $('#search-results').addClass('hidden');
@@ -704,13 +711,7 @@
             $('#global-search').val('');
         });
 
-        // --- MAP STATE & LOGIC ---
-        let mapInstance = null;
-        let mapTileLayer = null;
-        let mapMarkers = null;
-        let geoCache = JSON.parse(localStorage.getItem('genealogyGeoCache') || '{}');
-        let currentMapGeocodeRun = 0;
-
+        // --- MAP LOGIC ---
         function getMajorityColor(colorsObj) {
             let maxTotal = 0, maxMales = -1, res = '#3b82f6';
             for(let c in colorsObj) {
@@ -721,7 +722,7 @@
             return res;
         }
 
-        async function openMap() {
+        function initializeMap() {
             let tileUrl = currentLang === 'de' 
                 ? 'https://tile.openstreetmap.de/{z}/{x}/{y}.png' 
                 : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -734,13 +735,10 @@
                     mapTileLayer.setUrl(tileUrl);
                 }
             }
+            return { previousCenter: mapInstance.getCenter(), previousZoom: mapInstance.getZoom() };
+        }
 
-            let previousCenter = mapInstance.getCenter();
-            let previousZoom = mapInstance.getZoom();
-
-            if (mapMarkers) mapInstance.removeLayer(mapMarkers);
-            mapMarkers = L.markerClusterGroup();
-
+        function groupMapLocations() {
             const locGroups = {};
             db.persons.forEach(p => {
                 let mapItems =[];
@@ -783,87 +781,129 @@
                     if (!isDup) locGroups[key].events.push({ type: e.type, date: e.date, note: e.note, involved: involved });
                 });
             });
+            return locGroups;
+        }
+
+        async function fetchCoordinates(group, rateLimitState, currentRunId) {
+            if (group.coordsStr) {
+                let parts = group.coordsStr.split(',');
+                if (parts.length === 2) return { lat: parseFloat(parts[0]), lng: parseFloat(parts[1]) };
+            } else if (group.place) {
+                if (geoCache[group.place]) {
+                    return { lat: geoCache[group.place].lat, lng: geoCache[group.place].lng };
+                } else {
+                    try {
+                        if (rateLimitState.hasNewGeocode) {
+                            await new Promise(r => setTimeout(r, 1000));
+                        }
+                        if (currentMapGeocodeRun !== currentRunId) return { lat: undefined, lng: undefined };
+                        
+                        rateLimitState.hasNewGeocode = true;
+                        
+                        console.time(`[Geocoding] API fetch for "${group.place}"`);
+                        let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
+                        let response = await $.getJSON(url);
+                        console.timeEnd(`[Geocoding] API fetch for "${group.place}"`);
+                        
+                        if (currentMapGeocodeRun !== currentRunId) return { lat: undefined, lng: undefined };
+
+                        if (response && response.length > 0) {
+                            let lat = parseFloat(response[0].lat);
+                            let lng = parseFloat(response[0].lon);
+                            geoCache[group.place] = { lat, lng };
+                            localStorage.setItem('genealogyGeoCache', JSON.stringify(geoCache));
+                            return { lat, lng };
+                        }
+                    } catch(err) { 
+                        console.error("[Geocoding] Failed for:", group.place, err); 
+                    }
+                }
+            }
+            return { lat: undefined, lng: undefined };
+        }
+
+        function createMapMarker(lat, lng, group, key) {
+            let mColor = getMajorityColor(group.colors);
+            let markerIcon = L.divIcon({
+                className: 'custom-pin',
+                html: `<div style="background-color: ${mColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
+                iconSize: [20, 20], iconAnchor: [10, 10]
+            });
+
+            let marker = L.marker([lat, lng], { icon: markerIcon });
+            let popupHtml = `<div class="popup-content max-h-64 overflow-y-auto pr-1 text-sm text-gray-800 font-sans w-[280px]">
+                <h3 class="mt-0 mb-3 border-b border-gray-200 pb-1.5 font-bold text-[15px] flex items-center gap-1.5 text-gray-700">
+                    <i class="ph ph-map-pin text-orange-500"></i> ${group.place || group.coordsStr}
+                </h3>`;
+            
+            group.events.sort((a,b) => parseInt(a.date||'9999') - parseInt(b.date||'9999')).forEach(e => {
+                let typeKey = (e.type || 'other').toLowerCase();
+                let typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : (e.type === 'address' ? '#6b7280' : '#6c757d')));
+                let iconHtml = ICONS[typeKey] || ICONS.other;
+
+                let personsHtml = e.involved.map(invP => {
+                    let roman = romanNumerals[invP.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[invP.id]}</span>` : '';
+                    return `<span class="person-link px-1 rounded cursor-pointer hover:text-blue-600 hover:bg-blue-50 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName||''}${roman}</span>`;
+                }).join(' <span class="text-xs font-normal text-gray-400">&amp;</span> ');
+
+                popupHtml += `
+                    <div class="bg-gray-50 border border-gray-200 rounded px-1.5 py-2 mb-2 last:mb-0 shadow-sm">
+                        <div class="flex items-center justify-between mb-1.5 px-0.5">
+                            <div class="flex items-center gap-1 text-gray-600 font-semibold text-[11px]" style="color: ${typeColor}">
+                                ${iconHtml} <span class="uppercase tracking-wide">${t(typeKey)}</span>
+                            </div>
+                            <span class="text-xs text-gray-500 font-medium">${e.date || ''}</span>
+                        </div>
+                        <div class="leading-snug text-[13px]">${personsHtml}</div>
+                        ${e.note ? `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-200 italic leading-tight px-0.5">${e.note}</div>` : ''}
+                    </div>`;
+            });
+            popupHtml += `</div>`;
+            marker.bindPopup(popupHtml, { minWidth: 280 });
+            return marker;
+        }
+
+        async function openMap() {
+            let { previousCenter, previousZoom } = initializeMap();
+
+            if (mapMarkers) mapInstance.removeLayer(mapMarkers);
+            mapMarkers = L.markerClusterGroup();
+
+            const locGroups = groupMapLocations();
+            let keys = Object.keys(locGroups);
 
             currentMapGeocodeRun++;
             let thisRun = currentMapGeocodeRun;
-            let keys = Object.keys(locGroups);
-            let hasNewGeocode = false;
+            let rateLimitState = { hasNewGeocode: false };
 
-            if (keys.length > 0) $('#map-loading').removeClass('hidden');
+            if (keys.length > 0) {
+                $('#map-loading').removeClass('hidden');
+                $('#app-loading-pct, #map-loading-pct').text('0%');
+            }
 
             for (let i = 0; i < keys.length; i++) {
-                if (currentMapGeocodeRun !== thisRun) return;
+                if (currentMapGeocodeRun !== thisRun) {
+                    return;
+                }
 
                 let key = keys[i];
                 let group = locGroups[key];
-                let lat, lng;
+                
+                let { lat, lng } = await fetchCoordinates(group, rateLimitState, thisRun);
 
-                if (group.coordsStr) {
-                    let parts = group.coordsStr.split(',');
-                    if (parts.length === 2) { lat = parseFloat(parts[0]); lng = parseFloat(parts[1]); }
-                } else if (group.place) {
-                    if (geoCache[group.place]) {
-                        lat = geoCache[group.place].lat; lng = geoCache[group.place].lng;
-                    } else {
-                        try {
-                            if (hasNewGeocode) await new Promise(r => setTimeout(r, 1000));
-                            if (currentMapGeocodeRun !== thisRun) return;
-                            hasNewGeocode = true;
-                            let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
-                            let response = await $.getJSON(url);
-                            if (currentMapGeocodeRun !== thisRun) return;
-                            if (response && response.length > 0) {
-                                lat = parseFloat(response[0].lat); lng = parseFloat(response[0].lon);
-                                geoCache[group.place] = { lat, lng };
-                                localStorage.setItem('genealogyGeoCache', JSON.stringify(geoCache));
-                            }
-                        } catch(err) { console.error("Geocoding failed for:", group.place); }
-                    }
-                }
+                if (currentMapGeocodeRun !== thisRun) return;
 
                 if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
-                    let mColor = getMajorityColor(group.colors);
-                    let markerIcon = L.divIcon({
-                        className: 'custom-pin',
-                        html: `<div style="background-color: ${mColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
-                        iconSize:[20, 20], iconAnchor:[10, 10]
-                    });
-
-                    let marker = L.marker([lat, lng], { icon: markerIcon });
-                    let popupHtml = `<div class="popup-content max-h-64 overflow-y-auto pr-1 text-sm text-gray-800 font-sans w-[280px]">
-                        <h3 class="mt-0 mb-3 border-b border-gray-200 pb-1.5 font-bold text-[15px] flex items-center gap-1.5 text-gray-700">
-                            <i class="ph ph-map-pin text-orange-500"></i> ${group.place || group.coordsStr}
-                        </h3>`;
-                    
-                    group.events.sort((a,b) => parseInt(a.date||'9999') - parseInt(b.date||'9999')).forEach(e => {
-                        let typeKey = (e.type || 'other').toLowerCase();
-                        let typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : (e.type === 'address' ? '#6b7280' : '#6c757d')));
-                        let iconHtml = ICONS[typeKey] || ICONS.other;
-
-                        let personsHtml = e.involved.map(invP => {
-                            let roman = romanNumerals[invP.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[invP.id]}</span>` : '';
-                            return `<span class="person-link px-1 rounded cursor-pointer hover:text-blue-600 hover:bg-blue-50 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName||''}${roman}</span>`;
-                        }).join(' <span class="text-xs font-normal text-gray-400">&amp;</span> ');
-
-                        popupHtml += `
-                            <div class="bg-gray-50 border border-gray-200 rounded px-1.5 py-2 mb-2 last:mb-0 shadow-sm">
-                                <div class="flex items-center justify-between mb-1.5 px-0.5">
-                                    <div class="flex items-center gap-1 text-gray-600 font-semibold text-[11px]" style="color: ${typeColor}">
-                                        ${iconHtml} <span class="uppercase tracking-wide">${t(typeKey)}</span>
-                                    </div>
-                                    <span class="text-xs text-gray-500 font-medium">${e.date || ''}</span>
-                                </div>
-                                <div class="leading-snug text-[13px]">${personsHtml}</div>
-                                ${e.note ? `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-200 italic leading-tight px-0.5">${e.note}</div>` : ''}
-                            </div>`;
-                    });
-                    popupHtml += `</div>`;
-                    marker.bindPopup(popupHtml, { minWidth: 280 });
+                    let marker = createMapMarker(lat, lng, group, key);
                     mapMarkers.addLayer(marker);
                 }
+
+                let pct = Math.round(((i + 1) / keys.length) * 100) + '%';
+                $('#app-loading-pct, #map-loading-pct').text(pct);
             }
 
             if (currentMapGeocodeRun !== thisRun) return;
+
             mapInstance.addLayer(mapMarkers);
             
             if (mapMarkers.getLayers().length > 0 && (!previousCenter || (previousZoom === 4 && previousCenter.lat === 48.2082))) {
@@ -871,15 +911,16 @@
             }
             
             mapInstance.invalidateSize();
-            setTimeout(() => mapInstance.invalidateSize(), 150);
-            $('#map-loading').addClass('hidden');
+            setTimeout(() => {
+                mapInstance.invalidateSize();
+                $('#map-loading').addClass('hidden');
+            }, 150);
         }
 
         function setViewMode(mode) {
             currentViewMode = mode;
             $('#burger-menu').addClass('hidden');
 
-            // Strip any leftover inline display style that might override .hidden
             $('#canvas-container, #map-container').css('display', '');
 
             if (db.persons.length === 0) {
