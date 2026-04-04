@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="description" content="Free, open-source, and minimal genealogy tool designed to help you build, organize, and research your family tree.">
+    <meta name="keywords" content="genealogy">
+    <meta name="author" content="Niklas Jank">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Legacy</title>
     <link rel="icon" type="image/svg+xml" href="tree-structure-duotone.svg">
@@ -13,8 +16,8 @@
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <!-- Leaflet MarkerCluster CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
 
     <style>
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -35,7 +38,7 @@
         svg path, svg circle { transition: stroke 0.3s, stroke-width 0.3s; }
         .highlighted-line { stroke: #3b82f6 !important; stroke-width: 4px !important; z-index: 100; }
 
-        .leaflet-popup-content { margin: 12px 14px; }
+        .leaflet-popup-content { margin: 8px 10px; }
         .leaflet-popup-content-wrapper { border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
     </style>
 </head>
@@ -129,10 +132,10 @@
                     <span class="lang-flag flex-shrink-0"></span> <span class="lang-label">EN</span> <i class="ph ph-caret-up text-gray-400"></i>
                 </button>
                 <div class="lang-menu absolute right-0 bottom-full mb-1 min-w-max bg-white border border-gray-200 rounded shadow-lg hidden flex-col overflow-hidden z-[100]">
-                    <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 border-b border-gray-100 transition-colors" data-lang="en">
+                    <button class="lang-option px-2 py-1.5 text-left text-[11px] font-bold hover:bg-gray-50 flex items-center gap-1.5 border-b border-gray-100 transition-colors" data-lang="en">
                         <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 30" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><clipPath id="a"><path d="M0 0v30h60V0z"/></clipPath><clipPath id="b"><path d="M30 15h30v15zv15H0zH0V0zv15h30z"/></clipPath><g clip-path="url(#a)"><path d="M0 0v30h60V0z" fill="#012169"/><path d="M0 0l60 30m0-30L0 30" stroke="#fff" stroke-width="6"/><path d="M0 0l60 30m0-30L0 30" clip-path="url(#b)" stroke="#C8102E" stroke-width="4"/><path d="M30 0v30M0 15h60" stroke="#fff" stroke-width="10"/><path d="M30 0v30M0 15h60" stroke="#C8102E" stroke-width="6"/></g></svg></span> EN
                     </button>
-                    <button class="lang-option px-3 py-2 text-left text-xs font-bold hover:bg-gray-50 flex items-center gap-2 transition-colors" data-lang="de">
+                    <button class="lang-option px-2 py-1.5 text-left text-[11px] font-bold hover:bg-gray-50 flex items-center gap-1.5 transition-colors" data-lang="de">
                         <span class="flex-shrink-0 flex items-center justify-center w-[18px] h-[12px]"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3 2" preserveAspectRatio="xMidYMid slice" class="w-[18px] h-[12px] rounded-[2px] object-cover border border-gray-200"><rect width="3" height="2" fill="#000"/><rect width="3" height="1.33" y=".67" fill="#d00"/><rect width="3" height=".67" y="1.33" fill="#ffce00"/></svg></span> DE
                     </button>
                 </div>
@@ -352,12 +355,13 @@
 
         const i18n = {
             en: {
-                jumpPerson: "Jump Person", jumpMarriage: "Jump Marriage", tree: "Tree", map: "Map",
-                exportJson: "JSON", exportZip: "ZIP", importReplace: "Import (Replace)", importMerge: "Import (Merge)",
+                jumpPerson: "Jump to Person", jumpMarriage: "Jump to Marriage", tree: "Tree", map: "Map",
+                exportJson: "Export (JSON)", exportZip: "Export (ZIP)",
+                importReplace: "Import (Replace)", importMerge: "Import (Merge)",
                 createPerson: "Create Person", editPerson: "Edit Person", title: "Title", gender: "Gender *",
                 nickname: "Nickname", firstName: "First Name *", lastName: "Last Name", category: "Category",
-                catNone: "None", catRed: "Red", catOrange: "Orange", catYellow: "Yellow", catChartreuse: "Chartreuse", 
-                catGreen: "Green", catSpringGreen: "Spring Gr.", catCyan: "Cyan", catAzure: "Azure", 
+                catNone: "None", catRed: "Red", catOrange: "Orange", catYellow: "Yellow", catChartreuse: "Chartreuse",
+                catGreen: "Green", catSpringGreen: "Spring Gr.", catCyan: "Cyan", catAzure: "Azure",
                 catBlue: "Blue", catViolet: "Violet", catMagenta: "Magenta", catRose: "Rose",
                 parents: "Parents", father: "Father", mother: "Mother", partner: "Partner",
                 noFather: "-- No Father --", noMother: "-- No Mother --",
@@ -382,8 +386,8 @@
                 importReplace: "Importieren (Ersetzen)", importMerge: "Importieren (Zusammenführen)",
                 createPerson: "Person erstellen", editPerson: "Person bearbeiten", title: "Titel", gender: "Geschlecht *",
                 nickname: "Spitzname", firstName: "Vorname *", lastName: "Nachname", category: "Kategorie",
-                catNone: "Keine", catRed: "Rot", catOrange: "Orange", catYellow: "Gelb", catChartreuse: "Hellgrün", 
-                catGreen: "Grün", catSpringGreen: "Frühlingsgr.", catCyan: "Türkis", catAzure: "Azurblau", 
+                catNone: "Keine", catRed: "Rot", catOrange: "Orange", catYellow: "Gelb", catChartreuse: "Hellgrün",
+                catGreen: "Grün", catSpringGreen: "Frühlingsgr.", catCyan: "Türkis", catAzure: "Azurblau",
                 catBlue: "Blau", catViolet: "Violett", catMagenta: "Magenta", catRose: "Rosa",
                 parents: "Eltern", father: "Vater", mother: "Mutter", partner: "Partner",
                 noFather: "-- Kein Vater --", noMother: "-- Keine Mutter --",
@@ -415,30 +419,32 @@
         };
 
         const initialData = {
-            persons:[
-                { id: 1, firstName: "Georg", lastName: "Müller", gender: "m", category: "blue", notes: "", events:[{type: "Birth", date: "1850", place: "Berlin"}, {type: "Death", date: "1920", place: "Berlin"}] },
-                { id: 2, firstName: "Ursula", lastName: "Schmidt", gender: "f", category: "rose", notes: "", events:[{type: "Birth", date: "1855", place: "Munich"}, {type: "Marriage", date: "1880", place: "Berlin", involvedPersonId: 1}, {type: "Death", date: "1925", place: "Berlin"}] },
-                { id: 3, firstName: "Johann", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1882", place: "Berlin"}] },
-                { id: 4, firstName: "Josef", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events:[{type: "Birth", date: "1885", place: "Berlin"}, {type: "Marriage", date: "1910", place: "Hamburg", involvedPersonId: 14}] },
-                { id: 5, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", events:[{type: "Birth", date: "1860", place: "Vienna"}, {type: "Death", date: "1910", place: "Vienna"}] },
-                { id: 6, firstName: "Gerda", lastName: "Fuchs", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1865", place: "Salzburg"}, {type: "Marriage", date: "1885", place: "Vienna", involvedPersonId: 5}, {type: "Death", date: "1930", place: "Vienna"}] },
-                { id: 7, firstName: "Heinrich", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1886", place: "Vienna"}] },
-                { id: 8, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events:[{type: "Birth", date: "1890", place: "Vienna"}] },
-                { id: 9, firstName: "Elise", lastName: "Meier", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1895", place: "Linz"}, {type: "Marriage", date: "1915", place: "Vienna", involvedPersonId: 8}] },
-                { id: 10, firstName: "Ernst", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1916", place: "Vienna"}] },
-                { id: 11, firstName: "Johann", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events:[{type: "Birth", date: "1918", place: "Vienna"}] },
-                { id: 12, firstName: "Friedrich", lastName: "Hoffman", gender: "m", category: "none", notes: "", events:[{type: "Birth", date: "1862", place: "Hamburg"}, {type: "Death", date: "1915", place: "Hamburg"}] },
-                { id: 13, firstName: "Waltraud", lastName: "Wagner", gender: "f", category: "none", notes: "", events:[{type: "Birth", date: "1868", place: "Bremen"}, {type: "Marriage", date: "1890", place: "Hamburg", involvedPersonId: 12}, {type: "Death", date: "1940", place: "Hamburg"}] },
-                { id: 14, firstName: "Maria", lastName: "Hoffman", gender: "f", category: "none", notes: "", fatherId: 12, motherId: 13, events:[{type: "Birth", date: "1892", place: "Hamburg"}] },
-                { id: 15, firstName: "Archie", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 4, motherId: 14, events:[{type: "Birth", date: "1912", place: "Hamburg"}] }
+            persons: [
+                { id: 1, firstName: "Georg", lastName: "Müller", gender: "m", category: "blue", notes: "", events: [{type: "Birth", date: "1850", place: "Berlin"}, {type: "Death", date: "1920", place: "Berlin"}] },
+                { id: 2, firstName: "Ursula", lastName: "Schmidt", gender: "f", category: "rose", notes: "", events: [{type: "Birth", date: "1855", place: "Munich"}, {type: "Marriage", date: "1880", place: "Berlin", involvedPersonId: 1}, {type: "Death", date: "1925", place: "Berlin"}] },
+                { id: 3, firstName: "Johann", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events: [{type: "Birth", date: "1882", place: "Berlin"}] },
+                { id: 4, firstName: "Josef", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 1, motherId: 2, events: [{type: "Birth", date: "1885", place: "Berlin"}, {type: "Marriage", date: "1910", place: "Hamburg", involvedPersonId: 14}] },
+                { id: 5, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", events: [{type: "Birth", date: "1860", place: "Vienna"}, {type: "Death", date: "1910", place: "Vienna"}] },
+                { id: 6, firstName: "Gerda", lastName: "Fuchs", gender: "f", category: "none", notes: "", events: [{type: "Birth", date: "1865", place: "Salzburg"}, {type: "Marriage", date: "1885", place: "Vienna", involvedPersonId: 5}, {type: "Death", date: "1930", place: "Vienna"}] },
+                { id: 7, firstName: "Heinrich", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events: [{type: "Birth", date: "1886", place: "Vienna"}] },
+                { id: 8, firstName: "Karl", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 5, motherId: 6, events: [{type: "Birth", date: "1890", place: "Vienna"}] },
+                { id: 9, firstName: "Elise", lastName: "Meier", gender: "f", category: "none", notes: "", events: [{type: "Birth", date: "1895", place: "Linz"}, {type: "Marriage", date: "1915", place: "Vienna", involvedPersonId: 8}] },
+                { id: 10, firstName: "Ernst", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events: [{type: "Birth", date: "1916", place: "Vienna"}] },
+                { id: 11, firstName: "Johann", lastName: "Weber", gender: "m", category: "none", notes: "", fatherId: 8, motherId: 9, events: [{type: "Birth", date: "1918", place: "Vienna"}] },
+                { id: 12, firstName: "Friedrich", lastName: "Hoffman", gender: "m", category: "none", notes: "", events: [{type: "Birth", date: "1862", place: "Hamburg"}, {type: "Death", date: "1915", place: "Hamburg"}] },
+                { id: 13, firstName: "Waltraud", lastName: "Wagner", gender: "f", category: "none", notes: "", events: [{type: "Birth", date: "1868", place: "Bremen"}, {type: "Marriage", date: "1890", place: "Hamburg", involvedPersonId: 12}, {type: "Death", date: "1940", place: "Hamburg"}] },
+                { id: 14, firstName: "Maria", lastName: "Hoffman", gender: "f", category: "none", notes: "", fatherId: 12, motherId: 13, events: [{type: "Birth", date: "1892", place: "Hamburg"}] },
+                { id: 15, firstName: "Archie", lastName: "Müller", gender: "m", category: "none", notes: "", fatherId: 4, motherId: 14, events: [{type: "Birth", date: "1912", place: "Hamburg"}] }
             ]
         };
 
         // ==========================================
         // 2. GLOBAL STATE INITIALIZATION
         // ==========================================
-        let currentLang = localStorage.getItem('genealogyLang') || 'en';
-        
+        const supportedLangs = Object.keys(i18n);
+        const browserLang = (navigator.language || navigator.userLanguage || '').slice(0, 2).toLowerCase();
+        let currentLang = localStorage.getItem('genealogyLang') || (supportedLangs.includes(browserLang) ? browserLang : 'en');
+
         let mapInstance = null;
         let mapTileLayer = null;
         let mapMarkers = null;
@@ -447,32 +453,22 @@
 
         let dbNames = JSON.parse(localStorage.getItem('genealogyDBNames'));
         if (!dbNames) {
-            dbNames =['default'];
+            dbNames = ['default'];
             localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
         }
-        
+
         let currentDbName = localStorage.getItem('genealogyActiveDB') || 'default';
         if (!dbNames.includes(currentDbName)) currentDbName = dbNames[0];
-
-        // Migrate older legacy localstorage key to DB standard
-        let oldDb = localStorage.getItem('genealogyData');
-        if (oldDb && !localStorage.getItem('genealogyData_default')) {
-            localStorage.setItem('genealogyData_default', oldDb);
-            let oldHistory = localStorage.getItem('genealogyHistory');
-            let oldHistoryIndex = localStorage.getItem('genealogyHistoryIndex');
-            if(oldHistory) localStorage.setItem('genealogyHistory_default', oldHistory);
-            if(oldHistoryIndex) localStorage.setItem('genealogyHistoryIndex_default', oldHistoryIndex);
-        }
 
         let db = JSON.parse(localStorage.getItem('genealogyData_' + currentDbName));
         if (!db || !Array.isArray(db.persons)) { db = JSON.parse(JSON.stringify(initialData)); }
 
-        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[];
+        let historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) || [];
         let historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
         if (isNaN(historyIndex)) historyIndex = -1;
 
         if (historyStack.length === 0 || historyIndex === -1) {
-            historyStack =[JSON.parse(JSON.stringify(db.persons))];
+            historyStack = [JSON.parse(JSON.stringify(db.persons))];
             historyIndex = 0;
             saveHistory();
         }
@@ -481,7 +477,7 @@
         let selectedPersonId = null;
         let romanNumerals = {};
         let personGen = {};
-        let currentViewMode = 'tree'; 
+        let currentViewMode = 'tree';
         let displayInfoModes = { events: false, address: false, notes: false, actions: true };
         let collapsedFamilies = new Set();
         let suppressedIds = new Set();
@@ -501,17 +497,15 @@
 
             $('.lang-option').removeClass('ring-2 ring-blue-500 bg-blue-50');
             $(`.lang-option[data-lang="${currentLang}"]`).addClass('ring-2 ring-blue-500 bg-blue-50');
-            
+
             $('.lang-flag').html(FLAGS[currentLang]);
             $('.lang-label').text(currentLang.toUpperCase());
 
             updateQuickNav();
             if (selectedPersonId) openPanel(selectedPersonId);
-            
+
             renderTree();
-            if (currentViewMode === 'map') {
-                openMap();
-            }
+            if (currentViewMode === 'map') openMap();
         }
 
         $('.lang-option').click(function() {
@@ -527,13 +521,14 @@
         });
 
         function loadDBList() {
-            let opts = '';
-            dbNames.forEach(name => { opts += `<option value="${name}" ${name === currentDbName ? 'selected' : ''}>${name}</option>`; });
+            const opts = dbNames.map(name =>
+                `<option value="${name}" ${name === currentDbName ? 'selected' : ''}>${name}</option>`
+            ).join('');
             $('#db-select, #burger-db-select').html(opts);
         }
 
         function centerOnLargestFamily() {
-            let possibleRoots =[];
+            const possibleRoots = [];
             db.persons.forEach(p => {
                 if (p.gender === 'm' && !p.fatherId && !p.motherId) possibleRoots.push(p.id);
                 if (p.gender === 'f' && !p.fatherId && !p.motherId && !hasActiveMalePartner(p.id)) possibleRoots.push(p.id);
@@ -541,9 +536,8 @@
 
             let largestRoot = null;
             let maxDescendants = -1;
-
             possibleRoots.forEach(rootId => {
-                let count = countDescendants(rootId);
+                const count = countDescendants(rootId);
                 if (count > maxDescendants) { maxDescendants = count; largestRoot = rootId; }
             });
 
@@ -552,25 +546,40 @@
             } else if (db.persons.length > 0) {
                 scrollToPerson(db.persons[0].id, false);
             } else {
-                let sliderEl = document.getElementById('canvas-container');
-                sliderEl.scrollLeft = 25000 - window.innerWidth/2 + 128;
-                sliderEl.scrollTop = 25000 - window.innerHeight/2 + 100;
+                const el = document.getElementById('canvas-container');
+                el.scrollLeft = 25000 - window.innerWidth / 2 + 128;
+                el.scrollTop = 25000 - window.innerHeight / 2 + 100;
             }
+        }
+
+        // Fade-in the correct view after a DB switch or import operation.
+        function refreshViewAfterLoad(delay = 40) {
+            setTimeout(() => {
+                if (currentViewMode === 'tree') {
+                    setCanvasZoom(1);
+                    drawLines();
+                    centerOnLargestFamily();
+                    $('#canvas-container').animate({ opacity: 1 }, 150);
+                } else {
+                    $('#map-container').animate({ opacity: 1 }, 150);
+                    $('#canvas-container').css('opacity', '1').addClass('hidden');
+                }
+            }, delay);
         }
 
         function switchDatabase(name) {
             if (!dbNames.includes(name)) return;
-            
-            let $canvas = $('#canvas-container');
+
+            const $canvas = $('#canvas-container');
             $canvas.css('opacity', '0');
-            
+
             currentDbName = name;
             localStorage.setItem('genealogyActiveDB', currentDbName);
-            
-            let saved = localStorage.getItem('genealogyData_' + currentDbName);
-            db = saved ? JSON.parse(saved) : { persons:[] };
-            
-            historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) ||[JSON.parse(JSON.stringify(db.persons))];
+
+            const saved = localStorage.getItem('genealogyData_' + currentDbName);
+            db = saved ? JSON.parse(saved) : { persons: [] };
+
+            historyStack = JSON.parse(localStorage.getItem('genealogyHistory_' + currentDbName)) || [JSON.parse(JSON.stringify(db.persons))];
             historyIndex = parseInt(localStorage.getItem('genealogyHistoryIndex_' + currentDbName), 10);
             if (isNaN(historyIndex)) historyIndex = 0;
             saveHistory();
@@ -578,20 +587,9 @@
             selectedPersonId = null;
             collapsedFamilies.clear();
             $('#close-panel').click();
-            
+
             saveData(true);
-            
-            setTimeout(() => {
-                if (currentViewMode === 'tree') {
-                    setCanvasZoom(1);
-                    drawLines();
-                    centerOnLargestFamily();
-                    $canvas.animate({opacity: 1}, 150);
-                } else {
-                    $('#map-container').animate({opacity: 1}, 150);
-                    $canvas.css('opacity', '1').addClass('hidden');
-                }
-            }, 40);
+            refreshViewAfterLoad();
         }
 
         function createDatabase() {
@@ -602,23 +600,23 @@
             if (dbNames.includes(name)) { alert(t('dbNameExists')); return; }
             dbNames.push(name);
             localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
-            localStorage.setItem('genealogyData_' + name, JSON.stringify({ persons:[] }));
-            
+            localStorage.setItem('genealogyData_' + name, JSON.stringify({ persons: [] }));
+
             loadDBList();
             switchDatabase(name);
         }
 
         function deleteDatabase() {
             if (dbNames.length <= 1) { alert(t('dbCantDeleteLast')); return; }
-            let msg = t('dbDeleteConfirm').replace('{db}', currentDbName);
+            const msg = t('dbDeleteConfirm').replace('{db}', currentDbName);
             if (confirm(msg)) {
                 localStorage.removeItem('genealogyData_' + currentDbName);
                 localStorage.removeItem('genealogyHistory_' + currentDbName);
                 localStorage.removeItem('genealogyHistoryIndex_' + currentDbName);
-                
+
                 dbNames = dbNames.filter(n => n !== currentDbName);
                 localStorage.setItem('genealogyDBNames', JSON.stringify(dbNames));
-                
+
                 currentDbName = dbNames[0];
                 loadDBList();
                 switchDatabase(currentDbName);
@@ -626,7 +624,7 @@
         }
 
         $('#db-select, #burger-db-select').change(function() {
-            let name = $(this).val();
+            const name = $(this).val();
             if (name !== currentDbName) switchDatabase(name);
         });
         $('#db-create-btn, #burger-db-create-btn').click(createDatabase);
@@ -634,25 +632,23 @@
 
         function debouncedSaveData() {
             clearTimeout(debounceSaveTimeout);
-            debounceSaveTimeout = setTimeout(() => {
-                saveData();
-            }, 200);
+            debounceSaveTimeout = setTimeout(() => saveData(), 200);
         }
 
         // --- FUZZY SEARCH LOGIC ---
         $('#global-search').on('input', function() {
-            let val = $(this).val().toLowerCase().trim();
-            if(!val) { $('#search-results').addClass('hidden'); return; }
-            
-            let results =[];
+            const val = $(this).val().toLowerCase().trim();
+            if (!val) { $('#search-results').addClass('hidden'); return; }
+
+            let results = [];
             db.persons.forEach(p => {
-                let pName = `${p.firstName} ${p.lastName||''}`.trim();
-                let romanPlain = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
-                let romanHtml = romanNumerals[p.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[p.id]}</span>` : '';
-                let pNameDisplayPlain = `${pName}${romanPlain}`;
-                let pNameDisplayHtml = `${pName}${romanHtml}`;
-                let pNameLower = pNameDisplayPlain.toLowerCase();
-                let nicknameLower = (p.nickname||'').toLowerCase();
+                const pName = `${p.firstName} ${p.lastName || ''}`.trim();
+                const romanPlain = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
+                const romanHtml = romanNumerals[p.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[p.id]}</span>` : '';
+                const pNameDisplayPlain = `${pName}${romanPlain}`;
+                const pNameDisplayHtml = `${pName}${romanHtml}`;
+                const pNameLower = pNameDisplayPlain.toLowerCase();
+                const nicknameLower = (p.nickname || '').toLowerCase();
 
                 if (pNameLower.includes(val) || nicknameLower.includes(val)) {
                     results.push({ type: t('typePerson'), text: pNameDisplayHtml, id: p.id, score: 10 });
@@ -669,23 +665,25 @@
                             results.push({ type: t('typeEventPlace'), text: e.place, personName: pNameDisplayHtml, id: p.id, score: 6 });
                         }
                         if (e.note && e.note.toLowerCase().includes(val)) {
-                            results.push({ type: t('typeEventNote'), text: e.note.substring(0,40)+'...', personName: pNameDisplayHtml, id: p.id, score: 4 });
+                            results.push({ type: t('typeEventNote'), text: e.note.substring(0, 40) + '...', personName: pNameDisplayHtml, id: p.id, score: 4 });
                         }
                     });
                 }
             });
-            
-            results.sort((a,b) => b.score - a.score);
-            let uniqueResults =[];
-            let seen = new Set();
-            results.forEach(r => {
-                let key = r.id + r.type + r.text;
-                if(!seen.has(key)) { seen.add(key); uniqueResults.push(r); }
-            });
-            uniqueResults = uniqueResults.slice(0, 10);
 
-            if(uniqueResults.length > 0) {
-                let html = uniqueResults.map(r => `
+            results.sort((a, b) => b.score - a.score);
+
+            // Deduplicate by (id, type, text) key
+            const seen = new Set();
+            const uniqueResults = results.filter(r => {
+                const key = r.id + r.type + r.text;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            }).slice(0, 10);
+
+            if (uniqueResults.length > 0) {
+                const html = uniqueResults.map(r => `
                     <div class="p-2 border-b border-gray-100 hover:bg-blue-50 cursor-pointer search-result-item transition-colors" data-id="${r.id}">
                         <div class="text-[10px] font-bold text-blue-500 uppercase tracking-wide">${r.type} ${r.personName ? `<span class="text-gray-400 font-medium lowercase">in</span> ${r.personName}` : ''}</div>
                         <div class="text-xs text-gray-700 truncate">${r.text}</div>
@@ -704,9 +702,9 @@
         }, true);
 
         $(document).on('click', '.search-result-item', function() {
-            let id = $(this).data('id');
+            const id = $(this).data('id');
             openPanel(id);
-            if(currentViewMode === 'tree') scrollToPerson(id);
+            if (currentViewMode === 'tree') scrollToPerson(id);
             $('#search-results').addClass('hidden');
             $('#global-search').val('');
         });
@@ -714,26 +712,24 @@
         // --- MAP LOGIC ---
         function getMajorityColor(colorsObj) {
             let maxTotal = 0, maxMales = -1, res = '#3b82f6';
-            for(let c in colorsObj) {
-                let stats = colorsObj[c];
-                if(stats.total > maxTotal) { maxTotal = stats.total; maxMales = stats.males; res = c; } 
-                else if (stats.total === maxTotal) { if (stats.males > maxMales) { maxMales = stats.males; res = c; } }
+            for (let c in colorsObj) {
+                const stats = colorsObj[c];
+                if (stats.total > maxTotal) { maxTotal = stats.total; maxMales = stats.males; res = c; }
+                else if (stats.total === maxTotal && stats.males > maxMales) { maxMales = stats.males; res = c; }
             }
             return res;
         }
 
         function initializeMap() {
-            let tileUrl = currentLang === 'de' 
-                ? 'https://tile.openstreetmap.de/{z}/{x}/{y}.png' 
+            const tileUrl = currentLang === 'de'
+                ? 'https://tile.openstreetmap.de/{z}/{x}/{y}.png'
                 : 'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
             if (!mapInstance) {
                 mapInstance = L.map('map-element').setView([48.2082, 16.3738], 4);
                 mapTileLayer = L.tileLayer(tileUrl, { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(mapInstance);
-            } else if (mapTileLayer) {
-                if (mapTileLayer._url !== tileUrl) {
-                    mapTileLayer.setUrl(tileUrl);
-                }
+            } else if (mapTileLayer && mapTileLayer._url !== tileUrl) {
+                mapTileLayer.setUrl(tileUrl);
             }
             return { previousCenter: mapInstance.getCenter(), previousZoom: mapInstance.getZoom() };
         }
@@ -741,8 +737,8 @@
         function groupMapLocations() {
             const locGroups = {};
             db.persons.forEach(p => {
-                let mapItems =[];
-                if(p.events) {
+                const mapItems = [];
+                if (p.events) {
                     p.events.forEach(e => mapItems.push({ type: e.type, date: e.date, note: e.note, place: e.place, coordsStr: e.coordinates, involvedPersonId: e.involvedPersonId }));
                 }
                 if (p.address && p.address.trim() !== '') {
@@ -750,34 +746,33 @@
                 }
 
                 mapItems.forEach(e => {
-                    let place = (e.place || "").trim();
-                    let coordsStr = (e.coordsStr || "").trim();
+                    const place = (e.place || "").trim();
+                    const coordsStr = (e.coordsStr || "").trim();
                     if (!place && !coordsStr) return;
 
-                    let key = coordsStr ? `coords:${coordsStr}` : `place:${place}`;
-                    if (!locGroups[key]) locGroups[key] = { place: place, coordsStr: coordsStr, events:[], colors: {} };
-                    
-                    let pColor = getColor(p.lastName);
+                    const key = coordsStr ? `coords:${coordsStr}` : `place:${place}`;
+                    if (!locGroups[key]) locGroups[key] = { place: place, coordsStr: coordsStr, events: [], colors: {} };
+
+                    const pColor = getColor(p.lastName);
                     if (!locGroups[key].colors[pColor]) locGroups[key].colors[pColor] = { total: 0, males: 0 };
                     locGroups[key].colors[pColor].total++;
                     if (p.gender === 'm') locGroups[key].colors[pColor].males++;
-                    
-                    let involved = [p];
+
+                    const involved = [p];
                     if (e.involvedPersonId) {
-                        let invP = getPerson(e.involvedPersonId);
+                        const invP = getPerson(e.involvedPersonId);
                         if (invP && !involved.find(ip => ip.id === invP.id)) {
                             involved.push(invP);
-                            let invColor = getColor(invP.lastName);
+                            const invColor = getColor(invP.lastName);
                             if (!locGroups[key].colors[invColor]) locGroups[key].colors[invColor] = { total: 0, males: 0 };
                             locGroups[key].colors[invColor].total++;
                             if (invP.gender === 'm') locGroups[key].colors[invColor].males++;
                         }
                     }
 
-                    let isDup = locGroups[key].events.find(existingEv => 
+                    const isDup = locGroups[key].events.find(existingEv =>
                         existingEv.type === e.type && existingEv.date === e.date && existingEv.involved.some(ip => ip.id === p.id)
                     );
-
                     if (!isDup) locGroups[key].events.push({ type: e.type, date: e.date, note: e.note, involved: involved });
                 });
             });
@@ -786,95 +781,94 @@
 
         async function fetchCoordinates(group, rateLimitState, currentRunId) {
             if (group.coordsStr) {
-                let parts = group.coordsStr.split(',');
+                const parts = group.coordsStr.split(',');
                 if (parts.length === 2) return { lat: parseFloat(parts[0]), lng: parseFloat(parts[1]) };
             } else if (group.place) {
                 if (geoCache[group.place]) {
                     return { lat: geoCache[group.place].lat, lng: geoCache[group.place].lng };
                 } else {
                     try {
-                        if (rateLimitState.hasNewGeocode) {
-                            await new Promise(r => setTimeout(r, 1000));
-                        }
+                        // Respect Nominatim rate limit: 1 request/second
+                        if (rateLimitState.hasNewGeocode) await new Promise(r => setTimeout(r, 1000));
                         if (currentMapGeocodeRun !== currentRunId) return { lat: undefined, lng: undefined };
-                        
+
                         rateLimitState.hasNewGeocode = true;
-                        
                         console.time(`[Geocoding] API fetch for "${group.place}"`);
-                        let url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
-                        let response = await $.getJSON(url);
+                        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(group.place)}`;
+                        const response = await $.getJSON(url);
                         console.timeEnd(`[Geocoding] API fetch for "${group.place}"`);
-                        
+
                         if (currentMapGeocodeRun !== currentRunId) return { lat: undefined, lng: undefined };
 
                         if (response && response.length > 0) {
-                            let lat = parseFloat(response[0].lat);
-                            let lng = parseFloat(response[0].lon);
+                            const lat = parseFloat(response[0].lat);
+                            const lng = parseFloat(response[0].lon);
                             geoCache[group.place] = { lat, lng };
                             localStorage.setItem('genealogyGeoCache', JSON.stringify(geoCache));
                             return { lat, lng };
                         }
-                    } catch(err) { 
-                        console.error("[Geocoding] Failed for:", group.place, err); 
+                    } catch (err) {
+                        console.error("[Geocoding] Failed for:", group.place, err);
                     }
                 }
             }
             return { lat: undefined, lng: undefined };
         }
 
-        function createMapMarker(lat, lng, group, key) {
-            let mColor = getMajorityColor(group.colors);
-            let markerIcon = L.divIcon({
+        function createMapMarker(lat, lng, group) {
+            const mColor = getMajorityColor(group.colors);
+            const markerIcon = L.divIcon({
                 className: 'custom-pin',
                 html: `<div style="background-color: ${mColor}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.5);"></div>`,
                 iconSize: [20, 20], iconAnchor: [10, 10]
             });
 
-            let marker = L.marker([lat, lng], { icon: markerIcon });
-            let popupHtml = `<div class="popup-content max-h-64 overflow-y-auto pr-1 text-sm text-gray-800 font-sans w-[280px]">
-                <h3 class="mt-0 mb-3 border-b border-gray-200 pb-1.5 font-bold text-[15px] flex items-center gap-1.5 text-gray-700">
-                    <i class="ph ph-map-pin text-orange-500"></i> ${group.place || group.coordsStr}
-                </h3>`;
-            
-            group.events.sort((a,b) => parseInt(a.date||'9999') - parseInt(b.date||'9999')).forEach(e => {
-                let typeKey = (e.type || 'other').toLowerCase();
-                let typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : (e.type === 'address' ? '#6b7280' : '#6c757d')));
-                let iconHtml = ICONS[typeKey] || ICONS.other;
+            const marker = L.marker([lat, lng], { icon: markerIcon });
+            let popupHtml = `<div class="popup-content max-h-56 overflow-y-auto text-gray-800 font-sans w-[240px]">
+              <div class="flex items-center gap-1 mb-2 pb-1.5 border-b border-gray-200">
+                  <i class="ph ph-map-pin text-orange-500 text-sm flex-shrink-0"></i>
+                  <span class="font-bold text-xs text-gray-700 truncate">${group.place || group.coordsStr}</span>
+              </div>`;
 
-                let personsHtml = e.involved.map(invP => {
-                    let roman = romanNumerals[invP.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[invP.id]}</span>` : '';
-                    return `<span class="person-link px-1 rounded cursor-pointer hover:text-blue-600 hover:bg-blue-50 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName||''}${roman}</span>`;
-                }).join(' <span class="text-xs font-normal text-gray-400">&amp;</span> ');
+            group.events.sort((a, b) => parseInt(a.date || '9999') - parseInt(b.date || '9999')).forEach(e => {
+                const typeKey = (e.type || 'other').toLowerCase();
+                const typeColor = e.type === 'Birth' ? '#28a745' : (e.type === 'Death' ? '#dc3545' : (e.type === 'Marriage' ? '#007bff' : '#6c757d'));
+                const iconHtml = ICONS[typeKey] || ICONS.other;
+
+                const personsHtml = e.involved.map(invP => {
+                    const roman = romanNumerals[invP.id] ? ` <span class="text-gray-400 font-normal">${romanNumerals[invP.id]}</span>` : '';
+                    return `<span class="person-link cursor-pointer hover:text-blue-600 font-bold transition-colors" data-id="${invP.id}">${invP.firstName} ${invP.lastName || ''}${roman}</span>`;
+                }).join(' <span class="text-gray-300">&amp;</span> ');
 
                 popupHtml += `
-                    <div class="bg-gray-50 border border-gray-200 rounded px-1.5 py-2 mb-2 last:mb-0 shadow-sm">
-                        <div class="flex items-center justify-between mb-1.5 px-0.5">
-                            <div class="flex items-center gap-1 text-gray-600 font-semibold text-[11px]" style="color: ${typeColor}">
-                                ${iconHtml} <span class="uppercase tracking-wide">${t(typeKey)}</span>
+                    <div class="flex flex-col gap-0.5 py-1.5 border-b border-gray-100 last:border-0">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide" style="color: ${typeColor}">
+                                ${iconHtml} ${t(typeKey)}
                             </div>
-                            <span class="text-xs text-gray-500 font-medium">${e.date || ''}</span>
+                            <span class="text-[10px] text-gray-400">${e.date || ''}</span>
                         </div>
-                        <div class="leading-snug text-[13px]">${personsHtml}</div>
-                        ${e.note ? `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-200 italic leading-tight px-0.5">${e.note}</div>` : ''}
+                        <div class="text-xs leading-snug">${personsHtml}</div>
+                        ${e.note ? `<div class="text-[10px] text-gray-400 italic truncate">${e.note}</div>` : ''}
                     </div>`;
             });
             popupHtml += `</div>`;
-            marker.bindPopup(popupHtml, { minWidth: 280 });
+            marker.bindPopup(popupHtml, { minWidth: 240 });
             return marker;
         }
 
         async function openMap() {
-            let { previousCenter, previousZoom } = initializeMap();
+            const { previousCenter, previousZoom } = initializeMap();
 
             if (mapMarkers) mapInstance.removeLayer(mapMarkers);
             mapMarkers = L.markerClusterGroup();
 
             const locGroups = groupMapLocations();
-            let keys = Object.keys(locGroups);
+            const keys = Object.keys(locGroups);
 
             currentMapGeocodeRun++;
-            let thisRun = currentMapGeocodeRun;
-            let rateLimitState = { hasNewGeocode: false };
+            const thisRun = currentMapGeocodeRun;
+            const rateLimitState = { hasNewGeocode: false };
 
             if (keys.length > 0) {
                 $('#map-loading').removeClass('hidden');
@@ -882,34 +876,28 @@
             }
 
             for (let i = 0; i < keys.length; i++) {
-                if (currentMapGeocodeRun !== thisRun) {
-                    return;
-                }
+                if (currentMapGeocodeRun !== thisRun) return;
 
-                let key = keys[i];
-                let group = locGroups[key];
-                
-                let { lat, lng } = await fetchCoordinates(group, rateLimitState, thisRun);
+                const group = locGroups[keys[i]];
+                const { lat, lng } = await fetchCoordinates(group, rateLimitState, thisRun);
 
                 if (currentMapGeocodeRun !== thisRun) return;
 
                 if (lat !== undefined && lng !== undefined && !isNaN(lat) && !isNaN(lng)) {
-                    let marker = createMapMarker(lat, lng, group, key);
-                    mapMarkers.addLayer(marker);
+                    mapMarkers.addLayer(createMapMarker(lat, lng, group));
                 }
 
-                let pct = Math.round(((i + 1) / keys.length) * 100) + '%';
-                $('#app-loading-pct, #map-loading-pct').text(pct);
+                $('#app-loading-pct, #map-loading-pct').text(Math.round(((i + 1) / keys.length) * 100) + '%');
             }
 
             if (currentMapGeocodeRun !== thisRun) return;
 
             mapInstance.addLayer(mapMarkers);
-            
+
             if (mapMarkers.getLayers().length > 0 && (!previousCenter || (previousZoom === 4 && previousCenter.lat === 48.2082))) {
-                mapInstance.fitBounds(mapMarkers.getBounds(), { padding:[50, 50], maxZoom: 15 });
+                mapInstance.fitBounds(mapMarkers.getBounds(), { padding: [50, 50], maxZoom: 15 });
             }
-            
+
             mapInstance.invalidateSize();
             setTimeout(() => {
                 mapInstance.invalidateSize();
@@ -920,12 +908,10 @@
         function setViewMode(mode) {
             currentViewMode = mode;
             $('#burger-menu').addClass('hidden');
-
             $('#canvas-container, #map-container').css('display', '');
 
             if (db.persons.length === 0) {
-                $('#canvas-container').addClass('hidden');
-                $('#map-container').addClass('hidden');
+                $('#canvas-container, #map-container').addClass('hidden');
                 $('#empty-state').removeClass('hidden');
             } else {
                 $('#empty-state').addClass('hidden');
@@ -940,24 +926,21 @@
                 }
             }
 
-            if (mode === 'tree') {
-                $('.mode-tree-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
-                $('.mode-map-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
-            } else {
-                $('.mode-map-btn').removeClass('bg-white text-gray-700').addClass('bg-blue-50 text-blue-600 shadow-inner');
-                $('.mode-tree-btn').removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700');
-            }
+            // Update toolbar button active states
+            const isTree = mode === 'tree';
+            $('.mode-tree-btn').toggleClass('bg-blue-50 text-blue-600 shadow-inner', isTree).toggleClass('bg-white text-gray-700', !isTree);
+            $('.mode-map-btn').toggleClass('bg-blue-50 text-blue-600 shadow-inner', !isTree).toggleClass('bg-white text-gray-700', isTree);
         }
 
         $('.mode-tree-btn').click(() => setViewMode('tree'));
         $('.mode-map-btn').click(() => setViewMode('map'));
 
         function setCanvasZoom(newZoom, mouseX, mouseY) {
-            let container = $('#canvas-container')[0];
+            const container = $('#canvas-container')[0];
             if (mouseX === undefined) mouseX = container.clientWidth / 2;
             if (mouseY === undefined) mouseY = container.clientHeight / 2;
-            let focusX = (container.scrollLeft + mouseX) / canvasZoom;
-            let focusY = (container.scrollTop + mouseY) / canvasZoom;
+            const focusX = (container.scrollLeft + mouseX) / canvasZoom;
+            const focusY = (container.scrollTop + mouseY) / canvasZoom;
             canvasZoom = Math.round(newZoom * 10) / 10;
             $('#zoom-container').css('transform', `scale(${canvasZoom})`);
             container.scrollLeft = (focusX * canvasZoom) - mouseX;
@@ -968,21 +951,20 @@
         $('.zoom-in-btn').click(() => setCanvasZoom(Math.min(canvasZoom + 0.1, 2)));
         $('.zoom-out-btn').click(() => setCanvasZoom(Math.max(canvasZoom - 0.1, 0.2)));
         $('.zoom-reset-btn').click(() => setCanvasZoom(1));
-        
+
         document.getElementById('canvas-container').addEventListener('wheel', (e) => {
             if (currentViewMode === 'map') return;
             e.preventDefault();
-            let zoomDelta = e.deltaY < 0 ? 0.1 : -0.1;
-            let newZoom = Math.min(Math.max(canvasZoom + zoomDelta, 0.2), 2);
-            let container = e.currentTarget;
-            let rect = container.getBoundingClientRect();
+            const zoomDelta = e.deltaY < 0 ? 0.1 : -0.1;
+            const newZoom = Math.min(Math.max(canvasZoom + zoomDelta, 0.2), 2);
+            const rect = e.currentTarget.getBoundingClientRect();
             setCanvasZoom(newZoom, e.clientX - rect.left, e.clientY - rect.top);
         }, { passive: false });
-        
+
         $('.info-toggle-btn').click(function() {
-            let mode = $(this).data('mode');
+            const mode = $(this).data('mode');
             displayInfoModes[mode] = !displayInfoModes[mode];
-            
+
             $(`.info-toggle-btn[data-mode="${mode}"]`).each(function() {
                 if (displayInfoModes[mode]) {
                     $(this).removeClass('bg-white text-gray-700 hover:bg-gray-50 hover:bg-gray-100').addClass('bg-blue-50 text-blue-600 shadow-inner');
@@ -990,23 +972,23 @@
                     $(this).removeClass('bg-blue-50 text-blue-600 shadow-inner').addClass('bg-white text-gray-700 hover:bg-gray-50 hover:bg-gray-100');
                 }
             });
-            saveData(true); 
+            saveData(true);
         });
 
         $(document).on('click', '.collapse-toggle-btn', function(e) {
             e.stopPropagation();
-            let id = parseInt($(this).data('id'), 10);
+            const id = parseInt($(this).data('id'), 10);
             if (collapsedFamilies.has(id)) collapsedFamilies.delete(id);
             else collapsedFamilies.add(id);
-            saveData(true); 
+            saveData(true);
         });
 
         $('.gender-btn').click(function() {
             $('.gender-btn').removeClass('bg-blue-50 bg-pink-50 shadow-inner text-blue-600 text-pink-600').addClass('bg-white');
-            let val = $(this).data('val');
+            const val = $(this).data('val');
             $('#edit-gender').val(val).trigger('change');
-            if(val === 'm') $(this).removeClass('bg-white').addClass('bg-blue-50 shadow-inner text-blue-600');
-            if(val === 'f') $(this).removeClass('bg-white').addClass('bg-pink-50 shadow-inner text-pink-600');
+            if (val === 'm') $(this).removeClass('bg-white').addClass('bg-blue-50 shadow-inner text-blue-600');
+            if (val === 'f') $(this).removeClass('bg-white').addClass('bg-pink-50 shadow-inner text-pink-600');
         });
 
         function getPerson(id) { return id ? db.persons.find(p => p.id === parseInt(id, 10)) : null; }
@@ -1033,7 +1015,8 @@
             if (historyIndex > 0) {
                 historyIndex--;
                 db.persons = JSON.parse(JSON.stringify(historyStack[historyIndex]));
-                saveHistory(); saveData(true); 
+                saveHistory();
+                saveData(true);
                 if (selectedPersonId) { if (getPerson(selectedPersonId)) openPanel(selectedPersonId); else $('#close-panel').click(); }
             }
         }
@@ -1042,45 +1025,47 @@
             if (historyIndex < historyStack.length - 1) {
                 historyIndex++;
                 db.persons = JSON.parse(JSON.stringify(historyStack[historyIndex]));
-                saveHistory(); saveData(true);
+                saveHistory();
+                saveData(true);
                 if (selectedPersonId) { if (getPerson(selectedPersonId)) openPanel(selectedPersonId); else $('#close-panel').click(); }
             }
         }
 
-        $('#undo-btn').click(undo); $('#redo-btn').click(redo);
+        $('#undo-btn').click(undo);
+        $('#redo-btn').click(redo);
         $('#burger-btn').click(function(e) { e.stopPropagation(); $('#burger-menu').toggleClass('hidden'); });
 
         function updateQuickNav() {
             let pOptions = `<option value="">${t('jumpPerson')}</option>`;
-            let sorted =[...db.persons].sort((a,b) => (a.firstName+(a.lastName||'')).localeCompare(b.firstName+(b.lastName||'')));
+            const sorted = [...db.persons].sort((a, b) => (a.firstName + (a.lastName || '')).localeCompare(b.firstName + (b.lastName || '')));
             sorted.forEach(p => {
-                let genderSym = p.gender === 'm' ? '♂' : '♀';
-                let opRoman = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
-                pOptions += `<option value="${p.id}">${genderSym} ${p.firstName} ${p.lastName||''}${opRoman}</option>`;
+                const genderSym = p.gender === 'm' ? '♂' : '♀';
+                const opRoman = romanNumerals[p.id] ? ` ${romanNumerals[p.id]}` : '';
+                pOptions += `<option value="${p.id}">${genderSym} ${p.firstName} ${p.lastName || ''}${opRoman}</option>`;
             });
             $('.quick-nav-person').html(pOptions);
 
             let mOptions = `<option value="">${t('jumpMarriage')}</option>`;
-            let marriages =[];
+            const marriages = [];
             db.persons.forEach(p => {
-                (p.events ||[]).forEach(e => {
+                (p.events || []).forEach(e => {
                     if (e.type === 'Marriage' && e.involvedPersonId) {
-                        let spouse = getPerson(e.involvedPersonId);
-                        if (spouse && !marriages.find(m => (m.p1.id===p.id && m.p2.id===spouse.id) || (m.p1.id===spouse.id && m.p2.id===p.id))) {
+                        const spouse = getPerson(e.involvedPersonId);
+                        if (spouse && !marriages.find(m => (m.p1.id === p.id && m.p2.id === spouse.id) || (m.p1.id === spouse.id && m.p2.id === p.id))) {
                             marriages.push({ p1: p, p2: spouse, date: e.date, place: e.place });
                         }
                     }
                 });
             });
-            marriages.sort((a,b) => (a.date||'').localeCompare(b.date||'')).forEach(m => {
-                let text = `${m.p1.firstName} & ${m.p2.firstName} ${m.date ? '('+m.date+')' : ''}`;
+            marriages.sort((a, b) => (a.date || '').localeCompare(b.date || '')).forEach(m => {
+                const text = `${m.p1.lastName} ${m.p1.firstName} & ${m.p2.firstName} ${m.date ? '(' + m.date + ')' : ''}`;
                 mOptions += `<option value="${m.p1.id}">${text}</option>`;
             });
             $('.quick-nav-marriage').html(mOptions);
         }
 
         $('.quick-nav-person, .quick-nav-marriage').change(function() {
-            let id = parseInt($(this).val(), 10);
+            const id = parseInt($(this).val(), 10);
             if (id) {
                 openPanel(id);
                 if (currentViewMode === 'tree') scrollToPerson(id);
@@ -1088,12 +1073,19 @@
             }
         });
 
+        // BFS using an index pointer instead of shift() for O(1) dequeue cost.
         function countDescendants(rootId) {
-            let count = 0, visited = new Set([rootId]), q =[rootId];
-            while(q.length > 0) {
-                let curr = q.shift();
-                db.persons.filter(p => p.fatherId === curr || p.motherId === curr).forEach(c => {
-                    if(!visited.has(c.id)) { visited.add(c.id); count++; q.push(c.id); }
+            let count = 0, qi = 0;
+            const visited = new Set([rootId]);
+            const q = [rootId];
+            while (qi < q.length) {
+                const curr = q[qi++];
+                db.persons.forEach(p => {
+                    if ((p.fatherId === curr || p.motherId === curr) && !visited.has(p.id)) {
+                        visited.add(p.id);
+                        count++;
+                        q.push(p.id);
+                    }
                 });
             }
             return count;
@@ -1101,19 +1093,19 @@
 
         function parseDateForSort(d) {
             if (!d) return 99999999;
-            let m2 = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+            const m2 = d.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
             if (m2) return parseInt(`${m2[3]}${m2[2]}${m2[1]}`);
-            let m1 = d.match(/\d{4}/);
+            const m1 = d.match(/\d{4}/);
             if (m1) return parseInt(`${m1[0]}0000`);
             return 99999999;
         }
 
         function getBirthYear(id) {
-            let p = getPerson(id);
+            const p = getPerson(id);
             if (!p) return 9999;
-            let e = (p.events ||[]).find(ev => ev.type === 'Birth');
+            const e = (p.events || []).find(ev => ev.type === 'Birth');
             if (e && e.date) {
-                let m = e.date.match(/\d{4}/);
+                const m = e.date.match(/\d{4}/);
                 if (m) return parseInt(m[0], 10);
                 return parseInt(e.date, 10) || 9999;
             }
@@ -1121,73 +1113,101 @@
         }
 
         function getBirthDateObj(id) {
-            let p = getPerson(id);
+            const p = getPerson(id);
             if (!p) return null;
-            let b = (p.events ||[]).find(e => e.type === 'Birth');
+            const b = (p.events || []).find(e => e.type === 'Birth');
             if (!b || !b.date) return null;
-            let m1 = b.date.match(/^(\d{4})$/);
+            const m1 = b.date.match(/^(\d{4})$/);
             if (m1) return new Date(parseInt(m1[1]), 0, 1);
-            let m2 = b.date.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
-            if (m2) return new Date(parseInt(m2[3]), parseInt(m2[2])-1, parseInt(m2[1]));
+            const m2 = b.date.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+            if (m2) return new Date(parseInt(m2[3]), parseInt(m2[2]) - 1, parseInt(m2[1]));
             return null;
         }
 
         function toRoman(num) {
-            const roman =["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"];
-            return roman[num] || num.toString();
+          const lookup = {
+            M: 1000, CM: 900, D: 500, CD: 400,
+            C: 100, XC: 90, L: 50, XL: 40,
+            X: 10, IX: 9, V: 5, IV: 4, I: 1
+          };
+          let roman = '';
+          for (let i in lookup) {
+            while (num >= lookup[i]) {
+              roman += i;
+              num -= lookup[i];
+            }
+          }
+          return roman;
         }
 
+        // Builds a generational graph via BFS from each unvisited node,
+        // then normalises so the earliest ancestor in each component is generation 0.
         function computeGenerations() {
             personGen = {};
-            let adj = {};
+            const adj = {};
+
+            // Build undirected adjacency list: parent↔child edges (offset ±1) and spouse edges (offset 0).
             db.persons.forEach(p => {
-                adj[p.id] = adj[p.id] ||[];
-                if (p.fatherId) { adj[p.id].push({to: p.fatherId, offset: -1}); adj[p.fatherId] = adj[p.fatherId] || []; adj[p.fatherId].push({to: p.id, offset: 1}); }
-                if (p.motherId) { adj[p.id].push({to: p.motherId, offset: -1}); adj[p.motherId] = adj[p.motherId] || []; adj[p.motherId].push({to: p.id, offset: 1}); }
+                adj[p.id] = adj[p.id] || [];
+                if (p.fatherId) {
+                    adj[p.id].push({ to: p.fatherId, offset: -1 });
+                    adj[p.fatherId] = adj[p.fatherId] || [];
+                    adj[p.fatherId].push({ to: p.id, offset: 1 });
+                }
+                if (p.motherId) {
+                    adj[p.id].push({ to: p.motherId, offset: -1 });
+                    adj[p.motherId] = adj[p.motherId] || [];
+                    adj[p.motherId].push({ to: p.id, offset: 1 });
+                }
                 getPartners(p.id).forEach(partnerId => {
-                    adj[p.id].push({to: partnerId, offset: 0});
-                    adj[partnerId] = adj[partnerId] ||[];
-                    adj[partnerId].push({to: p.id, offset: 0});
+                    adj[p.id].push({ to: partnerId, offset: 0 });
+                    adj[partnerId] = adj[partnerId] || [];
+                    adj[partnerId].push({ to: p.id, offset: 0 });
                 });
             });
 
-            let visited = new Set();
+            const visited = new Set();
             db.persons.forEach(startNode => {
-                if (!visited.has(startNode.id)) {
-                    let q = [startNode.id]; personGen[startNode.id] = 0; visited.add(startNode.id);
-                    let component =[startNode.id];
-                    while(q.length > 0) {
-                        let curr = q.shift();
-                        let currGen = personGen[curr];
-                        adj[curr].forEach(edge => {
-                            if (!visited.has(edge.to)) {
-                                personGen[edge.to] = currGen + edge.offset;
-                                visited.add(edge.to); q.push(edge.to); component.push(edge.to);
-                            }
-                        });
-                    }
-                    let minGen = Math.min(...component.map(id => personGen[id]));
-                    component.forEach(id => { personGen[id] -= minGen; });
+                if (visited.has(startNode.id)) return;
+                const q = [startNode.id];
+                personGen[startNode.id] = 0;
+                visited.add(startNode.id);
+                const component = [startNode.id];
+                let qi = 0;
+                while (qi < q.length) {
+                    const curr = q[qi++];
+                    adj[curr].forEach(edge => {
+                        if (!visited.has(edge.to)) {
+                            personGen[edge.to] = personGen[curr] + edge.offset;
+                            visited.add(edge.to);
+                            q.push(edge.to);
+                            component.push(edge.to);
+                        }
+                    });
                 }
+                // Shift so minimum generation in this connected component is 0
+                const minGen = Math.min(...component.map(id => personGen[id]));
+                component.forEach(id => { personGen[id] -= minGen; });
             });
         }
 
         function updateRomanNumerals() {
-            computeGenerations(); 
-            let groups = {};
+            computeGenerations();
+            const groups = {};
             db.persons.forEach(p => {
-                let nameKey = (p.firstName + " " + (p.lastName || '')).toLowerCase().trim();
+                const nameKey = (p.firstName + " " + (p.lastName || '')).toLowerCase().trim();
                 if (!groups[nameKey]) groups[nameKey] = [];
                 groups[nameKey].push(p);
             });
             romanNumerals = {};
-            for (let key in groups) {
+            for (const key in groups) {
                 if (groups[key].length > 1) {
                     groups[key].sort((a, b) => {
-                        let genA = personGen[a.id] !== undefined ? personGen[a.id] : 0;
-                        let genB = personGen[b.id] !== undefined ? personGen[b.id] : 0;
+                        const genA = personGen[a.id] !== undefined ? personGen[a.id] : 0;
+                        const genB = personGen[b.id] !== undefined ? personGen[b.id] : 0;
                         if (genA !== genB) return genA - genB;
-                        let bA = getBirthYear(a.id); let bB = getBirthYear(b.id);
+                        const bA = getBirthYear(a.id);
+                        const bB = getBirthYear(b.id);
                         if (bA !== bB) return bA - bB;
                         return a.id - b.id;
                     });
@@ -1198,79 +1218,87 @@
             }
         }
 
-        function getNextId() { return db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) + 1 : 1; }
+        // Use reduce instead of spread+Math.max to avoid call-stack limits on large datasets.
+        function getNextId() { return db.persons.reduce((max, p) => Math.max(max, p.id), 0) + 1; }
 
         function saveData(skipHistory = false) {
             clearTimeout(debounceSaveTimeout);
             localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
-            updateRomanNumerals(); updateQuickNav();
-            
-            let anchorNode = selectedPersonId ? document.querySelector(`.person-node[data-id="${selectedPersonId}"]`) : null;
-            let beforeRect = anchorNode ? anchorNode.getBoundingClientRect() : null;
+            updateRomanNumerals();
+            updateQuickNav();
 
-            renderTree(); updateHighlight();
+            // Capture the selected node's screen position before re-render to restore scroll afterwards
+            const anchorNode = selectedPersonId ? document.querySelector(`.person-node[data-id="${selectedPersonId}"]`) : null;
+            const beforeRect = anchorNode ? anchorNode.getBoundingClientRect() : null;
 
-            // Perform scroll restoration directly synchronously without setTimeouts or requestAnimationFrame frames
+            renderTree();
+            updateHighlight();
+
+            // Perform scroll restoration synchronously to avoid visible jumps
             if (anchorNode && beforeRect && currentViewMode === 'tree') {
-                let newAnchor = document.querySelector(`.person-node[data-id="${selectedPersonId}"]`);
+                const newAnchor = document.querySelector(`.person-node[data-id="${selectedPersonId}"]`);
                 if (newAnchor) {
-                    let afterRect = newAnchor.getBoundingClientRect();
+                    const afterRect = newAnchor.getBoundingClientRect();
                     document.getElementById('canvas-container').scrollLeft += (afterRect.left - beforeRect.left);
                     document.getElementById('canvas-container').scrollTop += (afterRect.top - beforeRect.top);
                 }
             }
-            if (currentViewMode === 'map') openMap(); 
+            if (currentViewMode === 'map') openMap();
             if (!skipHistory) pushToHistory();
         }
 
         function scrollToPerson(id, animate = true) {
-            let node = document.querySelector(`.person-node[data-id="${id}"]`);
+            const node = document.querySelector(`.person-node[data-id="${id}"]`);
             if (node) {
-                let container = $('#canvas-container');
-                let containerRect = container[0].getBoundingClientRect();
-                let zcRect = document.getElementById('zoom-container').getBoundingClientRect();
-                let rect = node.getBoundingClientRect();
-                let unscaledX = (rect.left + rect.width/2 - zcRect.left) / canvasZoom;
-                let unscaledY = (rect.top + rect.height/2 - zcRect.top) / canvasZoom;
-                let scrollTop = (unscaledY * canvasZoom) - containerRect.height / 2;
-                let scrollLeft = (unscaledX * canvasZoom) - containerRect.width / 2;
-                if (animate) container.animate({ scrollTop: scrollTop, scrollLeft: scrollLeft }, 300);
+                const container = $('#canvas-container');
+                const containerRect = container[0].getBoundingClientRect();
+                const zcRect = document.getElementById('zoom-container').getBoundingClientRect();
+                const rect = node.getBoundingClientRect();
+                const unscaledX = (rect.left + rect.width / 2 - zcRect.left) / canvasZoom;
+                const unscaledY = (rect.top + rect.height / 2 - zcRect.top) / canvasZoom;
+                const scrollTop = (unscaledY * canvasZoom) - containerRect.height / 2;
+                const scrollLeft = (unscaledX * canvasZoom) - containerRect.width / 2;
+                if (animate) container.animate({ scrollTop, scrollLeft }, 300);
                 else { container.scrollTop(scrollTop); container.scrollLeft(scrollLeft); }
             }
         }
 
+        // Deterministic hue derived from the lowercase letters of a surname.
         function getColor(lastName) {
             if (!lastName) return '#e5e7eb';
-            let hash = 0, str = lastName.toLowerCase().replace(/[^a-z]/g, '');
+            let hash = 0;
+            const str = lastName.toLowerCase().replace(/[^a-z]/g, '');
             for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
             return `hsl(${Math.abs(hash) % 360}, 65%, 65%)`;
         }
 
+        // organizes an array of persons by grouping them under the same father, then the same mother,
+        // followed by chronological order (birth year), with the database ID acting as a final tie-breaker.
         function sortChildren(childrenArray) {
             return childrenArray.sort((a, b) => {
-                let fA = a.fatherId || 0, fB = b.fatherId || 0;
+                const fA = a.fatherId || 0, fB = b.fatherId || 0;
                 if (fA !== fB) return fA - fB;
-                
-                let mA = a.motherId || 0, mB = b.motherId || 0;
+                const mA = a.motherId || 0, mB = b.motherId || 0;
                 if (mA !== mB) return mA - mB;
-                
-                let bA = getBirthYear(a.id);
-                let bB = getBirthYear(b.id);
+                const bA = getBirthYear(a.id);
+                const bB = getBirthYear(b.id);
                 if (bA !== bB) return bA - bB;
-                
                 return a.id - b.id;
             });
         }
 
+        // Returns a person's own events plus any Marriage events from other persons that list them as involved.
         function getDisplayEvents(personId) {
-            let events =[];
-            let p = getPerson(personId);
+            const events = [];
+            const p = getPerson(personId);
             if (!p) return events;
-            (p.events ||[]).forEach((e, i) => events.push({ ...e, sourceId: personId, originalIndex: i }));
+            (p.events || []).forEach((e, i) => events.push({ ...e, sourceId: personId, originalIndex: i }));
             db.persons.forEach(other => {
                 if (other.id !== personId) {
-                    (other.events ||[]).forEach((e, i) => {
-                        if (e.type === 'Marriage' && e.involvedPersonId === personId) events.push({ ...e, sourceId: other.id, originalIndex: i });
+                    (other.events || []).forEach((e, i) => {
+                        if (e.type === 'Marriage' && e.involvedPersonId === personId) {
+                            events.push({ ...e, sourceId: other.id, originalIndex: i });
+                        }
                     });
                 }
             });
@@ -1278,7 +1306,7 @@
         }
 
         function getPartners(personId) {
-            let partners = new Set();
+            const partners = new Set();
             getDisplayEvents(personId).forEach(e => {
                 if (e.type === 'Marriage') {
                     if (e.sourceId !== personId) partners.add(e.sourceId);
@@ -1289,7 +1317,7 @@
                 if (c.fatherId === personId && c.motherId) partners.add(c.motherId);
                 if (c.motherId === personId && c.fatherId) partners.add(c.fatherId);
             });
-            let pList = Array.from(partners).filter(id => getPerson(id) && id !== personId);
+            const pList = Array.from(partners).filter(id => getPerson(id) && id !== personId);
             pList.sort((a, b) => getEarliestChildBirth(personId, a) - getEarliestChildBirth(personId, b));
             return pList;
         }
@@ -1301,60 +1329,53 @@
         function getEarliestChildBirth(p1, p2) {
             let earliest = 9999;
             getSharedChildren(p1, p2).forEach(k => {
-                let b = (k.events||[]).find(e => e.type === 'Birth');
-                if(b && parseInt(b.date) < earliest) earliest = parseInt(b.date);
+                const b = (k.events || []).find(e => e.type === 'Birth');
+                if (b && parseInt(b.date) < earliest) earliest = parseInt(b.date);
             });
             return earliest;
         }
 
-        // Detects if the female has any male partner that is currently NOT suppressed (i.e. currently active in the graph tree).
+        // Detects if a female has any male partner currently visible (not suppressed) in the tree.
         function hasActiveMalePartner(femaleId) {
-            let partners = getPartners(femaleId);
-            for(let pid of partners) {
-                let p = getPerson(pid);
-                if(p && p.gender === 'm' && !suppressedIds.has(pid)) return true;
+            for (const pid of getPartners(femaleId)) {
+                const p = getPerson(pid);
+                if (p && p.gender === 'm' && !suppressedIds.has(pid)) return true;
             }
             return false;
         }
 
         function buildEventsHtml(personId) {
-            let displayEvents = getDisplayEvents(personId);
-            let birth = displayEvents.find(e => e.type === 'Birth');
-            let death = displayEvents.find(e => e.type === 'Death');
-            let marriage = displayEvents.find(e => e.type === 'Marriage');
-            
-            let showPlace = displayInfoModes.events;
+            const displayEvents = getDisplayEvents(personId);
+            const birth = displayEvents.find(e => e.type === 'Birth');
+            const death = displayEvents.find(e => e.type === 'Death');
+            const marriage = displayEvents.find(e => e.type === 'Marriage');
+            const showPlace = displayInfoModes.events;
 
             function evCol(ev, iconHtml, isCenter, isEnd) {
                 if (!ev) return `<div></div>`;
-                let jClass = isCenter ? 'justify-center' : (isEnd ? 'justify-end' : 'justify-start');
-                let alignClass = isCenter ? 'text-center' : (isEnd ? 'text-right' : 'text-left');
-                
-                let placeHtml = (showPlace && ev.place) ? `<div class="text-[9px] text-gray-400 truncate leading-none mt-0.5 px-0.5 ${alignClass}" title="${ev.place}">${ev.place}</div>` : '';
-
-                return `<div class="flex flex-col overflow-hidden text-gray-600" title="${ev.note||''}">
+                const jClass = isCenter ? 'justify-center' : (isEnd ? 'justify-end' : 'justify-start');
+                const alignClass = isCenter ? 'text-center' : (isEnd ? 'text-right' : 'text-left');
+                const placeHtml = (showPlace && ev.place) ? `<div class="text-[9px] text-gray-400 truncate leading-none mt-0.5 px-0.5 ${alignClass}" title="${ev.place}">${ev.place}</div>` : '';
+                return `<div class="flex flex-col overflow-hidden text-gray-600" title="${ev.note || ''}">
                     <div class="flex items-center gap-1 ${jClass}">
-                        ${iconHtml} <span class="truncate">${ev.date||''}</span>
+                        ${iconHtml} <span class="truncate">${ev.date || ''}</span>
                     </div>
                     ${placeHtml}
                 </div>`;
             }
 
-            let bHtml = evCol(birth, `<i class="ph ph-star text-[12px] flex-shrink-0 text-gray-500"></i>`, false, false);
-            let mHtml = evCol(marriage, ICONS.marriage, true, false);
-            let dHtml = evCol(death, `<i class="ph ph-cross text-[12px] flex-shrink-0 text-gray-500"></i>`, false, true);
-            
+            const bHtml = evCol(birth, `<i class="ph ph-star text-[12px] flex-shrink-0 text-gray-500"></i>`, false, false);
+            const mHtml = evCol(marriage, ICONS.marriage, true, false);
+            const dHtml = evCol(death, `<i class="ph ph-cross text-[12px] flex-shrink-0 text-gray-500"></i>`, false, true);
+
             return `<div class="grid grid-cols-3 gap-1 w-full text-gray-600">${bHtml}${mHtml}${dHtml}</div>`;
         }
 
         function updateValidationUI(p) {
-            let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
-            let hasNoLastName = !p.lastName || p.lastName.trim() === '';
+            const hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
+            const hasNoLastName = !p.lastName || p.lastName.trim() === '';
 
-            $('#edit-father').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
-            $('#edit-mother').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
-            $('#edit-lastName').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
-            
+            $('#edit-father, #edit-mother, #edit-lastName').removeClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
             if (hasOneParent) {
                 if (!p.fatherId) $('#edit-father').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
                 if (!p.motherId) $('#edit-mother').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
@@ -1362,87 +1383,86 @@
             if (hasNoLastName) $('#edit-lastName').addClass('ring-2 ring-amber-500 border-amber-500 bg-amber-50');
         }
 
-        function createCard(id) {
-            let p = getPerson(id);
-            if(!p) return '';
-            
-            let borderColor = getColor(p.lastName);
-            let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
-            let isSelected = selectedPersonId === id ? 'ring-2 ring-blue-500 shadow-xl' : '';
-            
-            let fatherIcon = p.fatherId ? `<i class="ph ph-user-gear text-blue-500 text-lg"></i>` : `<i class="ph ph-user-plus text-blue-400 text-lg"></i>`;
-            let motherIcon = p.motherId ? `<i class="ph ph-user-gear text-pink-500 text-lg"></i>` : `<i class="ph ph-user-plus text-pink-400 text-lg"></i>`;
-            let spouseIcon = `<svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`;
-            let childIcon = `<i class="ph ph-baby text-green-500 text-lg"></i>`;
-            
-            let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
-            let hasNoLastName = !p.lastName || p.lastName.trim() === '';
-            
-            let warnings =[];
-            if (hasOneParent) warnings.push(t('parentMissing'));
-            if (hasNoLastName) warnings.push(t('lastNameMissing'));
-            let warningHtml = warnings.length > 0 ? `<i class="ph ph-warning text-amber-500 mr-1" title="${warnings.join(' / ')}"></i>` : '';
+        // --- CARD RENDERING HELPERS ---
 
-            let roman = romanNumerals[id] ? `<span class="text-gray-400 ml-1">${romanNumerals[id]}</span>` : '';
-            let titleSpanAttr = p.title ? `title="${p.title.replace(/"/g, '&quot;')}"` : '';
-            let fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName||''} ${romanNumerals[id]||''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
+        function buildWarningHtml(p) {
+            const warnings = [];
+            if ((p.fatherId && !p.motherId) || (!p.fatherId && p.motherId)) warnings.push(t('parentMissing'));
+            if (!p.lastName || p.lastName.trim() === '') warnings.push(t('lastNameMissing'));
+            return warnings.length > 0 ? `<i class="ph ph-warning text-amber-500 mr-1" title="${warnings.join(' / ')}"></i>` : '';
+        }
 
-            let extraInfoHtml = '';
-
+        // Builds the collapsible extra-info section shown below a card's events row.
+        function buildExtraInfoHtml(p) {
+            let html = '';
             if (displayInfoModes.events) {
-                let displayEvents = getDisplayEvents(p.id);
-                let minorEvents = displayEvents.filter(e => !['Birth', 'Death', 'Marriage'].includes(e.type));
+                const minorEvents = getDisplayEvents(p.id).filter(e => !['Birth', 'Death', 'Marriage'].includes(e.type));
                 if (minorEvents.length > 0) {
-                    let minorHtml = minorEvents.map(e => {
-                        let text =[e.date, e.place, e.note].filter(x => x).join(' - ');
-                        let iconHtml = ICONS[e.type.toLowerCase()] || ICONS.other;
-                        return `<div class="flex items-start flex items-center gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
+                    const minorHtml = minorEvents.map(e => {
+                        const text = [e.date, e.place, e.note].filter(x => x).join(' - ');
+                        const iconHtml = ICONS[e.type.toLowerCase()] || ICONS.other;
+                        return `<div class="flex items-center gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
                     }).join('');
-                    extraInfoHtml += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
+                    html += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
                 }
             }
-
             if (displayInfoModes.address && p.address) {
-                extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
+                html += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
             }
-            
             if (displayInfoModes.notes && p.notes) {
-                extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
+                html += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
             }
-            
-            let fatherTitle = p.fatherId ? t('editFather') : t('addFather');
-            let motherTitle = p.motherId ? t('editMother') : t('addMother');
-            let spouseTitle = t('addSpouse');
-            let childTitle = t('addChild');
+            return html;
+        }
+
+        function createCard(id) {
+            const p = getPerson(id);
+            if (!p) return '';
+
+            const borderColor = getColor(p.lastName);
+            const bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
+            const isSelected = selectedPersonId === id ? 'ring-2 ring-blue-500 shadow-xl' : '';
+
+            const fatherIcon = p.fatherId ? `<i class="ph ph-user-gear text-blue-500 text-lg"></i>` : `<i class="ph ph-user-plus text-blue-400 text-lg"></i>`;
+            const motherIcon = p.motherId ? `<i class="ph ph-user-gear text-pink-500 text-lg"></i>` : `<i class="ph ph-user-plus text-pink-400 text-lg"></i>`;
+            const spouseIcon = `<svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4" stroke-width="2"/><circle cx="16" cy="12" r="4" stroke-width="2"/></svg>`;
+            const childIcon = `<i class="ph ph-baby text-green-500 text-lg"></i>`;
+
+            const roman = romanNumerals[id] ? `<span class="text-gray-400 ml-1">${romanNumerals[id]}</span>` : '';
+            const titleSpanAttr = p.title ? `title="${p.title.replace(/"/g, '&quot;')}"` : '';
+            const fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName || ''} ${romanNumerals[id] || ''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
+
+            const warningHtml = buildWarningHtml(p);
+            const extraInfoHtml = buildExtraInfoHtml(p);
 
             let actionButtonsHtml = '';
             if (displayInfoModes.actions) {
                 actionButtonsHtml = `
                 <div class="flex justify-between border-t border-gray-100 bg-black/5 rounded-b-lg action-buttons mt-auto h-7">
-                    <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${fatherTitle}">
+                    <div class="action-father flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${p.fatherId ? t('editFather') : t('addFather')}">
                         ${fatherIcon}
                     </div>
-                    <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${motherTitle}">
+                    <div class="action-mother flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${p.motherId ? t('editMother') : t('addMother')}">
                         ${motherIcon}
                     </div>
-                    <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${spouseTitle}">
+                    <div class="action-spouse flex items-center justify-center w-1/4 border-r border-gray-200/60 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${t('addSpouse')}">
                         ${spouseIcon}
                     </div>
-                    <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${childTitle}">
+                    <div class="action-child flex items-center justify-center w-1/4 hover:bg-black/5 transition-colors cursor-pointer text-gray-600" title="${t('addChild')}">
                         ${childIcon}
                     </div>
                 </div>`;
             }
 
             return `
-                <div class="person-node w-64 bg-white border border-gray-300 rounded-lg shadow-md relative hover:shadow-lg transition-all cursor-pointer z-10 flex flex-col ${isSelected}" 
+                <div class="person-node w-64 bg-white border border-gray-300 rounded-lg shadow-md relative hover:shadow-lg transition-all cursor-pointer z-10 flex flex-col ${isSelected}"
                      data-id="${id}" style="border-left: 6px solid ${borderColor}; background-color: ${bgColor};">
                     <div class="p-1 pb-1.5 flex-grow overflow-hidden">
                         <div class="flex justify-between items-start gap-2 mb-1">
                             <div class="flex flex-col overflow-hidden w-full">
                                 <span class="text-[10px] text-gray-400 font-bold uppercase truncate leading-none mb-1" ${titleSpanAttr}>${p.title || ''}</span>
                                 <div class="font-bold text-gray-800 text-sm leading-tight truncate" title="${fullNameAttr}">
-                                    ${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName||''}</span>${roman}
+                                    ${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName || ''}</span>${roman}
                                 </div>
                             </div>
                             <div class="flex-shrink-0 flex items-center ml-1">
@@ -1461,21 +1481,22 @@
 
         function calculateSuppressed() {
             suppressedIds.clear();
-            let q = Array.from(collapsedFamilies);
-            while (q.length > 0) {
-                let curr = q.shift();
-                let kidsToSuppress =[];
-                let p = getPerson(curr);
+            const q = Array.from(collapsedFamilies);
+            let qi = 0;
+            while (qi < q.length) {
+                const curr = q[qi++];
+                const p = getPerson(curr);
                 if (!p) continue;
 
+                const kidsToSuppress = [];
                 if (p.gender === 'm') {
-                    kidsToSuppress.push(...db.persons.filter(c => c.fatherId === curr && !c.motherId).map(c=>c.id));
+                    kidsToSuppress.push(...db.persons.filter(c => c.fatherId === curr && !c.motherId).map(c => c.id));
                     getPartners(curr).forEach(partnerId => {
-                        kidsToSuppress.push(...getSharedChildren(curr, partnerId).map(c=>c.id));
-                        kidsToSuppress.push(...db.persons.filter(c => c.motherId === partnerId && !c.fatherId).map(c=>c.id));
+                        kidsToSuppress.push(...getSharedChildren(curr, partnerId).map(c => c.id));
+                        kidsToSuppress.push(...db.persons.filter(c => c.motherId === partnerId && !c.fatherId).map(c => c.id));
                     });
                 } else {
-                    kidsToSuppress.push(...db.persons.filter(c => c.motherId === curr && !c.fatherId).map(c=>c.id));
+                    kidsToSuppress.push(...db.persons.filter(c => c.motherId === curr && !c.fatherId).map(c => c.id));
                 }
 
                 kidsToSuppress.forEach(kId => {
@@ -1487,43 +1508,44 @@
             }
         }
 
+        // Returns the collapse/expand toggle button HTML for a family group node.
+        function buildCollapseBtn(id, isCollapsed) {
+            const icon = isCollapsed ? '<i class="ph ph-plus text-xs"></i>' : '<i class="ph ph-minus text-xs"></i>';
+            return `<button class="collapse-toggle-btn absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full w-5 h-5 flex items-center justify-center text-gray-600 z-30 hover:bg-gray-100 shadow cursor-pointer transition-colors" data-id="${id}">${icon}</button>`;
+        }
+
         function renderFamily(maleId, expectedGen = 0) {
-            if(renderedIds.has(maleId)) return '';
+            if (renderedIds.has(maleId)) return '';
             renderedIds.add(maleId);
-            let actualGen = personGen[maleId] || 0;
-            let margin = Math.max(0, (actualGen - expectedGen) * 320); 
-            let partners = getPartners(maleId);
-            let $fam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
+            const actualGen = personGen[maleId] || 0;
+            const margin = Math.max(0, (actualGen - expectedGen) * 320);
+            const partners = getPartners(maleId);
+
+            const $fam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
             if (margin > 0) $fam.css('margin-left', margin + 'px');
 
-            let $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${maleId}"></div>`);
+            const $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${maleId}"></div>`);
             $parentsBox.append(createCard(maleId));
 
             partners.forEach(partnerId => {
-                if(!renderedIds.has(partnerId)) { 
-                    $parentsBox.append(createCard(partnerId)); 
-                    renderedIds.add(partnerId); 
+                if (!renderedIds.has(partnerId)) {
+                    $parentsBox.append(createCard(partnerId));
+                    renderedIds.add(partnerId);
                 }
             });
 
-            let childrenToRender =[];
-            let maleKids = sortChildren(db.persons.filter(c => c.fatherId === maleId && !c.motherId));
-            childrenToRender.push(...maleKids.filter(c => shouldRenderAsChild(c.id)));
-            
+            const childrenToRender = [];
+            childrenToRender.push(...sortChildren(db.persons.filter(c => c.fatherId === maleId && !c.motherId)).filter(c => shouldRenderAsChild(c.id)));
             partners.forEach(partnerId => {
-                let shared = sortChildren(getSharedChildren(maleId, partnerId));
-                childrenToRender.push(...shared.filter(c => shouldRenderAsChild(c.id)));
-                
-                let partnerKids = sortChildren(db.persons.filter(c => c.motherId === partnerId && !c.fatherId));
-                childrenToRender.push(...partnerKids.filter(c => shouldRenderAsChild(c.id)));
+                childrenToRender.push(...sortChildren(getSharedChildren(maleId, partnerId)).filter(c => shouldRenderAsChild(c.id)));
+                childrenToRender.push(...sortChildren(db.persons.filter(c => c.motherId === partnerId && !c.fatherId)).filter(c => shouldRenderAsChild(c.id)));
             });
 
             if (childrenToRender.length > 0) {
-                let isCollapsed = collapsedFamilies.has(maleId);
-                $parentsBox.append(`<button class="collapse-toggle-btn absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full w-5 h-5 flex items-center justify-center text-gray-600 z-30 hover:bg-gray-100 shadow cursor-pointer transition-colors" data-id="${maleId}">${isCollapsed ? '<i class="ph ph-plus text-xs"></i>' : '<i class="ph ph-minus text-xs"></i>'}</button>`);
-                
+                const isCollapsed = collapsedFamilies.has(maleId);
+                $parentsBox.append(buildCollapseBtn(maleId, isCollapsed));
                 if (!isCollapsed) {
-                    let $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
+                    const $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
                     childrenToRender.forEach(c => { $childrenCol.append(renderChild(c.id, actualGen + 1)); });
                     $fam.append($parentsBox);
                     $fam.append($childrenCol);
@@ -1537,77 +1559,86 @@
 
         function renderChild(childId, expectedGen = 0) {
             if (renderedIds.has(childId)) return '';
-            let child = getPerson(childId);
+            const child = getPerson(childId);
             if (!child) return '';
             if (child.gender === 'm') return renderFamily(childId, expectedGen);
-            else {
-                renderedIds.add(childId);
-                let actualGen = personGen[childId] || 0;
-                let margin = Math.max(0, (actualGen - expectedGen) * 320); 
-                let $singleFam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
-                if (margin > 0) $singleFam.css('margin-left', margin + 'px');
-                let $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${childId}"></div>`);
-                $parentsBox.append(createCard(childId));
-                
-                let singleKids = sortChildren(db.persons.filter(p => p.motherId === childId && !p.fatherId));
-                let childrenToRender = singleKids.filter(k => shouldRenderAsChild(k.id));
 
-                if (childrenToRender.length > 0) {
-                    let isCollapsed = collapsedFamilies.has(childId);
-                    $parentsBox.append(`<button class="collapse-toggle-btn absolute -right-3 top-1/2 transform -translate-y-1/2 bg-white border border-gray-300 rounded-full w-5 h-5 flex items-center justify-center text-gray-600 z-30 hover:bg-gray-100 shadow cursor-pointer transition-colors" data-id="${childId}">${isCollapsed ? '<i class="ph ph-plus text-xs"></i>' : '<i class="ph ph-minus text-xs"></i>'}</button>`);
-                    
-                    if (!isCollapsed) {
-                        let $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
-                        childrenToRender.forEach(k => { $childrenCol.append(renderChild(k.id, actualGen + 1)); });
-                        $singleFam.append($parentsBox);
-                        if($childrenCol.children().length > 0) $singleFam.append($childrenCol);
-                        return $singleFam;
-                    }
+            renderedIds.add(childId);
+            const actualGen = personGen[childId] || 0;
+            const margin = Math.max(0, (actualGen - expectedGen) * 320);
+
+            const $singleFam = $('<div class="flex flex-row gap-16 items-stretch family-group relative"></div>');
+            if (margin > 0) $singleFam.css('margin-left', margin + 'px');
+
+            const $parentsBox = $(`<div class="flex flex-col gap-1 justify-center items-center relative parents-box" data-id="${childId}"></div>`);
+            $parentsBox.append(createCard(childId));
+
+            const singleKids = sortChildren(db.persons.filter(p => p.motherId === childId && !p.fatherId));
+            const childrenToRender = singleKids.filter(k => shouldRenderAsChild(k.id));
+
+            if (childrenToRender.length > 0) {
+                const isCollapsed = collapsedFamilies.has(childId);
+                $parentsBox.append(buildCollapseBtn(childId, isCollapsed));
+                if (!isCollapsed) {
+                    const $childrenCol = $('<div class="flex flex-col gap-1 justify-center items-start children-box"></div>');
+                    childrenToRender.forEach(k => { $childrenCol.append(renderChild(k.id, actualGen + 1)); });
+                    $singleFam.append($parentsBox);
+                    if ($childrenCol.children().length > 0) $singleFam.append($childrenCol);
+                    return $singleFam;
                 }
-                $singleFam.append($parentsBox);
-                return $singleFam;
             }
+
+            $singleFam.append($parentsBox);
+            return $singleFam;
         }
 
         function shouldRenderAsChild(id) {
-            let p = getPerson(id);
+            const p = getPerson(id);
             if (!p) return false;
             if (p.gender === 'm') return true;
-            if (hasActiveMalePartner(id)) return false; 
+            if (hasActiveMalePartner(id)) return false;
             return true;
         }
 
+        // Returns a flat ordered list of root IDs where wife's parents roots are placed
+        // immediately after the husband's root so they appear as adjacent rows in the tree.
         function orderRootsSmartly(rawRoots) {
-            let personToRoot = {};
+            const personToRoot = {};
             function assignRoot(pId, rId) {
-                if(personToRoot[pId]) return;
+                if (personToRoot[pId]) return;
                 personToRoot[pId] = rId;
-                db.persons.forEach(c => { if(c.fatherId === pId || c.motherId === pId) assignRoot(c.id, rId); });
+                db.persons.forEach(c => { if (c.fatherId === pId || c.motherId === pId) assignRoot(c.id, rId); });
             }
             rawRoots.forEach(r => assignRoot(r, r));
 
-            let graph = {};
-            rawRoots.forEach(r => graph[r] = new Set());
+            // For each root, find which other roots contain a "branch-in" wife whose husband is in this root's tree.
+            const linkedAfter = {};
+            rawRoots.forEach(r => { linkedAfter[r] = []; });
             db.persons.forEach(p => {
-                let r1 = personToRoot[p.id];
-                if(!r1) return;
+                if (p.gender !== 'f') return;
+                const herRoot = personToRoot[p.id];
+                if (!herRoot) return;
                 getPartners(p.id).forEach(partnerId => {
-                    let r2 = personToRoot[partnerId];
-                    if(r2 && r1 !== r2) { graph[r1].add(r2); graph[r2].add(r1); }
+                    const hisRoot = personToRoot[partnerId];
+                    if (hisRoot && hisRoot !== herRoot && rawRoots.includes(hisRoot) && rawRoots.includes(herRoot)) {
+                        if (!linkedAfter[hisRoot].includes(herRoot)) linkedAfter[hisRoot].push(herRoot);
+                    }
                 });
             });
 
-            let ordered =[];
-            let visited = new Set();
+            // Emit each root, immediately followed by any wife's parents roots linked to it.
+            const emitted = new Set();
+            const ordered = [];
             rawRoots.forEach(r => {
-                if(!visited.has(r)) {
-                    let q = [r]; visited.add(r);
-                    while(q.length > 0) {
-                        let curr = q.shift();
-                        ordered.push(curr);
-                        Array.from(graph[curr]).forEach(n => { if(!visited.has(n)) { visited.add(n); q.push(n); } });
+                if (emitted.has(r)) return;
+                ordered.push(r);
+                emitted.add(r);
+                linkedAfter[r].forEach(linked => {
+                    if (!emitted.has(linked)) {
+                        ordered.push(linked);
+                        emitted.add(linked);
                     }
-                }
+                });
             });
             return ordered;
         }
@@ -1617,26 +1648,26 @@
             $('#tree-layer').empty();
 
             if (db.persons.length === 0) {
-                $('#empty-state').removeClass('hidden'); 
+                $('#empty-state').removeClass('hidden');
                 $('#canvas-container').addClass('hidden');
                 $('#map-container').addClass('hidden');
                 return;
-            } else {
-                $('#empty-state').addClass('hidden'); 
-                if (currentViewMode === 'tree') {
-                    $('#canvas-container').removeClass('hidden');
-                    $('#map-container').addClass('hidden');
-                } else if (currentViewMode === 'map') {
-                    $('#map-container').removeClass('hidden');
-                    $('#canvas-container').addClass('hidden');
-                }
             }
-            
+
+            $('#empty-state').addClass('hidden');
+            if (currentViewMode === 'tree') {
+                $('#canvas-container').removeClass('hidden');
+                $('#map-container').addClass('hidden');
+            } else if (currentViewMode === 'map') {
+                $('#map-container').removeClass('hidden');
+                $('#canvas-container').addClass('hidden');
+            }
+
             calculateSuppressed();
 
-            let roots =[];
+            let roots = [];
             db.persons.forEach(p => {
-                let hasParent = (p.fatherId && getPerson(p.fatherId)) || (p.motherId && getPerson(p.motherId));
+                const hasParent = (p.fatherId && getPerson(p.fatherId)) || (p.motherId && getPerson(p.motherId));
                 if (!hasParent && !suppressedIds.has(p.id)) {
                     if (p.gender === 'm') roots.push(p.id);
                     else if (p.gender === 'f' && !hasActiveMalePartner(p.id)) roots.push(p.id);
@@ -1644,9 +1675,9 @@
             });
 
             roots = orderRootsSmartly(roots);
-            roots.forEach(rootId => { if(!renderedIds.has(rootId)) $('#tree-layer').append(renderChild(rootId, 0)); });
+            roots.forEach(rootId => { if (!renderedIds.has(rootId)) $('#tree-layer').append(renderChild(rootId, 0)); });
 
-            // Catch-all loop to guarantee all isolated branches or unparented females with suppressed husbands are correctly rendered
+            // Catch-all: render any isolated branches or unparented females whose husbands are suppressed
             db.persons.forEach(p => {
                 if (!renderedIds.has(p.id) && !suppressedIds.has(p.id)) {
                     if (p.gender === 'm' || !hasActiveMalePartner(p.id)) {
@@ -1655,116 +1686,100 @@
                 }
             });
 
-            if (currentViewMode === 'tree') {
-                setTimeout(drawLines, 10);
-            }
+            if (currentViewMode === 'tree') setTimeout(drawLines, 10);
         }
 
         function drawLines() {
-            let container = document.getElementById('tree-layer');
-            if(container) {
-                // Force browser to synchronously compute correct layout constraints
-                // fixes bugs where line coords generate incorrectly before layout tick settles
-                let _forceReflow = container.offsetHeight; 
+            const container = document.getElementById('tree-layer');
+            if (container) {
+                // Force the browser to flush layout so getBoundingClientRect() returns accurate positions.
+                const _reflow = container.offsetHeight;
             }
-            
-            let svg = document.getElementById('svg-layer');
-            let svgRings = document.getElementById('svg-layer-rings');
+
+            const svg = document.getElementById('svg-layer');
+            const svgRings = document.getElementById('svg-layer-rings');
             let svgLinesHtml = '', svgOverlayHtml = '';
-            let zcRect = document.getElementById('zoom-container').getBoundingClientRect();
+            const zcRect = document.getElementById('zoom-container').getBoundingClientRect();
 
             function getCenter(el) {
-                let rect = el.getBoundingClientRect();
-                return { x: (rect.left + rect.width/2 - zcRect.left) / canvasZoom, y: (rect.top + rect.height/2 - zcRect.top) / canvasZoom };
+                const rect = el.getBoundingClientRect();
+                return { x: (rect.left + rect.width / 2 - zcRect.left) / canvasZoom, y: (rect.top + rect.height / 2 - zcRect.top) / canvasZoom };
             }
 
+            // Draw vertical partner links and marriage/relationship rings between spouses
             db.persons.forEach(p => {
-                if (p.gender === 'm') {
-                    let partners = getPartners(p.id);
-                    let maleEl = document.querySelector(`.person-node[data-id="${p.id}"]`);
-                    if(!maleEl) return;
-                    
-                    let hasDrawnRing = false;
+                if (p.gender !== 'm') return;
+                const maleEl = document.querySelector(`.person-node[data-id="${p.id}"]`);
+                if (!maleEl) return;
 
-                    partners.forEach(partnerId => {
-                        let femaleEl = document.querySelector(`.person-node[data-id="${partnerId}"]`);
-                        if(femaleEl) {
-                            let mC = getCenter(maleEl); let fC = getCenter(femaleEl);
-                            let mRect = maleEl.getBoundingClientRect();
-                            let fRect = femaleEl.getBoundingClientRect();
-                            
-                            let mBottom = (mRect.bottom - zcRect.top) / canvasZoom;
-                            let fTop = (fRect.top - zcRect.top) / canvasZoom;
+                let hasDrawnRing = false;
+                const mEvents = getDisplayEvents(p.id);
 
-                            let everMarried = false;
-                            let mEvents = getDisplayEvents(p.id);
-                            if (mEvents.some(e => e.type === 'Marriage' && (e.involvedPersonId === partnerId || e.sourceId === partnerId))) everMarried = true;
-                            
-                            let femaleEvents = getDisplayEvents(partnerId);
-                            let femaleIsMarried = femaleEvents.some(e => e.type === 'Marriage');
-                            let isSecondarySpouse = !everMarried && femaleIsMarried;
-                            let strokeAttr = isSecondarySpouse ? `stroke-dasharray="4,4"` : ``;
-                            
-                            // Draw continuous vertical link lines overriding the minimal gap
-                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mBottom} L ${fC.x - 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
-                            svgLinesHtml += `<path class="tree-line" d="M ${mC.x + 3} ${mBottom} L ${fC.x + 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
-                            
-                            let ringY = (mBottom + fTop) / 2;
-                            
-                            if (!hasDrawnRing) {
-                                if (everMarried) {
-                                    svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                    svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
-                                    hasDrawnRing = true;
-                                } else if (!isSecondarySpouse) {
-                                    svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
-                                    svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${ringY - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
-                                    hasDrawnRing = true;
-                                }
-                            }
+                getPartners(p.id).forEach(partnerId => {
+                    const femaleEl = document.querySelector(`.person-node[data-id="${partnerId}"]`);
+                    if (!femaleEl) return;
+
+                    const mC = getCenter(maleEl);
+                    const fC = getCenter(femaleEl);
+                    const mBottom = (maleEl.getBoundingClientRect().bottom - zcRect.top) / canvasZoom;
+                    const fTop = (femaleEl.getBoundingClientRect().top - zcRect.top) / canvasZoom;
+
+                    const everMarried = mEvents.some(e => e.type === 'Marriage' && (e.involvedPersonId === partnerId || e.sourceId === partnerId));
+                    const femaleIsMarried = getDisplayEvents(partnerId).some(e => e.type === 'Marriage');
+                    const isSecondarySpouse = !everMarried && femaleIsMarried;
+                    const strokeAttr = isSecondarySpouse ? `stroke-dasharray="4,4"` : ``;
+
+                    svgLinesHtml += `<path class="tree-line" d="M ${mC.x - 3} ${mBottom} L ${fC.x - 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
+                    svgLinesHtml += `<path class="tree-line" d="M ${mC.x + 3} ${mBottom} L ${fC.x + 3} ${fTop}" stroke="#9ca3af" stroke-width="2" ${strokeAttr}/>`;
+
+                    if (!hasDrawnRing) {
+                        const ringY = (mBottom + fTop) / 2;
+                        if (everMarried) {
+                            svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                            svgOverlayHtml += `<circle cx="${mC.x - 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/><circle cx="${mC.x + 3.5}" cy="${ringY}" r="3.5" fill="none" stroke="#4b5563" stroke-width="1.5"/>`;
+                            hasDrawnRing = true;
+                        } else if (!isSecondarySpouse) {
+                            svgOverlayHtml += `<circle cx="${mC.x}" cy="${ringY}" r="12" fill="white" stroke="#d1d5db" stroke-width="1"/>`;
+                            svgOverlayHtml += `<g transform="translate(${mC.x - 8}, ${ringY - 8}) scale(0.65)"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="#4b5563"/></g>`;
+                            hasDrawnRing = true;
                         }
-                    });
-                }
+                    }
+                });
             });
 
+            // Draw curved bezier lines from parent group boxes to each child node
             db.persons.forEach(child => {
-                let startParentId = null;
-                let startBox = null;
-                let startBoxId = null;
-                if (child.fatherId) {
-                    startParentId = child.fatherId;
-                } else if (child.motherId) {
-                    startParentId = child.motherId;
-                }
-                let parentNode = document.querySelector(`.person-node[data-id="${startParentId}"]`);
-                if (parentNode) {
-                    startBox = parentNode.closest('.parents-box');
-                    if (startBox) startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
-                }
+                let startParentId = child.fatherId || child.motherId || null;
+                if (!startParentId) return;
 
-                if (startBoxId && collapsedFamilies.has(startBoxId)) return;
+                const parentNode = document.querySelector(`.person-node[data-id="${startParentId}"]`);
+                if (!parentNode) return;
+                const startBox = parentNode.closest('.parents-box');
+                if (!startBox) return;
+                const startBoxId = parseInt(startBox.getAttribute('data-id'), 10);
+
+                if (collapsedFamilies.has(startBoxId)) return;
 
                 let endEl = null;
                 if (child.gender === 'm' || !hasActiveMalePartner(child.id)) {
-                    let cNode = document.querySelector(`.person-node[data-id="${child.id}"]`);
+                    const cNode = document.querySelector(`.person-node[data-id="${child.id}"]`);
                     if (cNode) endEl = cNode.closest('.parents-box');
                 } else {
                     endEl = document.querySelector(`.person-node[data-id="${child.id}"]`);
                 }
 
                 if (startBox && endEl) {
-                    let sRect = startBox.getBoundingClientRect(); let eRect = endEl.getBoundingClientRect();
-                    let x1 = (sRect.right - zcRect.left) / canvasZoom; let y1 = (sRect.top + sRect.height/2 - zcRect.top) / canvasZoom;
-                    let x2 = (eRect.left - zcRect.left) / canvasZoom; let y2 = (eRect.top + eRect.height/2 - zcRect.top) / canvasZoom;
-                    let isGenSkip = child.gender === 'f' && hasActiveMalePartner(child.id);
-                    let strokeAttr = isGenSkip ? 'stroke-dasharray="6,6" stroke="#9ca3af"' : 'stroke="#6b7280"';
-                    let sw = isGenSkip ? 3 : 2;
-                    
-                    let dist = Math.max(30, (x2 - x1) / 2);
-                    let ctrlX1 = x1 + dist;
-                    let ctrlX2 = x2 - dist;
-
-                    svgLinesHtml += `<path class="tree-line" data-child="${child.id}" data-father="${child.fatherId||''}" data-mother="${child.motherId||''}" d="M ${x1} ${y1} C ${ctrlX1} ${y1}, ${ctrlX2} ${y2}, ${x2} ${y2}" fill="none" ${strokeAttr} stroke-width="${sw}" />`;
+                    const sRect = startBox.getBoundingClientRect();
+                    const eRect = endEl.getBoundingClientRect();
+                    const x1 = (sRect.right - zcRect.left) / canvasZoom;
+                    const y1 = (sRect.top + sRect.height / 2 - zcRect.top) / canvasZoom;
+                    const x2 = (eRect.left - zcRect.left) / canvasZoom;
+                    const y2 = (eRect.top + eRect.height / 2 - zcRect.top) / canvasZoom;
+                    const isGenSkip = child.gender === 'f' && hasActiveMalePartner(child.id);
+                    const strokeAttr = isGenSkip ? 'stroke-dasharray="6,6" stroke="#9ca3af"' : 'stroke="#6b7280"';
+                    const sw = isGenSkip ? 3 : 2;
+                    const dist = Math.max(30, (x2 - x1) / 2);
+                    svgLinesHtml += `<path class="tree-line" data-child="${child.id}" data-father="${child.fatherId || ''}" data-mother="${child.motherId || ''}" d="M ${x1} ${y1} C ${x1 + dist} ${y1}, ${x2 - dist} ${y2}, ${x2} ${y2}" fill="none" ${strokeAttr} stroke-width="${sw}" />`;
                 }
             });
 
@@ -1773,6 +1788,7 @@
             updateHighlight();
         }
 
+        // --- PAN & DRAG ---
         let isDown = false, hasDragged = false, startX, startY, scrollLeft, scrollTop, clickStartX, clickStartY;
         const slider = document.getElementById('canvas-container');
 
@@ -1780,64 +1796,64 @@
         document.addEventListener('touchstart', () => { hasDragged = false; }, true);
 
         function startPan(e) {
-            if ($(e.target).closest('#editor-panel').length || $(e.target).closest('#action-bar').length || $(e.target).closest('#burger-menu').length || $(e.target).closest('#lang-dropdown-desktop').length || $(e.target).closest('#empty-state').length || $(e.target).closest('#map-container').length || $(e.target).closest('.leaflet-popup').length || $(e.target).closest('.collapse-toggle-btn').length || $(e.target).closest('#search-results').length || $(e.target).closest('#search-container').length) return;
-            if (e.target === slider && e.offsetX !== undefined) { if (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight) return; }
-
-            let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
-            let pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
+            if ($(e.target).closest('#editor-panel, #action-bar, #burger-menu, #lang-dropdown-desktop, #empty-state, #map-container, .leaflet-popup, .collapse-toggle-btn, #search-results, #search-container').length) return;
+            if (e.target === slider && (e.offsetX > slider.clientWidth || e.offsetY > slider.clientHeight)) return;
+            const pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
+            const pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
             clickStartX = pageX; clickStartY = pageY;
-            isDown = true; slider.classList.add('grabbing-cursor');
-            startX = pageX - slider.offsetLeft; startY = pageY - slider.offsetTop;
-            scrollLeft = slider.scrollLeft; scrollTop = slider.scrollTop;
+            isDown = true;
+            slider.classList.add('grabbing-cursor');
+            startX = pageX - slider.offsetLeft;
+            startY = pageY - slider.offsetTop;
+            scrollLeft = slider.scrollLeft;
+            scrollTop = slider.scrollTop;
         }
 
         function endPan() { isDown = false; slider.classList.remove('grabbing-cursor'); }
 
         function movePan(e) {
             if (!isDown) return;
-            let pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
-            let pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
-            let dx = Math.abs(pageX - clickStartX), dy = Math.abs(pageY - clickStartY);
-            if (dx > 5 || dy > 5) hasDragged = true;
-            if (e.type === 'touchmove' && e.cancelable) e.preventDefault(); 
+            const pageX = e.type.includes('touch') ? e.touches[0].pageX : e.pageX;
+            const pageY = e.type.includes('touch') ? e.touches[0].pageY : e.pageY;
+            if (Math.abs(pageX - clickStartX) > 5 || Math.abs(pageY - clickStartY) > 5) hasDragged = true;
+            if (e.type === 'touchmove' && e.cancelable) e.preventDefault();
             slider.scrollLeft = scrollLeft - (pageX - clickStartX);
             slider.scrollTop = scrollTop - (pageY - clickStartY);
         }
 
         document.addEventListener('mousedown', startPan);
-        document.addEventListener('mousemove', movePan, {passive: false});
+        document.addEventListener('mousemove', movePan, { passive: false });
         document.addEventListener('mouseup', endPan);
-        document.addEventListener('touchstart', startPan, {passive: true});
-        document.addEventListener('touchmove', movePan, {passive: false});
+        document.addEventListener('touchstart', startPan, { passive: true });
+        document.addEventListener('touchmove', movePan, { passive: false });
         document.addEventListener('touchend', endPan);
         document.addEventListener('touchcancel', endPan);
 
         document.addEventListener('click', (e) => {
             if (hasDragged) { e.stopPropagation(); e.preventDefault(); hasDragged = false; return; }
-            if (!$(e.target).closest('#burger-btn').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('.import-file-replace').length && !$(e.target).closest('.import-file-merge').length) $('#burger-menu').addClass('hidden');
+            if (!$(e.target).closest('#burger-btn, #burger-menu, .import-file-replace, .import-file-merge').length) $('#burger-menu').addClass('hidden');
             if (!$(e.target).closest('#lang-dropdown-desktop').length) $('.lang-menu').addClass('hidden');
-
-            if (!$(e.target).closest('.person-node').length && !$(e.target).closest('#editor-panel').length && !$(e.target).closest('#action-bar').length && !$(e.target).closest('#burger-menu').length && !$(e.target).closest('#lang-dropdown-desktop').length && !$(e.target).closest('.collapse-toggle-btn').length && !$(e.target).closest('#search-results').length) {
+            if (!$(e.target).closest('.person-node, #editor-panel, #action-bar, #burger-menu, #lang-dropdown-desktop, .collapse-toggle-btn, #search-results').length) {
                 if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
             }
         }, true);
 
         document.addEventListener('keydown', (e) => {
             const activeTag = document.activeElement ? document.activeElement.tagName.toUpperCase() : '';
-            const isInputActive =['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag);
+            const isInputActive = ['INPUT', 'TEXTAREA', 'SELECT'].includes(activeTag);
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z' && !isInputActive) {
                 if (e.shiftKey) redo(); else undo();
                 e.preventDefault();
             } else if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'y' && !isInputActive) {
                 redo(); e.preventDefault();
-            } else if (e.key === 'Delete') {
-                if (selectedPersonId && !isInputActive) $('#delete-person-btn').click();
+            } else if (e.key === 'Delete' && selectedPersonId && !isInputActive) {
+                $('#delete-person-btn').click();
             }
         });
 
         function updateHighlight() {
             $('.tree-line').removeClass('highlighted-line');
-            if(selectedPersonId) {
+            if (selectedPersonId) {
                 $(`.tree-line[data-child="${selectedPersonId}"]`).addClass('highlighted-line');
                 $(`.tree-line[data-father="${selectedPersonId}"]`).addClass('highlighted-line');
                 $(`.tree-line[data-mother="${selectedPersonId}"]`).addClass('highlighted-line');
@@ -1846,16 +1862,16 @@
 
         function openPanel(id) {
             selectedPersonId = parseInt(id, 10);
-            let p = getPerson(selectedPersonId);
+            const p = getPerson(selectedPersonId);
             if (!p) return;
-            
+
             $('#edit-id').val(p.id);
             $('#edit-firstName').val(p.firstName);
             $('#edit-lastName').val(p.lastName || '');
             $('#edit-nickname').val(p.nickname || '');
-            let activeCategory = p.category || 'none';
-            $('#edit-category').val(activeCategory);
-            $('#edit-category').css('background-color', activeCategory !== 'none' ? CATEGORY_COLORS[activeCategory] + '33' : '#ffffff');
+
+            const activeCategory = p.category || 'none';
+            $('#edit-category').val(activeCategory).css('background-color', activeCategory !== 'none' ? CATEGORY_COLORS[activeCategory] + '33' : '#ffffff');
             $('#edit-title').val(p.title || '');
             $('#edit-gender').val(p.gender);
             $('#edit-address').val(p.address || '');
@@ -1865,41 +1881,32 @@
             if (p.gender === 'm') $('#gender-m-btn').removeClass('bg-white').addClass('bg-blue-50 shadow-inner text-blue-600');
             if (p.gender === 'f') $('#gender-f-btn').removeClass('bg-white').addClass('bg-pink-50 shadow-inner text-pink-600');
 
-            let pBirthObj = getBirthDateObj(p.id);
+            const pBirthObj = getBirthDateObj(p.id);
+            const currentMotherSpouses = p.motherId ? getPartners(p.motherId) : [];
+            const currentFatherSpouses = p.fatherId ? getPartners(p.fatherId) : [];
+
             let popFatherOptions = `<option value="">${t('noFather')}</option>`;
             let popMotherOptions = `<option value="">${t('noMother')}</option>`;
             let childAssignOptions = `<option value="">${t('selectPerson')}</option>`;
-            
-            let currentMotherSpouses = p.motherId ? getPartners(p.motherId) :[];
-            let currentFatherSpouses = p.fatherId ? getPartners(p.fatherId) :[];
 
             db.persons.forEach(op => {
-                if(op.id !== p.id) {
-                    let opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
-                    let fullName = `${op.firstName} ${op.lastName || ''}${opRoman}`;
-                    let genderSym = op.gender === 'm' ? '♂' : '♀';
-                    let fullNameWithGender = `${genderSym} ${fullName}`;
-                    let opBirthObj = getBirthDateObj(op.id);
-                    let isOlder = true;
-                    if (pBirthObj && opBirthObj && opBirthObj >= pBirthObj) isOlder = false;
-                    let isYounger = true;
-                    if (pBirthObj && opBirthObj && opBirthObj <= pBirthObj) isYounger = false;
-                    
-                    if (isOlder) {
-                        if (op.gender === 'm') {
-                            let mark = currentMotherSpouses.includes(op.id) ? ` ⭐` : '';
-                            popFatherOptions += `<option value="${op.id}">${fullName}${mark}</option>`;
-                        }
-                        if (op.gender === 'f') {
-                            let mark = currentFatherSpouses.includes(op.id) ? ` ⭐` : '';
-                            popMotherOptions += `<option value="${op.id}">${fullName}${mark}</option>`;
-                        }
-                    }
-                    if (op.fatherId !== p.id && op.motherId !== p.id && isYounger) {
-                        childAssignOptions += `<option value="${op.id}">${fullNameWithGender}</option>`;
-                    }
+                if (op.id === p.id) return;
+                const opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
+                const fullName = `${op.firstName} ${op.lastName || ''}${opRoman}`;
+                const genderSym = op.gender === 'm' ? '♂' : '♀';
+                const opBirthObj = getBirthDateObj(op.id);
+                const isOlder = !(pBirthObj && opBirthObj && opBirthObj >= pBirthObj);
+                const isYounger = !(pBirthObj && opBirthObj && opBirthObj <= pBirthObj);
+
+                if (isOlder) {
+                    if (op.gender === 'm') popFatherOptions += `<option value="${op.id}">${fullName}${currentMotherSpouses.includes(op.id) ? ' ⭐' : ''}</option>`;
+                    if (op.gender === 'f') popMotherOptions += `<option value="${op.id}">${fullName}${currentFatherSpouses.includes(op.id) ? ' ⭐' : ''}</option>`;
+                }
+                if (op.fatherId !== p.id && op.motherId !== p.id && isYounger) {
+                    childAssignOptions += `<option value="${op.id}">${genderSym} ${fullName}</option>`;
                 }
             });
+
             $('#edit-father').html(popFatherOptions).val(p.fatherId || '');
             $('#edit-mother').html(popMotherOptions).val(p.motherId || '');
             $('#assign-child-select').html(childAssignOptions);
@@ -1910,65 +1917,63 @@
             $('#editor-panel').removeClass('hidden').addClass('flex');
             $('.person-node').removeClass('ring-2 ring-blue-500 shadow-xl');
             $(`.person-node[data-id="${selectedPersonId}"]`).addClass('ring-2 ring-blue-500 shadow-xl');
-            
+
             updateValidationUI(p);
             updateHighlight();
         }
 
         function renderChildrenEditor(parentId) {
-            let children = sortChildren(db.persons.filter(c => c.fatherId === parentId || c.motherId === parentId));
+            const children = sortChildren(db.persons.filter(c => c.fatherId === parentId || c.motherId === parentId));
             let html = '';
             children.forEach(c => {
-                let cRoman = romanNumerals[c.id] ? ` <span class="text-gray-400">${romanNumerals[c.id]}</span>` : '';
+                const cRoman = romanNumerals[c.id] ? ` <span class="text-gray-400">${romanNumerals[c.id]}</span>` : '';
                 html += `
                 <div class="flex justify-between items-center bg-gray-50 border px-1 rounded text-xs">
                     <div class="flex items-center gap-1.5 text-sm cursor-pointer person-link hover:text-blue-600 transition-colors" data-id="${c.id}">
                         ${c.gender === 'm' ? ICONS.male : ICONS.female}
-                        <span class="font-bold">${c.firstName} ${c.lastName||''}${cRoman}</span>
+                        <span class="font-bold">${c.firstName} ${c.lastName || ''}${cRoman}</span>
                     </div>
                     <button class="remove-child text-red-500 hover:text-red-700 font-bold p-1 rounded hover:bg-red-100 transition-colors" data-child-id="${c.id}" title="Remove Child">
                         <i class="ph ph-x text-sm"></i>
                     </button>
                 </div>`;
             });
-            if(children.length === 0) html = `<div class="text-xs text-gray-400 italic">${t('noChildren')}</div>`;
+            if (children.length === 0) html = `<div class="text-xs text-gray-400 italic">${t('noChildren')}</div>`;
             $('#edit-children-list').html(html);
         }
 
         function renderEventsEditor(personId) {
-            let events = getDisplayEvents(personId);
-            
+            const events = getDisplayEvents(personId);
+
             const typeWeight = { 'Birth': 1, 'Marriage': 2, 'Death': 3 };
             events.sort((a, b) => {
-                let wA = typeWeight[a.type] || 4;
-                let wB = typeWeight[b.type] || 4;
-                if (wA !== wB) return wA - wB;
-                
-                let dateA = parseDateForSort(a.date);
-                let dateB = parseDateForSort(b.date);
-                if (dateA !== dateB) return dateA - dateB;
-                
+                const wDiff = (typeWeight[a.type] || 4) - (typeWeight[b.type] || 4);
+                if (wDiff !== 0) return wDiff;
+                const dateDiff = parseDateForSort(a.date) - parseDateForSort(b.date);
+                if (dateDiff !== 0) return dateDiff;
                 return a.originalIndex - b.originalIndex;
             });
-            
+
+            // Pre-build person labels once — reused inside each Marriage event row (O(n) instead of O(n*m))
+            const personOptionLabels = db.persons.map(op => {
+                const opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
+                const genderSym = op.gender === 'm' ? '♂' : '♀';
+                return { id: op.id, label: `${genderSym} ${op.firstName} ${op.lastName || ''}${opRoman}` };
+            });
+
             let html = '';
-            events.forEach((e) => {
-                let pOpts = `<option value="">${t('noPerson')}</option>`;
-                db.persons.forEach(op => {
-                    let opRoman = romanNumerals[op.id] ? ` ${romanNumerals[op.id]}` : '';
-                    let genderSym = op.gender === 'm' ? '♂' : '♀';
-                    let fullNameWithGender = `${genderSym} ${op.firstName} ${op.lastName||''}${opRoman}`;
-                    let partnerId = (e.sourceId !== personId) ? e.sourceId : e.involvedPersonId;
-                    pOpts += `<option value="${op.id}" ${partnerId === op.id ? 'selected' : ''}>${fullNameWithGender}</option>`;
-                });
-                
-                let isBorrowed = e.sourceId !== personId;
-                let bgClass = isBorrowed ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200';
-                let borrowedBadge = isBorrowed ? `<span class="absolute top-0 left-2 text-[9px] font-bold text-blue-500 uppercase tracking-wider">Linked</span>` : '';
-                
+            events.forEach(e => {
+                const partnerId = (e.sourceId !== personId) ? e.sourceId : e.involvedPersonId;
+                const pOpts = `<option value="">${t('noPerson')}</option>` +
+                    personOptionLabels.map(o => `<option value="${o.id}" ${partnerId === o.id ? 'selected' : ''}>${o.label}</option>`).join('');
+
+                const isBorrowed = e.sourceId !== personId;
+                const bgClass = isBorrowed ? 'bg-blue-50 border-blue-200' : 'bg-gray-50 border-gray-200';
+                const borrowedBadge = isBorrowed ? `<span class="absolute top-0 left-2 text-[9px] font-bold text-blue-500 uppercase tracking-wider">Linked</span>` : '';
+
                 let pickerVal = '';
                 if (e.date && /^\d{2}\.\d{2}\.\d{4}$/.test(e.date)) {
-                    let parts = e.date.split('.');
+                    const parts = e.date.split('.');
                     pickerVal = `${parts[2]}-${parts[1]}-${parts[0]}`;
                 }
 
@@ -1979,23 +1984,23 @@
                     
                     <div class="flex gap-2 pr-6 ${isBorrowed ? 'mt-3' : ''}">
                         <select class="ev-type w-1/4 border rounded p-1 text-xs outline-none h-7" ${isBorrowed ? 'disabled' : ''}>
-                            <option value="Birth" ${e.type==='Birth'?'selected':''}>${t('birth')}</option>
-                            <option value="Death" ${e.type==='Death'?'selected':''}>${t('death')}</option>
-                            <option value="Marriage" ${e.type==='Marriage'?'selected':''}>${t('marriage')}</option>
-                            <option value="Other" ${e.type==='Other'?'selected':''}>${t('other')}</option>
+                            <option value="Birth" ${e.type === 'Birth' ? 'selected' : ''}>${t('birth')}</option>
+                            <option value="Death" ${e.type === 'Death' ? 'selected' : ''}>${t('death')}</option>
+                            <option value="Marriage" ${e.type === 'Marriage' ? 'selected' : ''}>${t('marriage')}</option>
+                            <option value="Other" ${e.type === 'Other' ? 'selected' : ''}>${t('other')}</option>
                         </select>
                         <div class="relative w-1/4">
-                            <input type="text" class="ev-date w-full border rounded p-1 pr-6 text-xs outline-none h-7 focus:ring focus:ring-blue-200 invalid:border-red-500 invalid:ring-1 invalid:ring-red-500" placeholder="${t('formatDate')}" value="${e.date||''}" pattern="^(\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})?$" ${isBorrowed ? 'disabled' : ''} title="Format: YYYY or DD.MM.YYYY">
+                            <input type="text" class="ev-date w-full border rounded p-1 pr-6 text-xs outline-none h-7 focus:ring focus:ring-blue-200 invalid:border-red-500 invalid:ring-1 invalid:ring-red-500" placeholder="${t('formatDate')}" value="${e.date || ''}" pattern="^(\\d{4}|\\d{2}\\.\\d{2}\\.\\d{4})?$" ${isBorrowed ? 'disabled' : ''} title="Format: YYYY or DD.MM.YYYY">
                             <input type="date" class="ev-date-picker absolute right-0 w-6 h-full opacity-0 cursor-pointer" value="${pickerVal}" ${isBorrowed ? 'disabled' : ''} onclick="this.showPicker && this.showPicker()">
                             <i class="ph ph-calendar-blank absolute right-1 top-1.5 pointer-events-none text-gray-500 text-sm"></i>
                         </div>
-                        <input type="text" class="ev-place w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('place')}" value="${e.place||''}" ${isBorrowed ? 'disabled' : ''}>
-                        <input type="text" class="ev-coords w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('coords')}" value="${e.coordinates||''}" ${isBorrowed ? 'disabled' : ''}>
+                        <input type="text" class="ev-place w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('place')}" value="${e.place || ''}" ${isBorrowed ? 'disabled' : ''}>
+                        <input type="text" class="ev-coords w-1/4 border rounded p-1 text-xs outline-none h-7" placeholder="${t('coords')}" value="${e.coordinates || ''}" ${isBorrowed ? 'disabled' : ''}>
                     </div>
                     
                     <div class="flex gap-2">
-                        ${(e.type==='Marriage') ? `<select class="ev-person w-1/3 border rounded p-1 text-xs outline-none h-7" ${isBorrowed ? 'disabled' : ''}>${pOpts}</select>` : ''}
-                        <input type="text" class="ev-note flex-grow border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200" placeholder="${t('eventNotes')}" value="${e.note||''}" ${isBorrowed ? 'disabled' : ''}>
+                        ${(e.type === 'Marriage') ? `<select class="ev-person w-1/3 border rounded p-1 text-xs outline-none h-7" ${isBorrowed ? 'disabled' : ''}>${pOpts}</select>` : ''}
+                        <input type="text" class="ev-note flex-grow border rounded p-1 text-xs outline-none h-7 focus:ring focus:ring-blue-200" placeholder="${t('eventNotes')}" value="${e.note || ''}" ${isBorrowed ? 'disabled' : ''}>
                     </div>
                 </div>`;
             });
@@ -2003,23 +2008,22 @@
         }
 
         $(document).on('change', '.ev-date-picker', function() {
-            let val = $(this).val(); 
+            const val = $(this).val();
             if (val) {
-                let parts = val.split('-');
-                let formatted = `${parts[2]}.${parts[1]}.${parts[0]}`;
-                $(this).siblings('.ev-date').val(formatted).trigger('change');
+                const parts = val.split('-');
+                $(this).siblings('.ev-date').val(`${parts[2]}.${parts[1]}.${parts[0]}`).trigger('change');
             }
         });
 
+        // Handles live editing of all panel fields except event-specific inputs.
         $('#editor-panel').on('input change', 'input:not(.ev-date):not(.ev-place):not(.ev-coords):not(.ev-note):not(.ev-date-picker), select:not(.ev-type):not(.ev-person), textarea:not(.ev-note)', function(e) {
-            if(this.id==='edit-id' || this.id==='assign-child-select' || this.id==='quick-nav-select' || this.id==='quick-nav-marriage') return;
-            let id = parseInt($('#edit-id').val(), 10);
-            if(!id) return;
-            let p = getPerson(id);
-            if(!p) return;
-            
-            let oldGender = p.gender;
+            if (this.id === 'edit-id' || this.id === 'assign-child-select' || this.id === 'quick-nav-select' || this.id === 'quick-nav-marriage') return;
+            const id = parseInt($('#edit-id').val(), 10);
+            if (!id) return;
+            const p = getPerson(id);
+            if (!p) return;
 
+            const oldGender = p.gender;
             p.firstName = $('#edit-firstName').val();
             p.lastName = $('#edit-lastName').val();
             p.nickname = $('#edit-nickname').val();
@@ -2037,110 +2041,72 @@
                 $(this).css('background-color', p.category !== 'none' ? CATEGORY_COLORS[p.category] + '33' : '#ffffff');
             }
 
-            // Cascade Gender Flipping Safeties
+            // When gender changes, flip all partners and swap fatherId/motherId on children
             if (oldGender !== p.gender) {
                 getPartners(p.id).forEach(partnerId => {
-                    let partner = getPerson(partnerId);
+                    const partner = getPerson(partnerId);
                     if (partner) partner.gender = (p.gender === 'm') ? 'f' : 'm';
                 });
-                
                 db.persons.filter(c => c.fatherId === p.id || c.motherId === p.id).forEach(c => {
-                    let oldFather = c.fatherId;
-                    let oldMother = c.motherId;
-                    if (oldFather === p.id) {
-                        c.fatherId = oldMother;
-                        c.motherId = p.id;
-                    } else if (oldMother === p.id) {
-                        c.motherId = oldFather;
-                        c.fatherId = p.id;
-                    }
+                    if (c.fatherId === p.id) { c.fatherId = c.motherId; c.motherId = p.id; }
+                    else if (c.motherId === p.id) { c.motherId = c.fatherId; c.fatherId = p.id; }
                 });
                 saveData(false);
-                openPanel(p.id); 
-                return; 
+                openPanel(p.id);
+                return;
             }
 
-            if(this.tagName === 'SELECT' && e.type === 'change') {
+            if (this.tagName === 'SELECT' && e.type === 'change') {
                 debouncedSaveData();
-            }
-            else if (this.tagName !== 'SELECT') {
+            } else if (this.tagName !== 'SELECT') {
+                // For text inputs: update card DOM in-place (faster than full re-render) and persist to localStorage
                 localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 updateRomanNumerals();
-                
-                let roman = romanNumerals[p.id] ? `<span class="text-gray-400 ml-1">${romanNumerals[p.id]}</span>` : '';
-                let titleSpanAttr = p.title ? `title="${p.title.replace(/"/g, '&quot;')}"` : '';
-                let fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName||''} ${romanNumerals[p.id]||''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
-                
-                let $node = $(`.person-node[data-id="${p.id}"]`);
-                $node.find('span.text-\\[10px\\]').html(p.title || '');
-                if (p.title) $node.find('span.text-\\[10px\\]').attr('title', p.title.replace(/"/g, '&quot;'));
-                else $node.find('span.text-\\[10px\\]').removeAttr('title');
-                
-                $node.find('.font-bold.text-gray-800').attr('title', fullNameAttr).html(`${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName||''}</span>${roman}`);
-                
-                let hasOneParent = (p.fatherId && !p.motherId) || (!p.fatherId && p.motherId);
-                let hasNoLastName = !p.lastName || p.lastName.trim() === '';
-                let warnings =[];
-                if (hasOneParent) warnings.push(t('parentMissing'));
-                if (hasNoLastName) warnings.push(t('lastNameMissing'));
-                let warningHtml = warnings.length > 0 ? `<i class="ph ph-warning text-amber-500 mr-1" title="${warnings.join(' / ')}"></i>` : '';
-                
-                $node.find('.flex-shrink-0.flex.items-center.ml-1').html(`${warningHtml}${p.gender === 'm' ? ICONS.male : ICONS.female}`);
 
-                let extraInfoHtml = '';
+                const roman = romanNumerals[p.id] ? `<span class="text-gray-400 ml-1">${romanNumerals[p.id]}</span>` : '';
+                const titleSpanAttr = p.title ? `title="${p.title.replace(/"/g, '&quot;')}"` : '';
+                const fullNameAttr = `${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} ${p.lastName || ''} ${romanNumerals[p.id] || ''}`.trim().replace(/\s+/g, ' ').replace(/"/g, '&quot;');
 
-                if (displayInfoModes.events) {
-                    let displayEvents = getDisplayEvents(p.id);
-                    let minorEvents = displayEvents.filter(ev => !['Birth', 'Death', 'Marriage'].includes(ev.type));
-                    if (minorEvents.length > 0) {
-                        let minorHtml = minorEvents.map(ev => {
-                            let text =[ev.date, ev.place, ev.note].filter(x => x).join(' - ');
-                            let iconHtml = ICONS[ev.type.toLowerCase()] || ICONS.other;
-                            return `<div class="flex items-start gap-1 truncate text-gray-500" title="${text}">${iconHtml} <span class="truncate">${text}</span></div>`;
-                        }).join('');
-                        extraInfoHtml += `<div class="text-[11px] mt-1.5 pt-1.5 border-t border-gray-100 leading-tight flex flex-col gap-1">${minorHtml}</div>`;
-                    }
-                }
+                const $node = $(`.person-node[data-id="${p.id}"]`);
+                const $titleEl = $node.find('span.text-\\[10px\\]');
+                $titleEl.html(p.title || '');
+                if (p.title) $titleEl.attr('title', p.title.replace(/"/g, '&quot;'));
+                else $titleEl.removeAttr('title');
 
-                if (displayInfoModes.address && p.address) {
-                    extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 leading-tight overflow-hidden flex items-start gap-1" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;"><i class="ph ph-house text-gray-400 text-sm"></i> <span>${p.address}</span></div>`;
-                }
+                $node.find('.font-bold.text-gray-800').attr('title', fullNameAttr).html(`${p.firstName} ${p.nickname ? `"${p.nickname}"` : ''} <span class="uppercase">${p.lastName || ''}</span>${roman}`);
+                $node.find('.flex-shrink-0.flex.items-center.ml-1').html(`${buildWarningHtml(p)}${p.gender === 'm' ? ICONS.male : ICONS.female}`);
 
-                if (displayInfoModes.notes && p.notes) {
-                    extraInfoHtml += `<div class="text-[11px] text-gray-500 mt-1.5 pt-1.5 border-t border-gray-100 italic leading-tight overflow-hidden" style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">${p.notes}</div>`;
-                }
-                
-                $node.find('.events-container').nextAll('div:not(.action-buttons)').remove(); 
+                // Rebuild and inject the extra info section
+                const extraInfoHtml = buildExtraInfoHtml(p);
+                $node.find('.events-container').nextAll('div:not(.action-buttons)').remove();
                 if (extraInfoHtml) $node.find('.p-1.pb-1\\.5').append(extraInfoHtml);
-                
-                let borderColor = getColor(p.lastName);
-                let bgColor = (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff';
-                $node.css('border-left', `6px solid ${borderColor}`);
-                $node.css('background-color', bgColor);
 
-                if (e.type === 'change') debouncedSaveData(); 
+                $node.css({ 'border-left': `6px solid ${getColor(p.lastName)}`, 'background-color': (p.category && p.category !== 'none' && CATEGORY_COLORS[p.category]) ? (CATEGORY_COLORS[p.category] + '33') : '#ffffff' });
+
+                if (e.type === 'change') debouncedSaveData();
             }
         });
 
         $('#editor-panel').on('input change', '.ev-type, .ev-date, .ev-place, .ev-coords, .ev-person, .ev-note', function(e) {
-            let row = $(this).closest('.event-row');
-            let sId = parseInt(row.attr('data-source-id'), 10);
-            let idx = parseInt(row.attr('data-original-index'), 10);
-            let sourcePerson = getPerson(sId);
+            const row = $(this).closest('.event-row');
+            const sId = parseInt(row.attr('data-source-id'), 10);
+            const idx = parseInt(row.attr('data-original-index'), 10);
+            const sourcePerson = getPerson(sId);
             if (!sourcePerson || !sourcePerson.events[idx]) return;
-            
-            let ev = sourcePerson.events[idx];
-            let dateVal = row.find('.ev-date').val().trim();
-            if (dateVal !== "" && !/^(\d{4}|\d{2}\.\d{2}\.\d{4})$/.test(dateVal)) return; 
-            
+
+            const ev = sourcePerson.events[idx];
+            const dateVal = row.find('.ev-date').val().trim();
+            if (dateVal !== "" && !/^(\d{4}|\d{2}\.\d{2}\.\d{4})$/.test(dateVal)) return;
+
             ev.type = row.find('.ev-type').val();
             ev.date = dateVal;
             ev.place = row.find('.ev-place').val();
             ev.coordinates = row.find('.ev-coords').val();
-            let invId = row.find('.ev-person').val();
+            const invId = row.find('.ev-person').val();
             ev.involvedPersonId = invId ? parseInt(invId, 10) : null;
             ev.note = row.find('.ev-note').val();
 
+            // Type/person changes need a full re-render; other changes only update the card's events row
             if (e.type === 'change' && ($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
                 clearTimeout(debounceSaveTimeout);
                 debounceSaveTimeout = setTimeout(() => {
@@ -2150,29 +2116,26 @@
             } else {
                 localStorage.setItem('genealogyData_' + currentDbName, JSON.stringify(db));
                 $(`.person-node[data-id="${selectedPersonId}"]`).find('.events-container').html(buildEventsHtml(selectedPersonId));
-                if(ev.involvedPersonId) $(`.person-node[data-id="${ev.involvedPersonId}"]`).find('.events-container').html(buildEventsHtml(ev.involvedPersonId));
-                
-                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) {
-                    debouncedSaveData();
-                }
+                if (ev.involvedPersonId) $(`.person-node[data-id="${ev.involvedPersonId}"]`).find('.events-container').html(buildEventsHtml(ev.involvedPersonId));
+                if (e.type === 'change' && !($(this).hasClass('ev-type') || $(this).hasClass('ev-person'))) debouncedSaveData();
             }
         });
 
         $('#add-event-btn').click(() => {
-            let id = parseInt($('#edit-id').val(), 10);
-            let p = getPerson(id);
+            const id = parseInt($('#edit-id').val(), 10);
+            const p = getPerson(id);
             if (!p) return;
-            if(!p.events) p.events =[];
-            p.events.push({type: 'Other', date: ''});
+            if (!p.events) p.events = [];
+            p.events.push({ type: 'Other', date: '' });
             renderEventsEditor(id);
             saveData();
         });
 
         $(document).on('click', '.remove-event', function() {
-            let row = $(this).closest('.event-row');
-            let sId = parseInt(row.attr('data-source-id'), 10);
-            let idx = parseInt(row.attr('data-original-index'), 10);
-            let p = getPerson(sId);
+            const row = $(this).closest('.event-row');
+            const sId = parseInt(row.attr('data-source-id'), 10);
+            const idx = parseInt(row.attr('data-original-index'), 10);
+            const p = getPerson(sId);
             if (p && p.events) {
                 p.events.splice(idx, 1);
                 saveData();
@@ -2181,57 +2144,51 @@
         });
 
         $('#create-first-person-btn').click(() => {
-            let newId = 1;
-            db.persons =[ { id: newId, firstName: "New", lastName: "Person", gender: "m", events:[] } ];
+            db.persons = [{ id: 1, firstName: "New", lastName: "Person", gender: "m", events: [] }];
             saveData();
-            openPanel(newId);
-            
-            let sliderEl = document.getElementById('canvas-container');
-            sliderEl.scrollLeft = 25000 - window.innerWidth/2 + 128;
-            sliderEl.scrollTop = 25000 - window.innerHeight/2 + 100;
+            openPanel(1);
+            const el = document.getElementById('canvas-container');
+            el.scrollLeft = 25000 - window.innerWidth / 2 + 128;
+            el.scrollTop = 25000 - window.innerHeight / 2 + 100;
         });
 
         $('#create-child-btn').click(() => {
-            let parentId = parseInt($('#edit-id').val(), 10);
-            let parent = getPerson(parentId);
-            let newId = getNextId();
-            let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            
-            let partners = getPartners(parentId);
-            if (parent.gender === 'm') {
-                newChild.fatherId = parentId; 
-                if (partners.length > 0) newChild.motherId = partners[0];
-            } else {
-                newChild.motherId = parentId;
-                if (partners.length > 0) newChild.fatherId = partners[0];
-            }
-
+            const parentId = parseInt($('#edit-id').val(), 10);
+            const parent = getPerson(parentId);
+            const newId = getNextId();
+            const newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events: [] };
+            const partners = getPartners(parentId);
+            if (parent.gender === 'm') { newChild.fatherId = parentId; if (partners.length > 0) newChild.motherId = partners[0]; }
+            else { newChild.motherId = parentId; if (partners.length > 0) newChild.fatherId = partners[0]; }
             db.persons.push(newChild);
-            saveData(); openPanel(parentId);
+            saveData();
+            openPanel(parentId);
         });
 
         $('#assign-child-btn').click(() => {
-            let childId = parseInt($('#assign-child-select').val(), 10);
-            if(!childId) return;
-            let parentId = parseInt($('#edit-id').val(), 10);
-            let parent = getPerson(parentId);
-            let child = getPerson(childId);
+            const childId = parseInt($('#assign-child-select').val(), 10);
+            if (!childId) return;
+            const parentId = parseInt($('#edit-id').val(), 10);
+            const parent = getPerson(parentId);
+            const child = getPerson(childId);
             if (parent.gender === 'm') child.fatherId = parentId; else child.motherId = parentId;
-            saveData(); openPanel(parentId);
+            saveData();
+            openPanel(parentId);
         });
 
         $(document).on('click', '.remove-child', function() {
-            let childId = parseInt($(this).data('child-id'), 10);
-            let parentId = parseInt($('#edit-id').val(), 10);
-            let parent = getPerson(parentId);
-            let child = getPerson(childId);
+            const childId = parseInt($(this).data('child-id'), 10);
+            const parentId = parseInt($('#edit-id').val(), 10);
+            const parent = getPerson(parentId);
+            const child = getPerson(childId);
             if (parent.gender === 'm') child.fatherId = null; else child.motherId = null;
-            saveData(); openPanel(parentId);
+            saveData();
+            openPanel(parentId);
         });
-        
+
         $(document).on('click', '.person-link', function(e) {
             e.stopPropagation();
-            let id = parseInt($(this).data('id'), 10);
+            const id = parseInt($(this).data('id'), 10);
             openPanel(id);
             if (currentViewMode === 'tree') scrollToPerson(id);
         });
@@ -2244,161 +2201,135 @@
         });
 
         $(document).on('click', '.person-node', function(e) {
-            if($(e.target).closest('.action-buttons').length) return;
+            if ($(e.target).closest('.action-buttons').length) return;
             openPanel($(this).data('id'));
         });
 
         $(document).on('click', '.action-father', function(e) {
             e.stopPropagation();
-            let childId = parseInt($(this).closest('.person-node').data('id'), 10);
-            let child = getPerson(childId);
-            if(child.fatherId) openPanel(child.fatherId);
-            else {
-                let newId = getNextId();
-                db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "m", events:[] });
-                child.fatherId = newId;
-                saveData(); openPanel(newId);
-            }
+            const childId = parseInt($(this).closest('.person-node').data('id'), 10);
+            const child = getPerson(childId);
+            if (child.fatherId) { openPanel(child.fatherId); return; }
+            const newId = getNextId();
+            db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "m", events: [] });
+            child.fatherId = newId;
+            saveData();
+            openPanel(newId);
         });
 
         $(document).on('click', '.action-mother', function(e) {
             e.stopPropagation();
-            let childId = parseInt($(this).closest('.person-node').data('id'), 10);
-            let child = getPerson(childId);
-            if(child.motherId) openPanel(child.motherId);
-            else {
-                let newId = getNextId();
-                db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "f", events:[] });
-                child.motherId = newId;
-                saveData(); openPanel(newId);
-            }
+            const childId = parseInt($(this).closest('.person-node').data('id'), 10);
+            const child = getPerson(childId);
+            if (child.motherId) { openPanel(child.motherId); return; }
+            const newId = getNextId();
+            db.persons.push({ id: newId, firstName: "New", lastName: child.lastName, gender: "f", events: [] });
+            child.motherId = newId;
+            saveData();
+            openPanel(newId);
         });
-        
+
         $(document).on('click', '.action-spouse', function(e) {
             e.stopPropagation();
-            let personId = parseInt($(this).closest('.person-node').data('id'), 10);
-            let person = getPerson(personId);
-            let newId = getNextId();
-            let newGender = person.gender === 'm' ? 'f' : 'm';
-            db.persons.push({ id: newId, firstName: "New", lastName: "", gender: newGender, events:[] });
-            if (!person.events) person.events =[];
+            const personId = parseInt($(this).closest('.person-node').data('id'), 10);
+            const person = getPerson(personId);
+            const newId = getNextId();
+            db.persons.push({ id: newId, firstName: "New", lastName: "", gender: person.gender === 'm' ? 'f' : 'm', events: [] });
+            if (!person.events) person.events = [];
             person.events.push({ type: 'Marriage', date: '', place: '', involvedPersonId: newId, note: '' });
-            saveData(); openPanel(newId);
+            saveData();
+            openPanel(newId);
         });
 
         $(document).on('click', '.action-child', function(e) {
             e.stopPropagation();
-            let parentId = parseInt($(this).closest('.person-node').data('id'), 10);
-            let parent = getPerson(parentId);
-            let newId = getNextId();
-            let newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events:[] };
-            
-            let partners = getPartners(parentId);
-            if (parent.gender === 'm') {
-                newChild.fatherId = parentId; 
-                if (partners.length > 0) newChild.motherId = partners[0];
-            } else {
-                newChild.motherId = parentId;
-                if (partners.length > 0) newChild.fatherId = partners[0];
-            }
-
+            const parentId = parseInt($(this).closest('.person-node').data('id'), 10);
+            const parent = getPerson(parentId);
+            const newId = getNextId();
+            const newChild = { id: newId, firstName: "New", lastName: parent.lastName, gender: "m", events: [] };
+            const partners = getPartners(parentId);
+            if (parent.gender === 'm') { newChild.fatherId = parentId; if (partners.length > 0) newChild.motherId = partners[0]; }
+            else { newChild.motherId = parentId; if (partners.length > 0) newChild.fatherId = partners[0]; }
             db.persons.push(newChild);
-            saveData(); openPanel(newId);
+            saveData();
+            openPanel(newId);
         });
 
         $('#delete-person-btn').click(() => {
-            let id = parseInt($('#edit-id').val(), 10);
-            if(confirm(t('confirmDelete'))) {
+            const id = parseInt($('#edit-id').val(), 10);
+            if (confirm(t('confirmDelete'))) {
                 db.persons = db.persons.filter(p => p.id !== id);
                 db.persons.forEach(p => {
-                    if(p.fatherId === id) p.fatherId = null;
-                    if(p.motherId === id) p.motherId = null;
-                    if(p.events) p.events = p.events.filter(e => e.involvedPersonId !== id);
+                    if (p.fatherId === id) p.fatherId = null;
+                    if (p.motherId === id) p.motherId = null;
+                    if (p.events) p.events = p.events.filter(e => e.involvedPersonId !== id);
                 });
                 $('#close-panel').click();
                 saveData();
             }
         });
 
+        // Re-sequence IDs starting from 1 with no gaps before exporting.
         function getExportData() {
-            let exportDb = JSON.parse(JSON.stringify(db));
-            let idMap = {};
+            const exportDb = JSON.parse(JSON.stringify(db));
+            const idMap = {};
             let newId = 1;
-            
-            // Generate sequence starting from 1 with no holes
             exportDb.persons.forEach(p => { idMap[p.id] = newId++; });
-            
-            // Remap records
             exportDb.persons.forEach(p => {
                 p.id = idMap[p.id];
                 if (p.fatherId) p.fatherId = idMap[p.fatherId] || null;
                 if (p.motherId) p.motherId = idMap[p.motherId] || null;
-                if (p.events) {
-                    p.events.forEach(e => {
-                        if (e.involvedPersonId) e.involvedPersonId = idMap[e.involvedPersonId] || null;
-                    });
-                }
+                if (p.events) p.events.forEach(e => { if (e.involvedPersonId) e.involvedPersonId = idMap[e.involvedPersonId] || null; });
             });
             return exportDb;
         }
 
-        $('.export-json-btn').click(() => {
-            $('#burger-menu').addClass('hidden');
-            const dataStr = JSON.stringify(getExportData(), null, 2);
-            const blob = new Blob([dataStr], {type: "application/json"});
+        // Shared helper: triggers a browser file download from a Blob.
+        function triggerDownload(blob, filename) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `genealogy_${currentDbName}.json`;
+            a.download = filename;
             a.click();
             URL.revokeObjectURL(url);
+        }
+
+        $('.export-json-btn').click(() => {
+            $('#burger-menu').addClass('hidden');
+            triggerDownload(new Blob([JSON.stringify(getExportData(), null, 2)], { type: "application/json" }), `genealogy_${currentDbName}.json`);
         });
 
         $('.export-zip-btn').click(async () => {
             $('#burger-menu').addClass('hidden');
             try {
-                const dataStr = JSON.stringify(getExportData());
-                const stream = new Blob([dataStr], {type: 'application/json'}).stream();
-                const compressedReadableStream = stream.pipeThrough(new CompressionStream('gzip'));
-                const blob = await new Response(compressedReadableStream).blob();
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = `genealogy_${currentDbName}.json.gz`;
-                a.click();
-                URL.revokeObjectURL(url);
+                const stream = new Blob([JSON.stringify(getExportData())], { type: 'application/json' }).stream();
+                const blob = await new Response(stream.pipeThrough(new CompressionStream('gzip'))).blob();
+                triggerDownload(blob, `genealogy_${currentDbName}.json.gz`);
             } catch (err) { alert("Your browser does not support the Compression Streams API yet."); }
         });
+
+        // Shared helper: reads a .json or .gz file and returns the parsed object.
+        async function readImportFile(file) {
+            const view = new Uint8Array(await file.slice(0, 2).arrayBuffer());
+            const isGzip = view.length === 2 && view[0] === 0x1F && view[1] === 0x8B;
+            let stream = file.stream();
+            if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
+            return JSON.parse(await new Response(stream).text());
+        }
 
         $('.import-file-replace').change(async function(e) {
             $('#burger-menu').addClass('hidden');
             const file = e.target.files[0];
             if (!file) return;
             try {
-                const buffer = await file.slice(0, 2).arrayBuffer();
-                const view = new Uint8Array(buffer);
-                const isGzip = view.length === 2 && view[0] === 0x1F && view[1] === 0x8B;
-                let stream = file.stream();
-                if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
-                const jsonStr = await new Response(stream).text();
-                const importedDb = JSON.parse(jsonStr);
+                const importedDb = await readImportFile(file);
                 if (importedDb && Array.isArray(importedDb.persons)) {
                     $('#canvas-container').css('opacity', '0');
                     db = importedDb;
                     if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
                     collapsedFamilies.clear();
                     saveData(true);
-                    setTimeout(() => {
-                        if (currentViewMode === 'tree') {
-                            setCanvasZoom(1);
-                            drawLines();
-                            centerOnLargestFamily();
-                            $('#canvas-container').animate({opacity: 1}, 150);
-                        } else {
-                            $('#map-container').animate({opacity: 1}, 150);
-                            $('#canvas-container').css('opacity', '1').addClass('hidden');
-                        }
-                    }, 40);
+                    refreshViewAfterLoad();
                 } else alert("Invalid data format. Expected an array of persons.");
             } catch (err) { alert("Failed to import data. Please ensure it is a valid JSON or GZIP file."); }
             $(this).val('');
@@ -2409,52 +2340,26 @@
             const file = e.target.files[0];
             if (!file) return;
             try {
-                const buffer = await file.slice(0, 2).arrayBuffer();
-                const view = new Uint8Array(buffer);
-                const isGzip = view.length === 2 && view[0] === 0x1F && view[1] === 0x8B;
-                let stream = file.stream();
-                if (isGzip) stream = stream.pipeThrough(new DecompressionStream('gzip'));
-                const jsonStr = await new Response(stream).text();
-                const importedDb = JSON.parse(jsonStr);
-
+                const importedDb = await readImportFile(file);
                 if (importedDb && Array.isArray(importedDb.persons)) {
                     $('#canvas-container').css('opacity', '0');
-                    
-                    let maxId = db.persons.length > 0 ? Math.max(...db.persons.map(p => p.id)) : 0;
-                    let idMap = {};
-                    
-                    // Assign entirely new sequential IDs based on current db maximum state
-                    importedDb.persons.forEach(ip => {
-                        let newId = ++maxId;
-                        idMap[ip.id] = newId;
-                        ip.id = newId;
-                    });
-                    
-                    // Update relational references using the local ID mapping
+
+                    // Assign new sequential IDs above the current maximum to avoid collisions
+                    let maxId = db.persons.reduce((m, p) => Math.max(m, p.id), 0);
+                    const idMap = {};
+                    importedDb.persons.forEach(ip => { idMap[ip.id] = ++maxId; ip.id = maxId; });
+
+                    // Remap all relational references using the new ID mapping
                     importedDb.persons.forEach(ip => {
                         if (ip.fatherId) ip.fatherId = idMap[ip.fatherId] || null;
                         if (ip.motherId) ip.motherId = idMap[ip.motherId] || null;
-                        if (ip.events) {
-                            ip.events.forEach(ev => {
-                                if (ev.involvedPersonId) ev.involvedPersonId = idMap[ev.involvedPersonId] || null;
-                            });
-                        }
+                        if (ip.events) ip.events.forEach(ev => { if (ev.involvedPersonId) ev.involvedPersonId = idMap[ev.involvedPersonId] || null; });
                         db.persons.push(ip);
                     });
-                    
+
                     if (!$('#editor-panel').hasClass('hidden')) $('#close-panel').click();
                     saveData(true);
-                    setTimeout(() => {
-                        if (currentViewMode === 'tree') {
-                            setCanvasZoom(1);
-                            drawLines();
-                            centerOnLargestFamily();
-                            $('#canvas-container').animate({opacity: 1}, 150);
-                        } else {
-                            $('#map-container').animate({opacity: 1}, 150);
-                            $('#canvas-container').css('opacity', '1').addClass('hidden');
-                        }
-                    }, 40);
+                    refreshViewAfterLoad();
                 } else alert("Invalid data format. Expected an array of persons.");
             } catch (err) { alert("Failed to merge data. Please ensure it is a valid JSON or GZIP file."); }
             $(this).val('');
@@ -2464,17 +2369,16 @@
 
         // INITIALIZE ALL
         loadDBList();
-        
         updateRomanNumerals();
         updateLanguageUI();
-        
-        // Let everything build, then fade out the loader overlay and reveal the UI beautifully.
+
+        // Let everything build, then fade out the loader overlay and reveal the UI.
         setTimeout(() => {
             if (currentViewMode === 'tree') {
                 drawLines();
                 centerOnLargestFamily();
             }
-            
+
             $('#app-loading').addClass('opacity-0 pointer-events-none');
             $('#action-bar').removeClass('opacity-0 pointer-events-none');
             if (currentViewMode === 'tree') $('#canvas-container').removeClass('hidden opacity-0');
